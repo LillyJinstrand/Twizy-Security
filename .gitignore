@@ -1,0 +1,12 @@
+# Object files
+*.o
+
+# Ada library information
+*.ali
+
+# gnatprove artifacts
+gnatprove/
+
+# Output files
+*.stderr
+*.stdout
