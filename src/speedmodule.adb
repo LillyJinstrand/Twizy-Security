@@ -1,4 +1,6 @@
-package body speedModule is
+package body speedModule 
+    with SPARK_Mode
+is
 
 function speedtest(S : in Speed) return Boolean 
    is
