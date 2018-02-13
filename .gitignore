@@ -6,3 +6,7 @@
 
 # gnatprove artifacts
 gnatprove/
+
+# Output files
+*.stderr
+*.stdout
