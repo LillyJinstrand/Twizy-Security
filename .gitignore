@@ -10,3 +10,6 @@ gnatprove/
 # Output files
 *.stderr
 *.stdout
+
+# Swap files
+*.swp
