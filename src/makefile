@@ -7,7 +7,7 @@ spark:
 
 .PHONY: prove
 prove:
-	gnatprove --level=4 -P$(GPR)
+	gnatprove -j 0 --level=4 -P$(GPR)
 .PHONY: clean
 clean:
 	rm -rf gnatprove
