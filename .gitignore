@@ -1,6 +1,10 @@
 # Object files
 *.o
 
+# Remove obj and bin directory
+obj/
+bin/
+
 # Ada library information
 *.ali
 
