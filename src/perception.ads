@@ -24,11 +24,13 @@ package perception with SPARK_Mode is
    scopeangle : constant Lidar_angle := 45.0;
    breakConstant : constant Distance := 150.0;
 
-   function breakingDist (s : in Speed) return Distance;
+   function breakingDistance (s : in Speed) return Distance with
+   Pre => S > 0.0;
 
    function pccheck(O : in Obstacle; S : in Speed) return Boolean with
-    Post => (if pccheck'Result then abs O.ang > scopeangle or o.dist > breakingDist(S)) and
-    (if not pccheck'Result then  abs O.ang <= scopeangle and O.dist <= breakingDist(S)),
+	Pre => S > 0.0,
+    Post => (if pccheck'Result then abs O.ang > scopeangle or o.dist > breakingDistance(S)) and
+    (if not pccheck'Result then  abs O.ang <= scopeangle and O.dist <= breakingDistance(S)),
      Global => null;
 
 
