@@ -12,9 +12,15 @@ package perception with SPARK_Mode is
    subtype Steering_angle is Angle range -90.0 .. 90.0;
    subtype Lidar_angle is Angle range -90.0 .. 90.0;
 
+   type DangerZone is
+	  record
+		 ScopeAngle : Lidar_Angle;
+		 Radius: Distance;
+		 SteeringAngleOffset : Lidar_Angle;
+	  end record;
 
    type Obstacle is
-      record
+	  record
          obj_type : Object_type;
          ang : Lidar_angle;
          dist : Distance;
@@ -23,13 +29,20 @@ package perception with SPARK_Mode is
    scopeangle : constant Lidar_angle := 45.0;
    breakConstant : constant Distance := 150.0;
 
+
    function breakingDistance (s : in Speed) return Distance with
    Pre => S > 0.0;
 
+   function GetDangerZone(S : in Speed; SteeringAngle : in Steering_Angle; Obj_Type : in Object_Type)
+	 return DangerZone with
+	 Pre => S > 0.0,
+	 Post => GetDangerZone'Result.Radius > 0.0,
+     Global => null;
+
    function pccheck(O : in Obstacle; S : in Speed) return Boolean with
-	Pre => S > 0.0,
-    Post => (if pccheck'Result then abs O.ang > scopeangle or o.dist > breakingDistance(S)) and
-    (if not pccheck'Result then  abs O.ang <= scopeangle and O.dist <= breakingDistance(S)),
+	 Pre => S > 0.0,
+	 Post => (if pccheck'Result then abs O.ang > scopeangle or o.dist > breakingDistance(S)) and
+	         (if not pccheck'Result then  abs O.ang <= scopeangle and O.dist <= breakingDistance(S)),
      Global => null;
 
 
