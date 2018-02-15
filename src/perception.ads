@@ -12,7 +12,6 @@ package perception with SPARK_Mode is
    subtype Steering_angle is Angle range -90.0 .. 90.0;
    subtype Lidar_angle is Angle range -90.0 .. 90.0;
 
-   -- max value is range of the lidar
 
    type Obstacle is
       record
