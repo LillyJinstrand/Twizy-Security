@@ -1,9 +1,13 @@
 with types;
 use types;
 
-package perception is
+package perception with SPARK_Mode is
    -- perhaps extend to provide a human type
    type Object_type is (STATIC, DYNAMIC, UNKNOWN);
+   
+
+   subtype Distance is fixedNumber range 0.0 .. 160.0;
+   
    
    -- angle from lidar (0 is straight forward)
    type Angle is delta 0.1 range -360.0 .. 360.0;
@@ -11,7 +15,7 @@ package perception is
    subtype Lidar_angle is Angle range -90.0 .. 90.0;
    
    -- max value is range of the lidar
-   type Distance is delta 0.01 range 0.0 .. 100.0;
+    
    
    type Obstacle is 
       record
@@ -19,6 +23,19 @@ package perception is
          ang : Lidar_angle;
          dist : Distance;
       end record;
+   
+   scopeangle : constant Lidar_angle := 45.0;
+   breakConstant : constant Distance := 150.0;
+   
+   
+   
+   function breakingDist (s : in Speed) return Distance;
+   
+   function pccheck(O : in Obstacle; S : in Speed) return Boolean with
+    Post => (if pccheck'Result then abs O.ang > scopeangle or o.dist > breakingDist(S)) and
+    (if not pccheck'Result then  abs O.ang <= scopeangle and O.dist <= breakingDist(S)),
+     Global => null;
+   
 
    
 end perception;
