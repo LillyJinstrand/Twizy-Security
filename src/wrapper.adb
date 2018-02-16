@@ -3,8 +3,14 @@ package body Wrapper
 is
     procedure Init_ada is
     begin
-        null;    
+        Initialized := True;
     end Init_ada;
+
+    function Is_Initialized return Boolean
+    is
+    begin
+        return Initialized;
+    end Is_Initialized;
 
     function Update_ada return Boolean
     is

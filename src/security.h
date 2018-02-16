@@ -2,7 +2,7 @@
 #define SECURITY_H
 
 
-static bool initialized = false;
+extern bool initialized;
 //Sets up internal state. Must be called before any other calls
 extern void init();
 
