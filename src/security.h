@@ -4,13 +4,13 @@
 
 static bool initialized = false;
 //Sets up internal state. Must be called before any other calls
-void init();
+extern void init();
 
 //Gets if library is initialized
-bool isInitialized();
+extern bool isInitialized();
 
 //Updates internal state.
-bool update();
+extern bool update();
 
 
 #endif

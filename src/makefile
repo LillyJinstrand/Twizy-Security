@@ -1,10 +1,14 @@
 GPR=security.gpr
 OBJ=obj
 BIN=bin
+TEMP=temp
 
 security.a: lib.a security.o
-	mkdir -p $(BIN)
-	ar rcs $(BIN)/security.a $(OBJ)/security.o $(OBJ)/lib.a /usr/lib/gcc/x86_64-linux-gnu/7/adalib/libgnat.a
+	mkdir -p $(BIN) 
+	rm -rf $(TEMP)
+	mkdir $(TEMP)
+	cd $(TEMP); ar -x ../$(OBJ)/lib.a; ar -x /usr/lib/gcc/x86_64-linux-gnu/7/adalib/libgnat.a
+	ar cr $(BIN)/security.a $(OBJ)/security.o $(TEMP)/*.o
 
 security.o: security.cc security.h
 	g++ -c -o $(OBJ)/security.o -Wall security.cc 
@@ -33,5 +37,6 @@ prove:
 .PHONY: clean
 clean:
 	rm -rf gnatprove
-	rm -rf obj/*
-	rm -rf bin/*
+	rm -rf $(OBJ)/*
+	rm -rf $(BIN)/*
+	rm -rf $(TEMP)
