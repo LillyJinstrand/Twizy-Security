@@ -1,7 +1,10 @@
 #include "security.h"
 
+bool initialized = false;
+
 extern "C" {
     void init_ada();
+    char is_initialized_ada();
     char update_ada();
     void ckinit();
 }
@@ -9,7 +12,7 @@ extern "C" {
 void init(){
     ckinit();
     init_ada();
-    initialized = true;
+    initialized = is_initialized_ada();
 }
 
 bool isInitialized(){
