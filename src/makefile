@@ -2,7 +2,9 @@ GPR=security.gpr
 OBJ=obj
 BIN=bin
 TEMP=temp
-LIBGNAT=/usr/lib/gcc/x86_64-linux-gnu/7/adalib/libgnat.a
+#LIBGNAT=/usr/lib/gcc/x86_64-linux-gnu/7/adalib/libgnat.a
+LIBPATH=$(shell gcc --print-libgcc-file-name)
+LIBGNAT=$(shell dirname $(LIBPATH))/adalib/libgnat.a
 SPARKOBJECTS=gpsmodule.o perception.o speedmodule.o wrapper.o
 
 $(BIN)/security.a: $(OBJ)/lib.a $(OBJ)/security.o
