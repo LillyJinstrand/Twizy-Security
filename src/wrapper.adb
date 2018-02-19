@@ -27,11 +27,11 @@ is
         null;
     end Update_Speed;
 
-    function Update return Boolean
+    function Is_Safe return Boolean
     is
     begin
         return True;
-    end Update;
+    end Is_Safe;
 
 begin
     null;

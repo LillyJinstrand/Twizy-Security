@@ -11,7 +11,7 @@ extern "C" {
     void update_gps_ada();
     void update_speed_ada();
 
-    char update_ada();
+    char is_safe_ada();
 
     void ckinit();
 }
@@ -36,8 +36,8 @@ void update_speed(){
     update_speed_ada();
 }
 
-bool update(){
-    char result = update_ada();
+bool is_safe(){
+    char result = is_safe_ada();
     if (result){
         return true;
     } else {

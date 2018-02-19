@@ -9,9 +9,10 @@ extern void init();
 //Gets if library is initialized
 extern bool isInitialized();
 
-//Updates internal state.
-extern bool update();
+//Returns if all checks have passed since last run
+extern bool is_safe();
 
+//Updates internal state
 extern void update_perception();
 extern void update_gps();
 extern void update_speed();

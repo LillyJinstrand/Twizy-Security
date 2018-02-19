@@ -7,9 +7,9 @@ int main(){
     init();
     std::cout << "isInitialized returned: " << isInitialized() << "\n";
 
-    std::cout << "Calling update()\n";
-    bool result = update();
-    std::cout << "Update returned: " << result << "\n";
+    std::cout << "Calling is_safe()\n";
+    bool result = is_safe();
+    std::cout << "is_safe returned: " << result << "\n";
 
     return 0;
 }
