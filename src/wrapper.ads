@@ -2,7 +2,7 @@ package Wrapper
     with SPARK_Mode
 is
     Initialized : Boolean := False;
-    procedure Init_ada 
+    procedure Init 
     with 
         Global => (In_Out => Initialized),
         Convention => C,
@@ -14,7 +14,26 @@ is
         Convention => C,
         Export,
         External_Name => "is_initialized_ada";
-    function Update_ada return Boolean 
+
+    procedure Update_Perception
+    with
+        Global => Null,
+        Convention => C,
+        Export,
+        External_Name => "update_perception_ada";
+    procedure Update_GPS
+    with
+        Global => Null,
+        Convention => C,
+        Export,
+        External_Name => "update_gps_ada";
+    procedure Update_Speed
+    with
+        Global => Null,
+        Convention => C,
+        Export,
+        External_Name => "update_speed_ada";
+    function Update return Boolean 
     with 
         Global => Null,
         Convention => C,

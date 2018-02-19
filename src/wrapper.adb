@@ -1,10 +1,10 @@
 package body Wrapper
     with SPARK_Mode
 is
-    procedure Init_ada is
+    procedure Init is
     begin
         Initialized := True;
-    end Init_ada;
+    end Init;
 
     function Is_Initialized return Boolean
     is
@@ -12,11 +12,26 @@ is
         return Initialized;
     end Is_Initialized;
 
-    function Update_ada return Boolean
+    procedure Update_Perception is
+    begin
+        null;
+    end Update_Perception;
+
+    procedure Update_GPS is
+    begin
+        null;
+    end Update_GPS;
+
+    procedure Update_Speed is
+    begin 
+        null;
+    end Update_Speed;
+
+    function Update return Boolean
     is
     begin
         return True;
-    end Update_ada;
+    end Update;
 
 begin
     null;

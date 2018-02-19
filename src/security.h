@@ -12,5 +12,9 @@ extern bool isInitialized();
 //Updates internal state.
 extern bool update();
 
+extern void update_perception();
+extern void update_gps();
+extern void update_speed();
+
 
 #endif
