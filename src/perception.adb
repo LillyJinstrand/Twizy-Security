@@ -15,7 +15,7 @@ package body perception with SPARK_Mode is
 	   BreakingDistScale : constant Distance := 1.23;
 	begin
 	   if not (Obj_Type = STATIC) then
-		  if (BreakingDist >= Distance'Round(Distance'Last / BreakingDistScale)) then
+		  if (BreakingDist >= Distance'Last / BreakingDistScale) then
 			 BreakingDist := Distance'Last;
 		  else
 			 BreakingDist := BreakingDist * BreakingDistScale; -- Change this constant later
