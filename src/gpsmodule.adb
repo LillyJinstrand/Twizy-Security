@@ -5,31 +5,16 @@ package body gpsmodule with SPARK_Mode is
                 top_left_lat => 57.688440132300684,
                 top_left_lon => 11.97746068239212);
    
-   
-   
    function gpstest(X : in Lat; Y : in Lon) return Boolean
-     
    is
-        
-      
-         
    begin      
-      
       if (X <= chalmers.top_left_lat and then 
           chalmers.bottom_right_lat <= X and then
           Y >= chalmers.top_left_lon and then
           chalmers.bottom_right_lon >= Y) then
-
          return True;
-      
-         
       else
-         
          return False;
-      
       end if;
-      
-      
-
    end gpstest;
    end;

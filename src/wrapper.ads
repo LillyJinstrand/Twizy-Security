@@ -38,7 +38,7 @@ is
         External_Name => "update_speed_ada";
 
     -- Returns whether we are safe or not
-    -- The result are based on the last run of the callback functions
+    -- The result is based on the last run of the callback functions
     -- Once it has switched to unsafe, it will not switch back without resetting
     function Is_Safe return Boolean 
     with 

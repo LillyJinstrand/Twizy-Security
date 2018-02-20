@@ -18,6 +18,4 @@ package gpsModule with SPARK_Mode is
     (if not gpstest'Result then X < 57.68699206426933 or X > 57.688440132300684 or Y < 11.97746068239212 or Y > 11.981237232685089),
      Global => null;
 
-
-
 end gpsModule;
