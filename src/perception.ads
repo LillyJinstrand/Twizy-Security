@@ -5,7 +5,8 @@ package perception with SPARK_Mode is
    -- perhaps extend to provide a human type
    type Object_type is (STATIC, DYNAMIC, UNKNOWN);
 
-   subtype Distance is fixedNumber range 0.0 .. 160.0;
+   -- unit is meters
+   subtype Distance is fixedNumber range 0.0 .. 1000.0;
 
    -- angle from lidar (0 is straight forward)
    type Angle is delta 0.1 range -360.0 .. 360.0;

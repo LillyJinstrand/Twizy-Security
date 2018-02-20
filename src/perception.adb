@@ -12,10 +12,10 @@ package body perception with SPARK_Mode is
 	   -- These values chage when test for real values
 	   BreakingDist : Distance := BreakingDistance(S);
 	   LidarAngle : Lidar_Angle := 45.0;
-	   BreakingDistScale : constant Distance := 1.40;
+	   BreakingDistScale : constant Distance := 1.23;
 	begin
 	   if not (Obj_Type = STATIC) then
-		  if (BreakingDist >= Distance'Last / BreakingDistScale) then
+		  if (BreakingDist >= Distance'Round(Distance'Last / BreakingDistScale)) then
 			 BreakingDist := Distance'Last;
 		  else
 			 BreakingDist := BreakingDist * BreakingDistScale; -- Change this constant later
