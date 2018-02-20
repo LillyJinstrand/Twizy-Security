@@ -36,7 +36,6 @@ package perception with SPARK_Mode is
    function GetDangerZone(S : in Speed; SteeringAngle : in Steering_Angle; Obj_Type : in Object_Type)
 	 return DangerZone with
 	 Pre => S > 0.0,
-	 Post => GetDangerZone'Result.Radius > 0.0,
      Global => null;
 
    function pccheck(O : in Obstacle; S : in Speed) return Boolean with
