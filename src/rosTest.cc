@@ -10,7 +10,7 @@ void chatterCallback(const std_msgs::String::ConstPtr& msg)
 int main(int argc, char **argv)
 {
 
-  ros::init(argc, argv, "listener");   
+  ros::init(argc, argv, "rosTest");   
   ros::NodeHandle n;   
 
   ros::Subscriber perception = n.subscribe("perception", 1000, chatterCallback);
