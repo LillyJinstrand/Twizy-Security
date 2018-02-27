@@ -64,7 +64,7 @@ int main(int argc, char **argv)
 
     ROS_INFO("%s", msg.data.c_str());
 
-    canbus_pub.publish(msg);
+    //canbus_pub.publish(msg);
 
     ros::spinOnce();
 
