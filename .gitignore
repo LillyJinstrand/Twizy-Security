@@ -5,6 +5,9 @@
 obj/
 bin/
 
+# Remove the ROS build directory
+build/
+
 # Ada library information
 *.ali
 
