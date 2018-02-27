@@ -1,8 +1,8 @@
-prefix=/home/hashtomte/ros/install
+prefix=/home/hashtomte/Twizzly-Security/src/ros/install
 
 Name: package
 Description: Description of package
 Version: 0.0.0
-Cflags: -I/home/hashtomte/ros/install/include
-Libs: -L/home/hashtomte/ros/install/lib 
+Cflags: -I/home/hashtomte/Twizzly-Security/src/ros/install/include
+Libs: -L/home/hashtomte/Twizzly-Security/src/ros/install/lib 
 Requires: 

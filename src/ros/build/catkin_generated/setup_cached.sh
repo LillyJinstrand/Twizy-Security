@@ -7,4 +7,10 @@
 # new environment variables
 
 # modified environment variables
-export PWD="/home/hashtomte/ros/build"
+export CMAKE_PREFIX_PATH="/home/hashtomte/Twizzly-Security/src/ros/devel:$CMAKE_PREFIX_PATH"
+export LD_LIBRARY_PATH="/home/hashtomte/Twizzly-Security/src/ros/devel/lib:$LD_LIBRARY_PATH"
+export PKG_CONFIG_PATH="/home/hashtomte/Twizzly-Security/src/ros/devel/lib/pkgconfig:$PKG_CONFIG_PATH"
+export PWD="/home/hashtomte/Twizzly-Security/src/ros/build"
+export PYTHONPATH="/home/hashtomte/Twizzly-Security/src/ros/devel/lib/python2.7/site-packages:$PYTHONPATH"
+export ROSLISP_PACKAGE_DIRECTORIES="/home/hashtomte/Twizzly-Security/src/ros/devel/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
+export ROS_PACKAGE_PATH="/home/hashtomte/ros/src:/home/hashtomte/Twizzly-Security/src/ros/src:$ROS_PACKAGE_PATH"
