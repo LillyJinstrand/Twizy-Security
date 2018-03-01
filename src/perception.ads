@@ -2,8 +2,8 @@ with types;
 use types;
 
 package perception with SPARK_Mode is
-   -- perhaps extend to provide a human type
-   type Object_type is (STATIC, DYNAMIC, UNKNOWN);
+   -- dynamic and static indicate unknown object with a know moving state
+   type Object_type is (UNKNOWN, DYNAMIC, STATIC, PEDESTRIAN, BICYCLE, VEHICLE);
 
    -- unit is meters
    subtype Distance is fixedNumber range 0.0 .. 1000.0;
@@ -25,6 +25,7 @@ package perception with SPARK_Mode is
          obj_type : Object_type;
          ang : Lidar_angle;
          dist : Distance;
+		 heading: Angle; -- heading in the world coordinate system
       end record;
 
    scopeangle : constant Lidar_angle := 45.0;
