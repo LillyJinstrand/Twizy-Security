@@ -1,4 +1,12 @@
+with Ada.Numerics.Generic_Elementary_Functions;
+
+
 package body perception with SPARK_Mode is
+
+	package Value_Functions is new Ada.Numerics.Generic_Elementary_Functions (
+		FixedNumber);
+
+	use Value_Functions;
 
 	function breakingDistance (s : in Speed) return Distance
 	is
@@ -24,6 +32,26 @@ package body perception with SPARK_Mode is
 	   end if;
 	   return (ScopeAngle => LidarAngle, Radius => BreakingDist, SteeringAngleOffset => SteeringAngle);
 	end GetDangerZone;
+
+	function PointInDangerZone(P : in LocalPoint; DZ : in DangerZone) return Boolean
+	is
+		Ang  : constant Lidar_Angle := Lidar_Angle(ArcTan(P.X / P.Y));
+		Dist : constant Distance := Sqrt(P.X * P.X + P.Y * P.Y);
+	begin
+	   return abs Ang <= DZ.ScopeAngle and then Dist <= DZ.Radius;
+	end PointInDangerZone;
+
+	function WorldToLocal(P : in Point) return LocalPoint
+	is
+	begin
+	   return (P.X, 0.0, 0.0);
+	end WorldToLocal;
+
+	function TransformAtoB(A : in Point; B : in Point) return Point
+	is
+	begin
+	   return (A.X, B.Y, 0.0);
+	end TransformAtoB;
 
 	function pccheck(O : in Obstacle; S : in Speed) return Boolean
 	is
