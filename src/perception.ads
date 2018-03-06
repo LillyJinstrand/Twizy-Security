@@ -1,12 +1,19 @@
 with types;
 use types;
 
+-- The cars coordinate system is defined as having the car being 0,0
+-- The y axis increases in the direction the car is facing
+-- The x axis increases to the right of the car
+-- This means positive angles are to the right of the center of the car
+-- and negative angles are the the left of the car
+
 package perception with SPARK_Mode is
    -- dynamic and static indicate unknown object with a know moving state
    type Object_type is (UNKNOWN, DYNAMIC, STATIC, PEDESTRIAN, BICYCLE, VEHICLE);
 
    -- unit is meters
-   subtype Distance is fixedNumber range 0.0 .. 1000.0;
+   subtype Distance is FixedNumber range 0.0 .. 10000.0;
+   subtype Carteisan_Coordinate is FixedNumber range -1000.0 .. 1000.0;
 
    -- angle from lidar (0 is straight forward)
    type Angle is delta 0.1 range -360.0 .. 360.0;
@@ -28,9 +35,32 @@ package perception with SPARK_Mode is
 		 heading: Angle; -- heading in the world coordinate system
       end record;
 
+   type Point is
+	  record
+		 X : Carteisan_Coordinate;
+		 Y : Carteisan_Coordinate;
+		 Z : Carteisan_Coordinate; -- height in meters
+	  end record;
+
+   subtype LocalPoint is Point;
+
    scopeangle : constant Lidar_angle := 45.0;
    breakConstant : constant Distance := 150.0;
 
+   -- Checks if a point is inside a danger zone
+   function PointInDangerZone(P : in LocalPoint; DZ : in DangerZone) return Boolean with
+	 Pre => P.Y > 0.0,
+	 Global => null;
+
+   -- Transforms a point P in the world space to the local space around the car
+   -- i.e. the car/dangerzone is the origin
+   function WorldToLocal(P : in Point) return LocalPoint with
+	 Global => null;
+
+   -- transforms a point A to a coordinate system with matrix B
+   -- TODO: matrix type
+   function TransformAtoB(A : in Point; B : in Point) return Point with
+	 Global => null;
 
    function breakingDistance (s : in Speed) return Distance with
    Pre => S > 0.0;
