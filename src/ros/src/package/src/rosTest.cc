@@ -3,14 +3,19 @@
 #include <sstream>
 
 #include "modules/perception/proto/perception_obstacle.pb.h"
+#include "modules/control/proto/control_cmd.pb.h"
+#include "modules/prediction/proto/prediction_obstacle.pb.h"
+#include "modules/localization/proto/localization.pb.h"
 //#include "security.h"
 
 void perceptionCallback(const apollo::perception::PerceptionObstacles& msg)
 {
     std::stringstream ss;
-    ss << "\nObstacles:\n";
+    ss << "\n" << msg.perception_obstacle_size() << " Obstacles:\n";
     for(int i=0; i < msg.perception_obstacle_size(); i++){
-       switch(msg.perception_obstacle(i).type()){
+        ss << "Id: " << msg.perception_obstacle(i).id() << "\n";
+        ss << "Type: ";
+        switch(msg.perception_obstacle(i).type()){
            case 0:
                ss << "Unknown";
                break;
@@ -31,20 +36,28 @@ void perceptionCallback(const apollo::perception::PerceptionObstacles& msg)
                break;
        }
        ss << "\n";
+       ss << "Size: " << msg.perception_obstacle(i).length() << " " << msg.perception_obstacle(i).width() << " " << msg.perception_obstacle(i).height() << "\n";
+       ss << "Position: x: " << msg.perception_obstacle(i).position().x() << " y: " << msg.perception_obstacle(i).position().y() << " z: " << msg.perception_obstacle(i).position().z() << "\n";
     }
     ROS_INFO("%s", ss.str().c_str());
   /* update_perception(); */
 }
 
-void predictionCallback(const std_msgs::String::ConstPtr& msg)
+void predictionCallback(const apollo::prediction::PredictionObstacles& msg)
 {
-  ROS_INFO("I heard from prediction: [%s]", msg->data.c_str());
+    ROS_INFO("Prediction recived");
   /* update_prediction(); Maybe combine prediction and perception? */
 }
 
-void controlCallback(const std_msgs::String::ConstPtr& msg)
+void controlCallback(const apollo::control::ControlCommand& msg)
 {
-  ROS_INFO("I heard from control: [%s]", msg->data.c_str());
+    std::stringstream ss;
+    ss << "\nControl Command:\n";
+    ss << "Throttle: " << msg.throttle() << "\n";
+    ss << "Brake: " << msg.brake() << "\n";
+    ss << "Speed: " << msg.speed() << "\n";
+    ROS_INFO("%s", ss.str().c_str());
+
   /* This isn't even correct just a suggestion, we should probably 
   if is_safe()
 	  vidarebefordra
@@ -59,9 +72,9 @@ void canbusCallback(const std_msgs::String::ConstPtr& msg)
   */
 }
 
-void localizationCallback(const std_msgs::String::ConstPtr& msg)
+void localizationCallback(const apollo::localization::LocalizationEstimate& msg)
 {
-  ROS_INFO("I heard from localization: [%s]", msg->data.c_str());
+    ROS_INFO("Recived localization callback");
   /* update_gps(); */
 }
 
