@@ -1,7 +1,7 @@
 with types;
 use types;
 
--- The cars coordinate system is defined as having the car being 0,0
+-- The car's coordinate system is defined as having the car being 0,0
 -- The y axis increases in the direction the car is facing
 -- The x axis increases to the right of the car
 -- This means positive angles are to the right of the center of the car
@@ -13,7 +13,7 @@ package perception with SPARK_Mode is
 
    -- unit is meters
    subtype Distance is FixedNumber range 0.0 .. 10000.0;
-   subtype Carteisan_Coordinate is FixedNumber range -1000.0 .. 1000.0;
+   subtype Cartesian_Coordinate is FixedNumber range -1000.0 .. 1000.0;
 
    -- angle from lidar (0 is straight forward)
    type Angle is delta 0.1 range -360.0 .. 360.0;
@@ -37,9 +37,9 @@ package perception with SPARK_Mode is
 
    type Point is
 	  record
-		 X : Carteisan_Coordinate;
-		 Y : Carteisan_Coordinate;
-		 Z : Carteisan_Coordinate; -- height in meters
+		 X : Cartesian_Coordinate;
+		 Y : Cartesian_Coordinate;
+		 Z : Cartesian_Coordinate; -- height in meters
 	  end record;
 
    subtype LocalPoint is Point;
