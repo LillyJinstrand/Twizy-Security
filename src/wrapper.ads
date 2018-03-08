@@ -1,3 +1,6 @@
+with perception_data_h;
+use perception_data_h;
+
 package Wrapper
     with SPARK_Mode
 is
@@ -18,7 +21,7 @@ is
         External_Name => "is_initialized_ada";
 
     -- This block is the callback functions for the c++ wrapper to attatch to the ROS topics
-    procedure Update_Perception
+    procedure Update_Perception(perception_data : in perception_obstacle_ada)
     with
         Global => Null,
         Convention => C,

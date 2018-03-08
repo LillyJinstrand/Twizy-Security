@@ -24,7 +24,7 @@ $(OBJ)/lib.a: $(OBJ)/wrapper.o
 	ar cr $(OBJ)/lib.a $(OBJ)/ck.o $(OBJ)/wrapper.o
 	rm -f ck.ad*
 
-$(OBJ)/%.o: %.adb %.ads
+$(OBJ)/%.o: %.adb %.ads perception_data_h.ads
 	mkdir -p $(OBJ)
 	gnatmake -D $(OBJ) $*
 
