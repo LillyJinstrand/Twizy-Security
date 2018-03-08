@@ -1,10 +1,9 @@
 with Ada.Numerics.Generic_Elementary_Functions;
 
-
 package body perception with SPARK_Mode is
 
 	package Value_Functions is new Ada.Numerics.Generic_Elementary_Functions (
-		FixedNumber);
+		FloatingNumber);
 
 	use Value_Functions;
 
@@ -41,17 +40,17 @@ package body perception with SPARK_Mode is
 	   return abs Ang <= DZ.ScopeAngle and then Dist <= DZ.Radius;
 	end PointInDangerZone;
 
-	function WorldToLocal(P : in Point) return LocalPoint
+	function WorldToLocal(P : in Point; C : in Point) return LocalPoint
 	is
 	begin
-	   return (P.X, 0.0, 0.0);
+	   return (P.X - C.X, P.Y - C.Y, P.Z - C.Z);
 	end WorldToLocal;
 
-	function TransformAtoB(A : in Point; B : in Point) return Point
-	is
-	begin
-	   return (A.X, B.Y, 0.0);
-	end TransformAtoB;
+	-- function TransformAtoB(A : in Point; B : in Point) return Point
+	-- is
+	-- begin
+	--    return (A.X, B.Y, 0.0);
+	-- end TransformAtoB;
 
 	function pccheck(O : in Obstacle; S : in Speed) return Boolean
 	is
