@@ -24,12 +24,15 @@ $(OBJ)/lib.a: $(OBJ)/wrapper.o
 	ar cr $(OBJ)/lib.a $(OBJ)/ck.o $(OBJ)/wrapper.o
 	rm -f ck.ad*
 
-$(OBJ)/%.o: %.adb %.ads
+$(OBJ)/%.o: %.adb %.ads perception_data_h.ads
 	mkdir -p $(OBJ)
 	gnatmake -D $(OBJ) $*
 
 $(BIN)/test: test.cc $(BIN)/security.a
 	g++ -o $(BIN)/test test.cc $(BIN)/security.a
+
+perception_data_h.ads: perception_data.h
+	g++ -c -fdump-ada-spec perception_data.h
 
 .PHONY: test
 test: $(BIN)/test

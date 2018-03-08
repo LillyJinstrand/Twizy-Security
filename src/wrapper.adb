@@ -12,7 +12,9 @@ is
         return Initialized;
     end Is_Initialized;
 
-    procedure Update_Perception is
+    procedure Update_Perception
+        (perception_data : in perception_obstacle_ada) 
+    is
     begin
         null;
     end Update_Perception;

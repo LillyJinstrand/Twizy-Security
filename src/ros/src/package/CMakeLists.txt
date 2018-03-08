@@ -14,6 +14,8 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
 )
 
+find_package(Protobuf REQUIRED)
+
 ## Generate messages in the 'msg' folder
 add_message_files(
   FILES
@@ -27,19 +29,31 @@ generate_messages(
 )
 
 catkin_package(
-#  INCLUDE_DIRS include
+  INCLUDE_DIRS include
 #  LIBRARIES package
-#  CATKIN_DEPENDS roscpp rospy std_msgs
+  CATKIN_DEPENDS roscpp 
 #  DEPENDS system_lib
 )
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
+  include
   ${catkin_INCLUDE_DIRS}
+  ${PROTOBUF_INCLUDE_DIRS}
+)
+
+file(GLOB_RECURSE ProtoSource "include/*.pb.cc")
+file(GLOB_RECURSE ProtoHeader "include/*.pb.h")
+
+add_library(apollo
+    STATIC ${ProtoSource} ${ProtoHeader}
 )
 
 add_executable(rosTest src/rosTest.cc)
-target_link_libraries(rosTest ${catkin_LIBRARIES})
+target_link_libraries(rosTest 
+    ${catkin_LIBRARIES}
+    apollo
+    ${PROTOBUF_LIBRARIES}
+)
 add_dependencies(rosTest package_generate_message_cpp)

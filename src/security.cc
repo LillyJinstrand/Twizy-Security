@@ -26,7 +26,7 @@ bool isInitialized(){
     return initialized;
 }
 
-void update_perception(){
+void update_perception(perception_obstacle_ada in){
     update_perception_ada();
 }
 void update_gps(){

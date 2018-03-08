@@ -11,5 +11,21 @@ int main(){
     bool result = is_safe();
     std::cout << "is_safe returned: " << result << "\n";
 
+    perception_obstacle_ada test_obstacle = {
+        1,
+        {1, 2, 3},
+        0.5,
+        {1.0, 0.0, 0.0},
+        5,
+        2,
+        1,
+        4,
+        Type::VEHICLE
+    };
+
+    std::cout << "Calling update_perception()\n";
+    update_perception(test_obstacle);
+    
+
     return 0;
 }
