@@ -21,3 +21,6 @@ gnatprove/
 
 # Swap files
 *.swp
+
+# Ignore generated files
+perception_data_h.ads

@@ -31,6 +31,9 @@ $(OBJ)/%.o: %.adb %.ads
 $(BIN)/test: test.cc $(BIN)/security.a
 	g++ -o $(BIN)/test test.cc $(BIN)/security.a
 
+perception_data_h.ads: perception_data.h
+	g++ -c -fdump-ada-spec perception_data.h
+
 .PHONY: test
 test: $(BIN)/test
 	@echo -----------------------------
