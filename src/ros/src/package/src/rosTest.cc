@@ -6,6 +6,7 @@
 #include "modules/control/proto/control_cmd.pb.h"
 #include "modules/prediction/proto/prediction_obstacle.pb.h"
 #include "modules/localization/proto/localization.pb.h"
+
 //#include "security.h"
 
 void perceptionCallback(const apollo::perception::PerceptionObstacles& msg)
@@ -13,7 +14,7 @@ void perceptionCallback(const apollo::perception::PerceptionObstacles& msg)
     std::stringstream ss;
     ss << "\n" << msg.perception_obstacle_size() << " Obstacles:\n";
     for(int i=0; i < msg.perception_obstacle_size(); i++){
-        ss << "Id: " << msg.perception_obstacle(i).id() << "\n";
+        //ss << "Id: " << msg.perception_obstacle(i).id() << "\n";
         ss << "Type: ";
         switch(msg.perception_obstacle(i).type()){
            case 0:
@@ -36,10 +37,10 @@ void perceptionCallback(const apollo::perception::PerceptionObstacles& msg)
                break;
        }
        ss << "\n";
-       ss << "Size: " << msg.perception_obstacle(i).length() << " " << msg.perception_obstacle(i).width() << " " << msg.perception_obstacle(i).height() << "\n";
+       //ss << "Size: " << msg.perception_obstacle(i).length() << " " << msg.perception_obstacle(i).width() << " " << msg.perception_obstacle(i).height() << "\n";
        ss << "Position: x: " << msg.perception_obstacle(i).position().x() << " y: " << msg.perception_obstacle(i).position().y() << " z: " << msg.perception_obstacle(i).position().z() << "\n";
     }
-    ROS_INFO("%s", ss.str().c_str());
+	// ROS_INFO("%s", ss.str().c_str());
   /* update_perception(); */
 }
 
@@ -56,7 +57,7 @@ void controlCallback(const apollo::control::ControlCommand& msg)
     ss << "Throttle: " << msg.throttle() << "\n";
     ss << "Brake: " << msg.brake() << "\n";
     ss << "Speed: " << msg.speed() << "\n";
-    ROS_INFO("%s", ss.str().c_str());
+   // ROS_INFO("%s", ss.str().c_str());
 
   /* This isn't even correct just a suggestion, we should probably 
   if is_safe()
@@ -74,7 +75,22 @@ void canbusCallback(const std_msgs::String::ConstPtr& msg)
 
 void localizationCallback(const apollo::localization::LocalizationEstimate& msg)
 {
-    ROS_INFO("Recived localization callback");
+	
+    std::stringstream ss;
+    ss << "\nLocalization:\n";
+	apollo::localization::Pose pose = msg.pose();
+	apollo::common::PointENU position = pose.position();
+	//ss << "Position of car in map reference frame" << "\n";
+	ss << "Heading: " << pose.heading() << "\n";
+	/*
+	ss << "x: " << position.x();
+	ss << " y: " << position.y();
+	ss << " z: " << position.z() << "\n";
+	*/
+	ROS_INFO("%s", ss.str().c_str());
+	
+	//ROS_INFO("Recived localization callback");
+	
   /* update_gps(); */
 }
 
