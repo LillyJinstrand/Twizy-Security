@@ -16,7 +16,7 @@ $(BIN)/security.a: $(OBJ)/lib.a $(OBJ)/security.o
 	rm -rf $(TEMP)
 
 $(OBJ)/security.o: security.cc security.h
-	g++ -c -o $(OBJ)/security.o -Wall security.cc 
+	g++ -c -fpic -o $(OBJ)/security.o -Wall security.cc 
 
 $(OBJ)/lib.a: $(OBJ)/wrapper.o
 	gnatbind -Lck -o ck.adb $(OBJ)/wrapper.ali
