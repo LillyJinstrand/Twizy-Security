@@ -25,7 +25,7 @@ namespace twizy {
 
 TwizyMessageManager::TwizyMessageManager() {
   // Control Messages
-
+  AddSendProtocolData<Steeringangle0c0hc0, true>();
 
   // Report Messages
   AddRecvProtocolData<Steeringangle0c0hc0, true>();
