@@ -44,8 +44,9 @@ ros: $(BIN)/security.a security.h
 	cp $(BIN)/security.a $(ROS)/src/package/lib/security.a
 
 .PHONY: apollo
-apollo: ros
-	cp -r $(ROS) $(APOLLO)/ros
+apollo: 
+	make ros
+	cp -r $(ROS) $(APOLLO)
 
 .PHONY: test
 test: $(BIN)/test

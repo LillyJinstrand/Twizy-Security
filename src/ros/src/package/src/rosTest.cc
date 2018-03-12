@@ -97,7 +97,7 @@ void perceptionCallback(const apollo::perception::PerceptionObstacles& msg)
 void predictionCallback(const apollo::prediction::PredictionObstacles& msg)
 {
     //ROS_INFO("Prediction recived");
-    update_prediction(); //Maybe combine prediction and perception? */
+    //update_prediction(); //Maybe combine prediction and perception? */
 }
 
 void controlCallback(const apollo::control::ControlCommand& msg)
