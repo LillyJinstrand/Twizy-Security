@@ -7,16 +7,62 @@
 #include "modules/prediction/proto/prediction_obstacle.pb.h"
 #include "modules/localization/proto/localization.pb.h"
 
-//#include "security.h"
+#include "perception_data.h"
+#include "security.h"
+
+
+int max_polygons = 0;
 
 void perceptionCallback(const apollo::perception::PerceptionObstacles& msg)
 {
+
     std::stringstream ss;
     ss << "\n" << msg.perception_obstacle_size() << " Obstacles:\n";
     for(int i=0; i < msg.perception_obstacle_size(); i++){
-        //ss << "Id: " << msg.perception_obstacle(i).id() << "\n";
+        const apollo::perception::PerceptionObstacle& obs = msg.perception_obstacle(i);
+
+        perception_obstacle_ada ada_obs = {};
+
+        ada_obs.id = obs.id();
+
+        ada_obs.velocity.x = obs.velocity().x();
+        ada_obs.velocity.y = obs.velocity().y();
+        ada_obs.velocity.z = obs.velocity().z();
+
+        ada_obs.length = obs.length();
+        ada_obs.width = obs.width();
+        ada_obs.height = obs.height();
+
+        ada_obs.tracking_time = obs.tracking_time();
+
+        switch(obs.type()){
+           case 0:
+               ada_obs.type = UNKNOWN;
+               break;
+           case 1:
+               ada_obs.type = UNKNOWN_MOVABLE;
+               break;
+           case 2:
+               ada_obs.type = UNKNOWN_UNMOVABLE;
+               break;
+           case 3:
+               ada_obs.type = PEDESTRIAN;
+               break;
+           case 4:
+               ada_obs.type = BICYCLE;
+               break;
+           case 5:
+               ada_obs.type = VEHICLE;
+               break;
+        }
+        ada_obs.timestamp = obs.timestamp();
+        ada_obs.tracking_time = obs.tracking_time();
+
+
+
+        ss << "Id: " << obs.id() << "\n";
         ss << "Type: ";
-        switch(msg.perception_obstacle(i).type()){
+        switch(obs.type()){
            case 0:
                ss << "Unknown";
                break;
@@ -37,17 +83,21 @@ void perceptionCallback(const apollo::perception::PerceptionObstacles& msg)
                break;
        }
        ss << "\n";
-       //ss << "Size: " << msg.perception_obstacle(i).length() << " " << msg.perception_obstacle(i).width() << " " << msg.perception_obstacle(i).height() << "\n";
-       ss << "Position: x: " << msg.perception_obstacle(i).position().x() << " y: " << msg.perception_obstacle(i).position().y() << " z: " << msg.perception_obstacle(i).position().z() << "\n";
+       ss << "Size: " << obs.length() << " " << obs.width() << " " << obs.height() << "\n";
+       ss << "Position: x: " << obs.position().x() << " y: " << obs.position().y() << " z: " << obs.position().z() << "\n";
+       ss << "Number of polygons: " << obs.polygon_point_size() << "\n";
+       
+       
+       update_perception(ada_obs);
+
     }
-	// ROS_INFO("%s", ss.str().c_str());
-  /* update_perception(); */
+    ROS_INFO("%s", ss.str().c_str());
 }
 
 void predictionCallback(const apollo::prediction::PredictionObstacles& msg)
 {
-    ROS_INFO("Prediction recived");
-  /* update_prediction(); Maybe combine prediction and perception? */
+    //ROS_INFO("Prediction recived");
+    update_prediction(); //Maybe combine prediction and perception? */
 }
 
 void controlCallback(const apollo::control::ControlCommand& msg)
@@ -57,7 +107,7 @@ void controlCallback(const apollo::control::ControlCommand& msg)
     ss << "Throttle: " << msg.throttle() << "\n";
     ss << "Brake: " << msg.brake() << "\n";
     ss << "Speed: " << msg.speed() << "\n";
-   // ROS_INFO("%s", ss.str().c_str());
+    //ROS_INFO("%s", ss.str().c_str());
 
   /* This isn't even correct just a suggestion, we should probably 
   if is_safe()
@@ -67,7 +117,7 @@ void controlCallback(const apollo::control::ControlCommand& msg)
 
 void canbusCallback(const std_msgs::String::ConstPtr& msg)
 {
-  ROS_INFO("I heard from canbus: [%s]", msg->data.c_str());
+  //ROS_INFO("I heard from canbus: [%s]", msg->data.c_str());
   /* Filter out speed from canbus data
   update_speed(); 
   */
@@ -75,22 +125,7 @@ void canbusCallback(const std_msgs::String::ConstPtr& msg)
 
 void localizationCallback(const apollo::localization::LocalizationEstimate& msg)
 {
-	
-    std::stringstream ss;
-    ss << "\nLocalization:\n";
-	apollo::localization::Pose pose = msg.pose();
-	apollo::common::PointENU position = pose.position();
-	//ss << "Position of car in map reference frame" << "\n";
-	ss << "Heading: " << pose.heading() << "\n";
-	/*
-	ss << "x: " << position.x();
-	ss << " y: " << position.y();
-	ss << " z: " << position.z() << "\n";
-	*/
-	ROS_INFO("%s", ss.str().c_str());
-	
-	//ROS_INFO("Recived localization callback");
-	
+    //ROS_INFO("Recived localization callback");
   /* update_gps(); */
 }
 
@@ -108,6 +143,8 @@ int main(int argc, char **argv)
   ros::Publisher canbus_pub = n.advertise<std_msgs::String>("canbus", 1000);
 
   ros::Rate loop_rate(1000);   
+
+  ROS_INFO("RosTest started");
 
   int count = 0;
   while (ros::ok())

@@ -2,10 +2,13 @@ GPR=security.gpr
 OBJ=obj
 BIN=bin
 TEMP=temp
+ROS=ros
 #LIBGNAT=/usr/lib/gcc/x86_64-linux-gnu/7/adalib/libgnat.a
 LIBPATH=$(shell gcc --print-libgcc-file-name)
 LIBGNAT=$(shell dirname $(LIBPATH))/adalib/libgnat.a
 SPARKOBJECTS=gpsmodule.o perception.o speedmodule.o wrapper.o
+
+APOLLO=~/AutonomousTwizy/src/BSc2018/apollo-2.0.0
 
 $(BIN)/security.a: $(OBJ)/lib.a $(OBJ)/security.o
 	mkdir -p $(BIN) 
@@ -33,6 +36,16 @@ $(BIN)/test: test.cc $(BIN)/security.a
 
 perception_data_h.ads: perception_data.h
 	g++ -c -fdump-ada-spec perception_data.h
+
+.PHONY: ros
+ros: $(BIN)/security.a security.h
+	cp security.h $(ROS)/src/package/include/security.h
+	mkdir -p $(ROS)/src/package/lib
+	cp $(BIN)/security.a $(ROS)/src/package/lib/security.a
+
+.PHONY: apollo
+apollo: ros
+	cp -r $(ROS) $(APOLLO)/ros
 
 .PHONY: test
 test: $(BIN)/test

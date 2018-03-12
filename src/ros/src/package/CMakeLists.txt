@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(package)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
+#add_compile_options(-std=c++11)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -54,6 +54,8 @@ add_executable(rosTest src/rosTest.cc)
 target_link_libraries(rosTest 
     ${catkin_LIBRARIES}
     apollo
+    ${CMAKE_CURRENT_LIST_DIR}/lib/security.a
     ${PROTOBUF_LIBRARIES}
+    
 )
 add_dependencies(rosTest package_generate_message_cpp)
