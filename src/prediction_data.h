@@ -1,14 +1,13 @@
 #ifndef PREDICTION_DATA_H
-#define PERCEPTION_DATA_H
+#define PREDICTION_DATA_H
 
-#include "perception_data.h"
 #include "common_data.h"
+#include "perception_data.h"
 
 
 struct trajectory_ada {
 	double probability;
 	bool valid_probability;
-
 
 	trajectory_point_ada trajectory_points[10];
 	int trajectory_points_size;

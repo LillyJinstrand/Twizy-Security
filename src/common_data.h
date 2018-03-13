@@ -35,7 +35,7 @@ struct path_point_ada {
 	bool valid_y;
 
 	double z;
-	bool valid_y;
+	bool valid_z;
 
 	// direction in x-y plane
 	double theta;

@@ -22,13 +22,13 @@ struct pose_ada {
 	double heading;
 	bool valid_heading;
 
-	point3d linear_acceleration_vrf;
+	point_3d linear_acceleration_vrf;
 	bool valid_linear_acceleration_vrf;
 
-	point3d angular_velocity_vrf;
+	point_3d angular_velocity_vrf;
 	bool valid_angular_velocity_vrf;
 
-	point3d euler_angles;
+	point_3d euler_angles;
 	bool valid_euler_angles;
 };
 
@@ -40,19 +40,19 @@ enum MeasureState {
 };
 
 struct uncertainty_ada {
-	point3d position_std_dev;
+	point_3d position_std_dev;
 	bool valid_position_std_dev;
 
-	point3d orientation_std_dev;
+	point_3d orientation_std_dev;
 	bool valid_orientation_std_dev;
 
-	point3d linear_velocity_std_dev;
+	point_3d linear_velocity_std_dev;
 	bool valid_linear_velocity_std_dev;
 
-	point3d linear_acceleration_std_dev;
+	point_3d linear_acceleration_std_dev;
 	bool valid_linear_acceleration_std_dev;
 
-	point3d angular_velocity_std_dev;
+	point_3d angular_velocity_std_dev;
 	bool valid_angular_velocity_std_dev;
 };
 
@@ -60,8 +60,8 @@ struct localization_estimate_ada {
 	pose_ada pose;
 	bool valid_pose;
 
-	uncertainty_ada uncertainty_ada;
-	bool valid_uncertainty_ada;
+	uncertainty_ada uncertainty;
+	bool valid_uncertainty;
 
 	double measurement_time;
 	bool valid_measurement_time;
