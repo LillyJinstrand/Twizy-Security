@@ -10,6 +10,11 @@ vehicle_parameter {
   driving_mode: COMPLETE_AUTO_DRIVE
 }
 
+vehicle_parameter {
+  brand: RENAULT_TWIZY
+  driving_mode: COMPLETE_AUTO_DRIVE
+  max_steer_angle: 40.0
+}
 can_card_parameter {
   brand: ESD_CAN
   type: PCI_CARD

@@ -44,8 +44,12 @@ class Steeringangle0c0hc0 : public ProtocolData {
   // config detail: {'name': 'LWS_Speed', 'offset': 0.0, 'precision': 4.0, 'len': 8, 'is_signed_var': False, 'physical_range': '[0|0]', 'bit': 16, 'type': 'double', 'order': 'intel', 'physical_unit': '\xb0/s'}
   double lws_speed(const std::uint8_t* bytes, const int32_t length) const;
 
-  // config detail: {'name': 'LWS', 'offset': 0.0, 'precision': 0.1, 'len': 16, 'is_signed_var': True, 'physical_range': '[0|0]', 'bit': 0, 'type': 'double', 'order': 'intel', 'physical_unit': '\xb0'}
+  // config detail: {'name': 'LWS', 'offset': 0.0, 'precision': 0.1, 'len': 16, 'is_signed_var': True, 'physical_range': '[-40|40]', 'bit': 0, 'type': 'double', 'order': 'intel', 'physical_unit': '\xb0'}
   double lws(const std::uint8_t* bytes, const int32_t length) const;
+
+  // TODO: add additional variables that are used.
+  private:
+	  double steering_angle_ = 0.0;
 };
 
 }  // namespace twizy

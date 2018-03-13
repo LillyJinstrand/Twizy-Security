@@ -61,6 +61,8 @@ class TwizyController final : public VehicleController {
   Chassis chassis() override;
 
  private:
+  Steeringangle0c0hc0 *steeringangle_0c0h_c0_ = nullptr;
+
   // main logical function for operation the car enter or exit the auto driving
   void Emergency() override;
   ::apollo::common::ErrorCode EnableAutoMode() override;

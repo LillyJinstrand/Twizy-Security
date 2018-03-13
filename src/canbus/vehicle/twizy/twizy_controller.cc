@@ -61,8 +61,15 @@ ErrorCode TwizyController::Init(const VehicleParameter& params,
   message_manager_ = message_manager;
 
   // sender part
+  steeringangle_0c0h_c0_ = dynamic_cast<Steeringangle0c0hc0 *>(
+  message_manager_->GetMutableProtocolDataById(Steeringangle0c0hc0::ID)
+  );
+  if (Steeringangle_0c0h_c0_ == nullptr) {
+    AERROR << "Steeringangle0c0hc0 does not exist in the TwizyMessageManager!";
+	return ErrorCode::CANBUS_ERROR;
+  }  
 
-
+  can_sender_->AddMessage(Steeringangle0c0hc0::ID, Steeringangle_0c0h_c0_, false);
 
   // need sleep to ensure all messages received
   AINFO << "TwizyController is initialized.";
@@ -113,8 +120,18 @@ Chassis TwizyController::chassis() {
 
   // 3
   chassis_.set_engine_started(true);
-  /* ADD YOUR OWN CAR CHASSIS OPERATION
-  */
+  // ADD YOUR OWN CAR CHASSIS OPERATION
+  // We assume that car isn't in motion when engine starts.
+  chassis_.set_engine_rpm(0);
+  chassis_.set_speed_mps(0);
+  chassis_.set_odometer_m(0);
+  chassis_.set_fuel_range_m(0);
+  chassis_.set_throttle_percentage(0);
+  chassis_.set_brake_percentage(0);
+  chassis_.set_steering_percentage(0);
+  chassis_.set_steering_torque_nm(0);
+  chassis_.set_parking_brake(false);
+ 
   return chassis_;
 }
 
@@ -129,10 +146,8 @@ ErrorCode TwizyController::EnableAutoMode() {
     return ErrorCode::OK;
   }
   return ErrorCode::OK;
-  /* ADD YOUR OWN CAR CHASSIS OPERATION
-  brake_60_->set_enable();
-  throttle_62_->set_enable();
-  steering_64_->set_enable();
+  // ADD YOUR OWN CAR CHASSIS OPERATION
+  steeringangle_0c0h_c0_->set_enable();
 
   can_sender_->Update();
   const int32_t flag =
@@ -147,7 +162,6 @@ ErrorCode TwizyController::EnableAutoMode() {
     AINFO << "Switch to COMPLETE_AUTO_DRIVE mode ok.";
     return ErrorCode::OK;
   }
-  */
 }
 
 ErrorCode TwizyController::DisableAutoMode() {
@@ -291,7 +305,7 @@ void TwizyController::Throttle(double pedal) {
   */
 }
 
-// twizy default, -470 ~ 470, left:+, right:-
+// twizy default, -40 ~ 40, left:+, right:-
 // need to be compatible with control module, so reverse
 // steering with old angle speed
 // angle:-99.99~0.00~99.99, unit:, left:-, right:+
@@ -301,11 +315,11 @@ void TwizyController::Steer(double angle) {
     AINFO << "The current driving mode does not need to set steer.";
     return;
   }
-  // const double real_angle = params_.max_steer_angle() * angle / 100.0;
+  const double real_angle = params_.max_steer_angle() * angle / 100.0;
   // reverse sign
-  /* ADD YOUR OWN CAR CHASSIS OPERATION
-  steering_64_->set_steering_angle(real_angle)->set_steering_angle_speed(200);
-  */
+  // ADD YOUR OWN CAR CHASSIS OPERATION
+  steeringangle_0c0h_c0_->set_steering_angle(real_angle)->set_steering_angle_speed(200);
+  
 }
 
 // steering with new angle speed

@@ -12,7 +12,7 @@ message Steeringangle_0c0h_c0 {
   optional int32 lws_stat = 3;
   // [°/s] [0|0]
   optional double lws_speed = 4;
-  // [°] [0|0]
+  // [°] [-40|40]
   optional double lws = 5;
 }
 

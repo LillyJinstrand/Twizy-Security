@@ -41,7 +41,7 @@ BO_ 192 steeringangle_0c0h: 5 Vector__XXX
  SG_ MSG_COUNT : 32|4@1+ (1,0) [0|0] "" Vector__XXX
  SG_ LWS_STAT : 24|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ LWS_Speed : 16|8@1+ (4,0) [0|0] "°/s" Vector__XXX
- SG_ LWS : 0|16@1- (0.1,0) [0|0] "°" Vector__XXX
+ SG_ LWS : 0|16@1- (0.1,0) [-40|40] "°" Vector__XXX
 
 
 

@@ -74,21 +74,48 @@ double Steeringangle0c0hc0::lws_speed(const std::uint8_t* bytes, int32_t length)
   return ret;
 }
 
-// config detail: {'name': 'lws', 'offset': 0.0, 'precision': 0.1, 'len': 16, 'is_signed_var': True, 'physical_range': '[0|0]', 'bit': 0, 'type': 'double', 'order': 'intel', 'physical_unit': '\xb0'}
-double Steeringangle0c0hc0::lws(const std::uint8_t* bytes, int32_t length) const {
-  Byte t0(bytes + 1);
-  int32_t x = t0.get_byte(0, 8);
+// config detail: {'name': 'lws', 'offset': 0.0, 'precision': 0.1, 'len': 16, 'is_signed_var': True, 'physical_range': '[-40|40]', 'bit': 0, 'type': 'double', 'order': 'intel', 'physical_unit': '\xb0'}
+double Steeringangle0c0hc0::lws(const std::uint8_t* bytes, double angle) const {
+  angle = ProtocolData::BoundedValue(-40.0, 40.0, angle);
 
-  Byte t1(bytes + 0);
-  int32_t t = t1.get_byte(0, 8);
-  x <<= 8;
-  x |= t;
+  Byte frame_high(bytes + 1);
+  // TODO: ask steering if + is left or right!!!!§
+  // for now assume that left(+) and right(-). write 255 for -, 0 for +.
+  if (angle < 0)
+    frame_high.set_value(0xFF);
+  else
+    frame_high.set_value(0x00);
 
-  x <<= 16;
-  x >>= 16;
+  // 
+  int32_t a = angle / 0.100000;
+  if (a < 0)
+    a += 0x10000;
+   
+  std::uint8_t t = 0;
+  t = a & 0xFF;
+  Byte frame_low(bytes + 0);
+  frame_low.set_value(t, 0, 8);
+  
+  a <<= 16;
+  a >>= 16;
 
-  double ret = x * 0.100000;
+  double ret = a * 0.100000;
   return ret;
+}
+
+Steeringangle0c0hc0 *Steeringangle0c0hc0::set_steering_angle(double angle) {
+	steering_angle_ = angle;
+	return this;
+}
+
+// TODO: Add additional setter functions for what we need.
+void Steeringangle0c0hc0::UpdateData(uint8_t *data) {
+	set_steering_angle(data, steering_angle_)
+}
+
+// TODO: add additional variables.
+void Steeringangle0c0hc0::Reset() {
+	steering_angle_ = 0.0;
 }
 }  // namespace twizy
 }  // namespace canbus
