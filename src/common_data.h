@@ -1,6 +1,32 @@
 #ifndef COMMON_DATA_H
 #define COMMON_DATA_H
 
+// point in the map reference frame
+struct point_enu_ada {
+	double x; // east from origin, meters
+	bool valid_x;
+
+	double y; // north from origin, meters
+	bool valid_y;
+
+	double z; // up from WGS-84 ellipsoid, meters
+	bool valid_z;
+};
+
+struct quaternion_ada {
+	double qx;
+	bool valid_qx;
+
+	double qy;
+	bool valid_qy;
+
+	double qz;
+	bool valid_qz;
+
+	double qw;
+	bool valid_qw;
+};
+
 struct path_point_ada {
 	double x;
 	bool valid_x;
