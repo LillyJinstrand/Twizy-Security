@@ -7,6 +7,7 @@ ROS=ros
 LIBPATH=$(shell gcc --print-libgcc-file-name)
 LIBGNAT=$(shell dirname $(LIBPATH))/adalib/libgnat.a
 SPARKOBJECTS=gpsmodule.o perception.o speedmodule.o wrapper.o
+ADASPEC=common_data_h.ads perception_data_h.ads prediction_data_h.ads localization_data_h.ads control_cmd_data_h.ads
 
 APOLLO=~/AutonomousTwizy/src/BSc2018/apollo-2.0.0
 
@@ -21,37 +22,32 @@ $(BIN)/security.a: $(OBJ)/lib.a $(OBJ)/security.o
 $(OBJ)/security.o: security.cc security.h
 	g++ -c -fpic -o $(OBJ)/security.o -Wall security.cc
 
-$(OBJ)/lib.a: $(OBJ)/wrapper.o
+$(OBJ)/lib.a: $(ADASPEC) $(OBJ)/wrapper.o 
 	gnatbind -Lck -o ck.adb $(OBJ)/wrapper.ali
 	gnatmake -D $(OBJ) ck.adb
 	ar cr $(OBJ)/lib.a $(OBJ)/ck.o $(OBJ)/wrapper.o
 	rm -f ck.ad*
 
-$(OBJ)/%.o: %.adb %.ads perception_data_h.ads
+$(OBJ)/%.o: %.adb %.ads 
 	mkdir -p $(OBJ)
 	gnatmake -D $(OBJ) $*
 
 $(BIN)/test: test.cc $(BIN)/security.a
+	make $(ADASPEC)
 	g++ -o $(BIN)/test test.cc $(BIN)/security.a
 
-perception_data_h.ads: perception_data.h
-	g++ -c -fdump-ada-spec perception_data.h
 
-prediction_data_h.ads: prediction_data.h
-	g++ -c -fdump-ada-spec prediction_data.h
+%_data_h.ads: %_data.h
+	g++ -c -fdump-ada-spec $^
 
-localization_data_h.ads: localization_data.h
-	g++ -c -fdump-ada-spec localization_data.h
 
-control_cmd_data_h.ads: control_cmd_data.h
-	g++ -c -fdump-ada-spec control_cmd_data.h
 
 .PHONY: ros
 ros: $(BIN)/security.a security.h perception_data.h
 	cp security.h $(ROS)/src/package/include/security.h
 	mkdir -p $(ROS)/src/package/lib
 	cp $(BIN)/security.a $(ROS)/src/package/lib/security.a
-	cp perception_data.h $(ROS)/src/package/include/perception_data.h
+	cp *_data.h $(ROS)/src/package/include/
 	rm -rf $(ROS)/build
 
 .PHONY: apollo
@@ -80,3 +76,4 @@ clean:
 	rm -rf $(OBJ)/*
 	rm -rf $(BIN)/*
 	rm -rf $(TEMP)
+	rm -f $(ADASPEC)

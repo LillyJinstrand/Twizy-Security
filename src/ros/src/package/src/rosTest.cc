@@ -27,11 +27,11 @@ void perceptionCallback(const apollo::perception::PerceptionObstacles& msg)
             ada_obs.id = obs.id();
         }
         if((ada_obs.valid_id = obs.has_velocity())){
-            if((ada_obs.velocity().valid_x = obs.velocity().has_x()))
+            if((ada_obs.velocity.valid_x = obs.velocity().has_x()))
                 ada_obs.velocity.x = obs.velocity().x();
-            if((ada_obs.velocity().valid_y = obs.velocity().has_y()))
+            if((ada_obs.velocity.valid_y = obs.velocity().has_y()))
                 ada_obs.velocity.y = obs.velocity().y();
-            if((ada_obs.velocity().valid_z = obs.velocity().has_z()))
+            if((ada_obs.velocity.valid_z = obs.velocity().has_z()))
                 ada_obs.velocity.z = obs.velocity().z();
         }
 
@@ -39,7 +39,7 @@ void perceptionCallback(const apollo::perception::PerceptionObstacles& msg)
             ada_obs.length = obs.length();
         if((ada_obs.valid_length = obs.has_width()))
             ada_obs.width = obs.width();
-        if((ada_obs.valid_heigth = obs.has_height()))
+        if((ada_obs.valid_height = obs.has_height()))
             ada_obs.height = obs.height();
 
         if((ada_obs.valid_tracking_time = obs.has_tracking_time()))
@@ -67,7 +67,7 @@ void perceptionCallback(const apollo::perception::PerceptionObstacles& msg)
                    break;
             }
         }
-        if((ada_obs.valid_timestamp() = obs.has_timestamp()))
+        if((ada_obs.valid_timestamp = obs.has_timestamp()))
             ada_obs.timestamp = obs.timestamp();
         if((ada_obs.valid_tracking_time = obs.has_tracking_time()))
             ada_obs.tracking_time = obs.tracking_time();

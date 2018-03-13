@@ -28,3 +28,4 @@ perception_data_h.ads
 src/ros/src/package/include/security.h
 src/ros/src/package/include/perception_data.h
 lib
+src/ros/src/package/include/*_data.h
