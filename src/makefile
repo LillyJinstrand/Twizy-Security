@@ -38,10 +38,11 @@ perception_data_h.ads: perception_data.h
 	g++ -c -fdump-ada-spec perception_data.h
 
 .PHONY: ros
-ros: $(BIN)/security.a security.h
+ros: $(BIN)/security.a security.h perception_data.h
 	cp security.h $(ROS)/src/package/include/security.h
 	mkdir -p $(ROS)/src/package/lib
 	cp $(BIN)/security.a $(ROS)/src/package/lib/security.a
+	cp perception_data.h $(ROS)/src/package/include/perception_data.h
 	rm -rf $(ROS)/build
 
 .PHONY: apollo
