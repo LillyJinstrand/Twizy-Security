@@ -11,15 +11,15 @@ SPARKOBJECTS=gpsmodule.o perception.o speedmodule.o wrapper.o
 APOLLO=~/AutonomousTwizy/src/BSc2018/apollo-2.0.0
 
 $(BIN)/security.a: $(OBJ)/lib.a $(OBJ)/security.o
-	mkdir -p $(BIN) 
+	mkdir -p $(BIN)
 	rm -rf $(TEMP)
 	mkdir $(TEMP)
 	cd $(TEMP); ar -x ../$(OBJ)/lib.a; ar -x $(LIBGNAT)
-	ar cr $(BIN)/security.a $(OBJ)/security.o $(TEMP)/*.o 
+	ar cr $(BIN)/security.a $(OBJ)/security.o $(TEMP)/*.o
 	rm -rf $(TEMP)
 
 $(OBJ)/security.o: security.cc security.h
-	g++ -c -fpic -o $(OBJ)/security.o -Wall security.cc 
+	g++ -c -fpic -o $(OBJ)/security.o -Wall security.cc
 
 $(OBJ)/lib.a: $(OBJ)/wrapper.o
 	gnatbind -Lck -o ck.adb $(OBJ)/wrapper.ali
@@ -37,6 +37,15 @@ $(BIN)/test: test.cc $(BIN)/security.a
 perception_data_h.ads: perception_data.h
 	g++ -c -fdump-ada-spec perception_data.h
 
+prediction_data_h.ads: prediction_data.h
+	g++ -c -fdump-ada-spec prediction_data.h
+
+localization_data_h.ads: localization_data.h
+	g++ -c -fdump-ada-spec localization_data.h
+
+control_cmd_data_h.ads: control_cmd_data.h
+	g++ -c -fdump-ada-spec control_cmd_data.h
+
 .PHONY: ros
 ros: $(BIN)/security.a security.h perception_data.h
 	cp security.h $(ROS)/src/package/include/security.h
@@ -46,7 +55,7 @@ ros: $(BIN)/security.a security.h perception_data.h
 	rm -rf $(ROS)/build
 
 .PHONY: apollo
-apollo: 
+apollo:
 	make ros
 	cp -r $(ROS) $(APOLLO)
 

@@ -23,6 +23,7 @@ gnatprove/
 *.swp
 
 # Ignore generated files
+*_h.ads
 perception_data_h.ads
 src/ros/src/package/include/security.h
 src/ros/src/package/include/perception_data.h
