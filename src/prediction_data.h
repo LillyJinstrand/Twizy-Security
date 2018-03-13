@@ -12,7 +12,7 @@ struct trajectory_ada {
 
 	trajectory_point_ada trajectory_points[10];
 	int trajectory_points_size;
-}
+};
 
 struct prediction_obstacle_ada {
 	perception_obstacle_ada perception_obstacle;
@@ -27,6 +27,6 @@ struct prediction_obstacle_ada {
 
 	trajectory_ada trajectory[10];
 	int trajectory_size;
-}
+};
 
 #endif // PREDICTION_DATA_H

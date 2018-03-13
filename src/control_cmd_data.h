@@ -30,7 +30,6 @@ struct control_cmd_ada {
 	double acceleration; // m/s^2
 	bool valid_acceleration;
 
-
-}
+};
 
 #endif // CONTROL_CMD_DATA_H

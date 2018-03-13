@@ -1,14 +1,8 @@
 #ifndef PERCEPTION_DATA_H
 #define PERCEPTION_DATA_H
 
-struct point_3d {
-    double x;
-    bool valid_x;
-    double y;
-    bool valid_y;
-    double z;
-    bool valid_z;
-};
+#include "common_data.h"
+
 enum Type {
   UNKNOWN = 0,
   UNKNOWN_MOVABLE = 1,

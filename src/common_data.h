@@ -28,7 +28,7 @@ struct path_point_ada {
 	// accumulated dist from beginning of path
 	double s;
 	bool valid_s;
-}
+};
 
 struct trajectory_point_ada {
 	path_point_ada path_point;
@@ -42,6 +42,15 @@ struct trajectory_point_ada {
 
 	double relative_time; // time from beginning of trajectory
 	bool valid_relative_time;
-}
+};
+
+struct point_3d {
+    double x;
+    bool valid_x;
+    double y;
+    bool valid_y;
+    double z;
+    bool valid_z;
+};
 
 #endif // COMMON_DATA_H
