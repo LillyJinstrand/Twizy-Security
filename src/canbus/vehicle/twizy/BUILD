@@ -28,8 +28,8 @@ cc_library(
     deps = [
         "//modules/canbus/common:canbus_common",
         "//modules/canbus/proto:canbus_proto",
-        "//modules/canbus/vehicle:message_manager_base",
         "//modules/canbus/vehicle/twizy/protocol:canbus_twizy_protocol",
+        "//modules/drivers/canbus/can_comm:message_manager_base",
     ],
 )
 
@@ -43,10 +43,10 @@ cc_library(
     ],
     deps = [
         ":twizy_message_manager",
-        "//modules/canbus/can_comm:can_sender",
-        "//modules/canbus/common:canbus_common",
+        "//modules/drivers/canbus/can_comm:can_sender",
+        "//modules/drivers/canbus/can_comm:message_manager_base",
+        "//modules/drivers/canbus/common:canbus_common",
         "//modules/canbus/proto:canbus_proto",
-        "//modules/canbus/vehicle:message_manager_base",
         "//modules/canbus/vehicle:vehicle_controller_base",
         "//modules/canbus/vehicle/twizy/protocol:canbus_twizy_protocol",
     ],
