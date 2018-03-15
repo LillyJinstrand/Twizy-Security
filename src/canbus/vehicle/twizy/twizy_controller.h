@@ -28,6 +28,7 @@
 #include "modules/common/macro.h"
 #include "modules/common/proto/error_code.pb.h"
 #include "modules/control/proto/control_cmd.pb.h"
+#include "modules/canbus/vehicle/twizy/protocol/steering_64.h"
 
 
 
@@ -44,8 +45,8 @@ class TwizyController final : public VehicleController {
 
   ::apollo::common::ErrorCode Init(
       const VehicleParameter& params,
-      CanSender* const can_sender,
-      MessageManager* const message_manager) override;
+      CanSender<::apollo::canbus::ChassisDetail>* const can_sender,
+      MessageManager<::apollo::canbus::ChassisDetail>* const message_manager) override;
 
   bool Start() override;
 
@@ -61,8 +62,6 @@ class TwizyController final : public VehicleController {
   Chassis chassis() override;
 
  private:
-  Steeringangle0c0hc0 *steeringangle_0c0h_c0_ = nullptr;
-
   // main logical function for operation the car enter or exit the auto driving
   void Emergency() override;
   ::apollo::common::ErrorCode EnableAutoMode() override;
@@ -111,9 +110,9 @@ class TwizyController final : public VehicleController {
 
  private:
   // control protocol
+  Steering64 *steering_64_ = nullptr;
 
-
-  CanSender* can_sender_;
+  CanSender<::apollo::canbus::ChassisDetail>* can_sender_;
   Chassis chassis_;
   std::unique_ptr<std::thread> thread_;
   bool is_chassis_error_ = false;
