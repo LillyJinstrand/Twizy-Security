@@ -17,7 +17,7 @@
 #ifndef MODULES_CANBUS_VEHICLE_TWIZY_PROTOCOL_STEERINGANGLE_0C0H_C0_H_
 #define MODULES_CANBUS_VEHICLE_TWIZY_PROTOCOL_STEERINGANGLE_0C0H_C0_H_
 
-#include "modules/canbus/vehicle/protocol_data.h"
+#include "modules/drivers/canbus/can_comm/protocol_data.h"
 
 namespace apollo {
 namespace canbus {

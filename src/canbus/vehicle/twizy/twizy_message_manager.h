@@ -16,7 +16,7 @@ limitations under the License.
 #ifndef MODULES_CANBUS_VEHICLE_TWIZY_TWIZY_MESSAGE_MANAGER_H_
 #define MODULES_CANBUS_VEHICLE_TWIZY_TWIZY_MESSAGE_MANAGER_H_
 
-#include "modules/canbus/vehicle/message_manager.h"
+#include "modules/drivers/canbus/can_comm/message_manager.h"
 
 namespace apollo {
 namespace canbus {
