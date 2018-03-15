@@ -50,10 +50,17 @@ add_library(apollo
     STATIC ${ProtoSource} ${ProtoHeader}
 )
 
+file(GLOB_RECURSE ConverterSource "src/*_converter.cc")
+file(GLOB_RECURSE ConverterHeader "include/*_converter.h")
+add_library(converters
+    STATIC ${ConverterSource} ${ConverterHeader}
+)
+
 add_executable(rosTest src/rosTest.cc)
 target_link_libraries(rosTest 
     ${catkin_LIBRARIES}
     apollo
+    converters
     ${CMAKE_CURRENT_LIST_DIR}/lib/security.a
     ${PROTOBUF_LIBRARIES}
     
