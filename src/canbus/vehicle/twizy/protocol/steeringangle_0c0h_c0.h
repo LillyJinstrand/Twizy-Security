@@ -18,12 +18,14 @@
 #define MODULES_CANBUS_VEHICLE_TWIZY_PROTOCOL_STEERINGANGLE_0C0H_C0_H_
 
 #include "modules/drivers/canbus/can_comm/protocol_data.h"
+#include "modules/canbus/proto/chassis_detail.pb.h"
 
 namespace apollo {
 namespace canbus {
 namespace twizy {
 
-class Steeringangle0c0hc0 : public ProtocolData {
+class Steeringangle0c0hc0 : public ::apollo::drivers::canbus::ProtocolData<
+							 ::apollo::canbus::ChassisDetail> {
  public:
   static const int32_t ID;
   Steeringangle0c0hc0();
