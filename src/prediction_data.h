@@ -4,12 +4,17 @@
 #include "common_data.h"
 #include "perception_data.h"
 
+#define MAX_NUMBER_TRAJECTORIES 10
+#define MAX_NUMBER_POINTS 10
+
 
 struct trajectory_ada {
 	double probability;
 	bool valid_probability;
 
-	trajectory_point_ada trajectory_points[10];
+    //No good way of passing dynamic arrays, so a fixed size is used
+    //Should be plenty, but if not later points in the list are dropped
+	trajectory_point_ada trajectory_points[MAX_NUMBER_POINTS];
 	int trajectory_points_size;
 };
 
@@ -23,8 +28,10 @@ struct prediction_obstacle_ada {
 	double predicted_period;
 	bool valid_predicted_period;
 
-
-	trajectory_ada trajectory[10];
+    //Since we have no good way of passing dynamic arrays between c++ and ada
+    //this is a predifined size.  
+    //In case there are more then the max trajectories will be prioritised based on probability
+	trajectory_ada trajectory[MAX_NUMBER_TRAJECTORIES];
 	int trajectory_size;
 };
 

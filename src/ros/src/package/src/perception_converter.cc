@@ -6,18 +6,16 @@ perception_obstacle_ada convert_obstacle(const apollo::perception::PerceptionObs
     if((ada_obs.valid_id = obs.has_id())){
         ada_obs.id = obs.id();
     }
-    if((ada_obs.valid_id = obs.has_velocity())){
-        if((ada_obs.velocity.valid_x = obs.velocity().has_x()))
-            ada_obs.velocity.x = obs.velocity().x();
-        if((ada_obs.velocity.valid_y = obs.velocity().has_y()))
-            ada_obs.velocity.y = obs.velocity().y();
-        if((ada_obs.velocity.valid_z = obs.velocity().has_z()))
-            ada_obs.velocity.z = obs.velocity().z();
+
+    
+
+    if((ada_obs.valid_velocity = obs.has_velocity())){
+        ada_obs.velocity = convert_point(obs.velocity());
     }
 
     if((ada_obs.valid_length = obs.has_length()))
         ada_obs.length = obs.length();
-    if((ada_obs.valid_length = obs.has_width()))
+    if((ada_obs.valid_width = obs.has_width()))
         ada_obs.width = obs.width();
     if((ada_obs.valid_height = obs.has_height()))
         ada_obs.height = obs.height();
