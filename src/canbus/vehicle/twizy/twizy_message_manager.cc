@@ -17,7 +17,7 @@ limitations under the License.
 
 
 
-#include "modules/canbus/vehicle/twizy/protocol/steeringangle_0c0h_c0.h"
+#include "modules/canbus/vehicle/twizy/protocol/steering_64.h"
 
 namespace apollo {
 namespace canbus {
@@ -25,10 +25,10 @@ namespace twizy {
 
 TwizyMessageManager::TwizyMessageManager() {
   // Control Messages
-  AddSendProtocolData<Steeringangle0c0hc0, true>();
+  AddSendProtocolData<Steering64, true>();
 
   // Report Messages
-  AddRecvProtocolData<Steeringangle0c0hc0, true>();
+  //AddRecvProtocolData<Steeringangle0c0hc0, true>();
 }
 
 TwizyMessageManager::~TwizyMessageManager() {}
