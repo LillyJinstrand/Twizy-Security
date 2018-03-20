@@ -12,11 +12,11 @@ package perception with SPARK_Mode is
 
    -- unit is meters
    subtype Distance is FloatingNumber range 0.0 .. 10000.0;
-   
+
    subtype Cartesian_Coordinate is FloatingNumber range -180.0 .. 180.0;
 
    -- angle from lidar (0 is straight forward)
-   type Angle is delta 0.1 range -360.0 .. 360.0;
+   subtype Angle is FloatingNumber range -360.0 .. 360.0;
    subtype Steering_angle is Angle range -90.0 .. 90.0;
    subtype Lidar_angle is Angle range -90.0 .. 90.0;
 
@@ -33,13 +33,13 @@ package perception with SPARK_Mode is
          Ang : Lidar_angle;
          Dist : Distance;
 		 Heading: Angle; -- heading in the world coordinate system
-      end record; 
+      end record;
 
    type Point is
 	  record
 		 X : Cartesian_Coordinate;
 		 Y : Cartesian_Coordinate;
-		 Z : Cartesian_Coordinate; 
+		 Z : Cartesian_Coordinate;
 	  end record;
 
    subtype LocalPoint is Point;
@@ -64,7 +64,8 @@ package perception with SPARK_Mode is
    -- Global => null;
 
    function breakingDistance (s : in Speed) return Distance with
-	 Pre => S > 0.0;
+	 Pre => S > 0.0,
+     Post => BreakingDistance'Result > 0.0;
 
    function GetDangerZone(S : in Speed; SteeringAngle : in Steering_Angle; Obj_Type : in Object_Type)
 	 return DangerZone with

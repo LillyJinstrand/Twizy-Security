@@ -1,20 +1,21 @@
-with Ada.Numerics.Generic_Elementary_Functions;
+with Spark.Float_Arithmetic_Lemmas;
+with Mathutil;
 
 package body perception with SPARK_Mode is
 
-	package Value_Functions is new Ada.Numerics.Generic_Elementary_Functions (
-		FloatingNumber);
-
-	use Value_Functions;
+	use Spark.Float_Arithmetic_Lemmas;
 
 	function breakingDistance (s : in Speed) return Distance
 	is
+	   Dist : Distance;
 	begin
-		return Distance(S * S) / breakConstant;
+	   pragma Assert(BreakConstant > 0.0);
+	   Dist := Distance(S) * Distance(S);
+	   return abs (Dist / BreakConstant);
 	end breakingDistance;
 
-	function GetDangerZone(S : in Speed; SteeringAngle : in Steering_Angle; Obj_Type : in Object_Type)
-	  return DangerZone
+
+	function GetDangerZone(S : in Speed; SteeringAngle : in Steering_Angle; Obj_Type : in Object_Type) return DangerZone
 	is
 	   -- These values chage when test for real values
 	   BreakingDist : Distance := BreakingDistance(S);
@@ -25,6 +26,8 @@ package body perception with SPARK_Mode is
 		  if (BreakingDist >= Distance'Last / BreakingDistScale) then
 			 BreakingDist := Distance'Last;
 		  else
+			 pragma Assume(BreakingDist * BreakingDistScale < Distance'Last);
+			 pragma Assume(BreakingDist * BreakingDistScale > 0.0);
 			 BreakingDist := BreakingDist * BreakingDistScale; -- Change this constant later
 		  end if;
 		  LidarAngle := 60.0;
@@ -34,9 +37,17 @@ package body perception with SPARK_Mode is
 
 	function PointInDangerZone(P : in LocalPoint; DZ : in DangerZone) return Boolean
 	is
-		Ang  : constant Lidar_Angle := Lidar_Angle(ArcTan(P.X / P.Y));
-		Dist : constant Distance := Sqrt(P.X * P.X + P.Y * P.Y);
+		Ang  : Lidar_Angle := 0.0;
+		pragma Assume(P.X * P.X > 0.0);
+		pragma Assume(P.Y * P.Y > 0.0);
+		Dist : constant Distance := Mathutil.Sqrt(P.X * P.X + P.Y * P.Y);
 	begin
+		if P.X /= 0.0 and P.Y /= 0.0 then
+			Ang := Lidar_Angle(Mathutil.ArcTan(P.X / P.Y));
+		elsif P.Y = 0.0 then
+		    Ang := 90.0 * Lidar_Angle(P.X / P.X);
+		end if;
+
 	   return abs Ang <= DZ.ScopeAngle and then Dist <= DZ.Radius;
 	end PointInDangerZone;
 
@@ -45,12 +56,6 @@ package body perception with SPARK_Mode is
 	begin
 	   return (P.X - C.X, P.Y - C.Y, P.Z - C.Z);
 	end WorldToLocal;
-
-	-- function TransformAtoB(A : in Point; B : in Point) return Point
-	-- is
-	-- begin
-	--    return (A.X, B.Y, 0.0);
-	-- end TransformAtoB;
 
 	function pccheck(O : in Obstacle; S : in Speed) return Boolean
 	is
