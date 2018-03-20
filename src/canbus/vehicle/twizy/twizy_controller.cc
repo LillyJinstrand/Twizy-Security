@@ -67,11 +67,20 @@ ErrorCode TwizyController::Init(const VehicleParameter& params,
   message_manager_->GetMutableProtocolDataById(Steering64::ID)
   );
   if (steering_64_ == nullptr) {
-    AERROR << "Steeringangle0c0hc0 does not exist in the TwizyMessageManager!";
+    AERROR << "Steering64 does not exist in the TwizyMessageManager!";
+	return ErrorCode::CANBUS_ERROR;
+  }  
+
+  gear_66_ = dynamic_cast<Gear66 *>(
+  message_manager_->GetMutableProtocolDataById(Gear66::ID)
+  );
+  if (gear_66_ == nullptr) {
+    AERROR << "Gear66 does not exist in the TwizyMessageManager!";
 	return ErrorCode::CANBUS_ERROR;
   }  
 
   can_sender_->AddMessage(Steering64::ID, steering_64_, false);
+  can_sender_->AddMessage(Gear66::ID, gear_66_, false);
 
   // need sleep to ensure all messages received
   AINFO << "TwizyController is initialized.";
@@ -133,7 +142,7 @@ Chassis TwizyController::chassis() {
   chassis_.set_steering_percentage(0);
   chassis_.set_steering_torque_nm(0);
   chassis_.set_parking_brake(false);
- 
+  
   return chassis_;
 }
 
@@ -150,7 +159,7 @@ ErrorCode TwizyController::EnableAutoMode() {
   return ErrorCode::OK;
   // ADD YOUR OWN CAR CHASSIS OPERATION
   steering_64_->set_enable();
-
+  
   can_sender_->Update();
   const int32_t flag =
       CHECK_RESPONSE_STEER_UNIT_FLAG | CHECK_RESPONSE_SPEED_UNIT_FLAG;
@@ -237,7 +246,7 @@ void TwizyController::Gear(Chassis::GearPosition gear_position) {
     return;
   }
   return;
-  /* ADD YOUR OWN CAR CHASSIS OPERATION
+  // ADD YOUR OWN CAR CHASSIS OPERATION
   switch (gear_position) {
     case Chassis::GEAR_NEUTRAL: {
       gear_66_->set_gear_neutral();
@@ -249,14 +258,6 @@ void TwizyController::Gear(Chassis::GearPosition gear_position) {
     }
     case Chassis::GEAR_DRIVE: {
       gear_66_->set_gear_drive();
-      break;
-    }
-    case Chassis::GEAR_PARKING: {
-      gear_66_->set_gear_park();
-      break;
-    }
-    case Chassis::GEAR_LOW: {
-      gear_66_->set_gear_low();
       break;
     }
     case Chassis::GEAR_NONE: {
@@ -273,7 +274,7 @@ void TwizyController::Gear(Chassis::GearPosition gear_position) {
       break;
     }
   }
-  */
+  
 }
 
 // brake with new acceleration
@@ -289,9 +290,8 @@ void TwizyController::Brake(double pedal) {
     AINFO << "The current drive mode does not need to set acceleration.";
     return;
   }
-  /* ADD YOUR OWN CAR CHASSIS OPERATION
-  brake_60_->set_pedal(pedal);
-  */
+  // ADD YOUR OWN CAR CHASSIS OPERATION
+  gear_66_->set_brake_pedalstatus();
 }
 
 // drive with old acceleration
