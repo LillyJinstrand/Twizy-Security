@@ -13,14 +13,23 @@ int main(){
 
     perception_obstacle_ada test_obstacle = {
         1,
+        true,
         {1, 2, 3},
+        true,
         0.5,
+        true,
         {1.0, 0.0, 0.0},
+        true,
         5,
+        true,
         2,
+        true,
         1,
+        true,
         4,
-        Type::VEHICLE
+        true,
+        Type::VEHICLE,
+        true
     };
 
     std::cout << "Calling update_perception()\n";

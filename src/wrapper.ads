@@ -1,10 +1,16 @@
 with perception_data_h;
 use perception_data_h;
+with localization_data_h;
+use localization_data_h;
+with Interface_utils;
+use Interface_utils;
 
 package Wrapper
     with SPARK_Mode
 is
     Initialized : Boolean := False;
+    Valid_pose_test : Boolean := False;
+    Valid_id_test : Boolean := False;
     -- Here should any initialzation code be run
     procedure Init 
     with 
@@ -27,9 +33,9 @@ is
         Convention => C,
         Export,
         External_Name => "update_perception_ada";
-    procedure Update_GPS
+    procedure Update_GPS(localization_estimate : in localization_status_ada)
     with
-        Global => Null,
+        Global => (Output => Valid_pose_test),
         Convention => C,
         Export,
         External_Name => "update_gps_ada";
