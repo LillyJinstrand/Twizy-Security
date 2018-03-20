@@ -6,7 +6,8 @@ ROS=ros
 #LIBGNAT=/usr/lib/gcc/x86_64-linux-gnu/7/adalib/libgnat.a
 LIBPATH=$(shell gcc --print-libgcc-file-name)
 LIBGNAT=$(shell dirname $(LIBPATH))/adalib/libgnat.a
-SPARKOBJECTS=gpsmodule.o perception.o speedmodule.o wrapper.o
+SPARKOBJECTS=$(OBJ)/gpsmodule.o $(OBJ)/perception.o $(OBJ)/speedmodule.o $(OBJ)/wrapper.o $(OBJ)/interface_utils.o
+SPARKALI=$(OBJ)/gpsmodule.ali $(OBJ)/perception.ali $(OBJ)/speedmodule.ali $(OBJ)/wrapper.ali $(OBJ)/interface_utils.ali
 ADASPEC=common_data_h.ads perception_data_h.ads prediction_data_h.ads localization_data_h.ads control_cmd_data_h.ads
 
 APOLLO=~/AutonomousTwizy/src/BSc2018/apollo-2.0.0
@@ -22,10 +23,10 @@ $(BIN)/security.a: $(OBJ)/lib.a $(OBJ)/security.o
 $(OBJ)/security.o: security.cc security.h
 	g++ -c -fpic -o $(OBJ)/security.o -Wall security.cc
 
-$(OBJ)/lib.a: $(ADASPEC) $(OBJ)/wrapper.o 
-	gnatbind -Lck -o ck.adb $(OBJ)/wrapper.ali
+$(OBJ)/lib.a: $(ADASPEC) $(SPARKOBJECTS) #$(OBJ)/wrapper.o 
+	gnatbind -Lck -o ck.adb $(SPARKALI)
 	gnatmake -D $(OBJ) ck.adb
-	ar cr $(OBJ)/lib.a $(OBJ)/ck.o $(OBJ)/wrapper.o
+	ar cr $(OBJ)/lib.a $(OBJ)/ck.o $(SPARKOBJECTS)
 	rm -f ck.ad*
 
 $(OBJ)/%.o: %.adb %.ads 

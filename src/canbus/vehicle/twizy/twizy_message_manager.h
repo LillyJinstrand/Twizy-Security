@@ -17,12 +17,15 @@ limitations under the License.
 #define MODULES_CANBUS_VEHICLE_TWIZY_TWIZY_MESSAGE_MANAGER_H_
 
 #include "modules/drivers/canbus/can_comm/message_manager.h"
+#include "modules/canbus/proto/chassis_detail.pb.h"
+
+using ::apollo::drivers::canbus::MessageManager;
 
 namespace apollo {
 namespace canbus {
 namespace twizy {
 
-class TwizyMessageManager : public MessageManager {
+class TwizyMessageManager : public MessageManager<::apollo::canbus::ChassisDetail> {
  public:
   TwizyMessageManager();
   virtual ~TwizyMessageManager();

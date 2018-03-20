@@ -29,8 +29,10 @@ TwizyVehicleFactory::CreateVehicleController() {
   return std::unique_ptr<VehicleController>(new twizy::TwizyController());
 }
 
-std::unique_ptr<MessageManager> TwizyVehicleFactory::CreateMessageManager() {
-  return std::unique_ptr<MessageManager>(new twizy::TwizyMessageManager());
+std::unique_ptr<MessageManager<::apollo::canbus::ChassisDetail>>
+TwizyVehicleFactory::CreateMessageManager() {
+  return std::unique_ptr<MessageManager<::apollo::canbus::ChassisDetail>>(
+	  new twizy::TwizyMessageManager());
 }
 
 }  // namespace canbus

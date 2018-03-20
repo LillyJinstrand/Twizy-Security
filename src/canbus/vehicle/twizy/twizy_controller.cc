@@ -17,7 +17,7 @@ limitations under the License.
 
 #include "modules/common/log.h"
 
-#include "modules/canbus/can_comm/can_sender.h"
+#include "modules/drivers/canbus/can_comm/can_sender.h"
 #include "modules/canbus/vehicle/twizy/twizy_message_manager.h"
 #include "modules/common/time/time.h"
 
@@ -36,8 +36,10 @@ const int32_t CHECK_RESPONSE_SPEED_UNIT_FLAG = 2;
 }
 
 ErrorCode TwizyController::Init(const VehicleParameter& params,
-                                  CanSender* const can_sender,
-                                  MessageManager* const message_manager) {
+                                  CanSender<::apollo::canbus::ChassisDetail>*
+									  const can_sender,
+                                  MessageManager<::apollo::canbus::ChassisDetail>*
+									  const message_manager) {
   if (is_initialized_) {
     AINFO << "TwizyController has already been initiated.";
     return ErrorCode::CANBUS_ERROR;
@@ -61,15 +63,15 @@ ErrorCode TwizyController::Init(const VehicleParameter& params,
   message_manager_ = message_manager;
 
   // sender part
-  steeringangle_0c0h_c0_ = dynamic_cast<Steeringangle0c0hc0 *>(
-  message_manager_->GetMutableProtocolDataById(Steeringangle0c0hc0::ID)
+  steering_64_ = dynamic_cast<Steering64 *>(
+  message_manager_->GetMutableProtocolDataById(Steering64::ID)
   );
-  if (Steeringangle_0c0h_c0_ == nullptr) {
+  if (steering_64_ == nullptr) {
     AERROR << "Steeringangle0c0hc0 does not exist in the TwizyMessageManager!";
 	return ErrorCode::CANBUS_ERROR;
   }  
 
-  can_sender_->AddMessage(Steeringangle0c0hc0::ID, Steeringangle_0c0h_c0_, false);
+  can_sender_->AddMessage(Steering64::ID, steering_64_, false);
 
   // need sleep to ensure all messages received
   AINFO << "TwizyController is initialized.";
@@ -108,7 +110,7 @@ Chassis TwizyController::chassis() {
   chassis_.Clear();
 
   ChassisDetail chassis_detail;
-  message_manager_->GetChassisDetail(&chassis_detail);
+  message_manager_->GetSensorData(&chassis_detail);
 
   // 21, 22, previously 1, 2
   if (driving_mode() == Chassis::EMERGENCY_MODE) {
@@ -147,7 +149,7 @@ ErrorCode TwizyController::EnableAutoMode() {
   }
   return ErrorCode::OK;
   // ADD YOUR OWN CAR CHASSIS OPERATION
-  steeringangle_0c0h_c0_->set_enable();
+  steering_64_->set_enable();
 
   can_sender_->Update();
   const int32_t flag =
@@ -318,7 +320,7 @@ void TwizyController::Steer(double angle) {
   const double real_angle = params_.max_steer_angle() * angle / 100.0;
   // reverse sign
   // ADD YOUR OWN CAR CHASSIS OPERATION
-  steeringangle_0c0h_c0_->set_steering_angle(real_angle)->set_steering_angle_speed(200);
+  steering_64_->set_steering_angle(real_angle)->set_steering_angle_speed(200);
   
 }
 

@@ -2,6 +2,7 @@
 #define SECURITY_H
 
 #include "perception_data.h"
+#include "localization_data.h"
 
 extern bool initialized;
 //Sets up internal state. Must be called before any other calls
