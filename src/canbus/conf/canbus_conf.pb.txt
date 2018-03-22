@@ -1,6 +1,6 @@
 vehicle_parameter {
-  brand: LINCOLN_MKZ
-  max_steer_angle: 470.0
+  brand: RENAULT_TWIZY
+  max_steer_angle: 40.0
   max_steer_angle_spd: 500.0
   min_steer_angle_spd: 100.0
   max_acc: 5.0
@@ -10,11 +10,6 @@ vehicle_parameter {
   driving_mode: COMPLETE_AUTO_DRIVE
 }
 
-vehicle_parameter {
-  brand: RENAULT_TWIZY
-  driving_mode: COMPLETE_AUTO_DRIVE
-  max_steer_angle: 40.0
-}
 can_card_parameter {
   brand: ESD_CAN
   type: PCI_CARD

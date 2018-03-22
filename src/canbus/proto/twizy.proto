@@ -2,6 +2,8 @@ syntax = "proto2";
 
 package apollo.canbus;
 
+import "modules/canbus/proto/chassis.proto";
+
 message Steeringangle_0c0h_c0 {
 // Report Message
   // [] [0|0]
@@ -35,7 +37,7 @@ message Gear_and_breakpedal_59b {
 }
 
 message Twizy {
-  optional Steeringangle_0c0h_c0 steeringangle_0c0h_c0 = 1; // report message
-  optional Currentspeed_599 currentspeed_599 = 2; // report message
-  optional Gear_and_breakpedal_59b gear_and_breakpedal_59b = 3; // report message
+  optional Steeringangle_0c0h_c0 steering_angle = 1; // report message
+  optional Currentspeed_599 curr_speed = 2; // report message
+  optional Gear_and_breakpedal_59b gear_and_pedal = 3; // report message
 }
