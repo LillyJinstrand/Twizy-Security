@@ -32,12 +32,12 @@ Steeringangle0c0hc0::Steeringangle0c0hc0() {}
 const int32_t Steeringangle0c0hc0::ID = 0xC0;
 
 void Steeringangle0c0hc0::Parse(const std::uint8_t* bytes, int32_t length,
-                         Twizy* chassis) const {
-  chassis->mutable_steeringangle_0c0h_c0()->set_sas_chcksum(sas_chcksum(bytes, length));
-  chassis->mutable_steeringangle_0c0h_c0()->set_msg_count(msg_count(bytes, length));
-  chassis->mutable_steeringangle_0c0h_c0()->set_lws_stat(lws_stat(bytes, length));
-  chassis->mutable_steeringangle_0c0h_c0()->set_lws_speed(lws_speed(bytes, length));
-  chassis->mutable_steeringangle_0c0h_c0()->set_lws(lws(bytes, length));
+                         ChassisDetail* chassis) const {
+  chassis->mutable_twizy()->mutable_steering_angle()->set_sas_chcksum(sas_chcksum(bytes, length));
+  chassis->mutable_twizy()->mutable_steering_angle()->set_msg_count(msg_count(bytes, length));
+  chassis->mutable_twizy()->mutable_steering_angle()->set_lws_stat(lws_stat(bytes, length));
+  chassis->mutable_twizy()->mutable_steering_angle()->set_lws_speed(lws_speed(bytes, length));
+  chassis->mutable_twizy()->mutable_steering_angle()->set_lws(lws(bytes, length));
 }
 
 // config detail: {'name': 'sas_chcksum', 'offset': 0.0, 'precision': 1.0, 'len': 4, 'is_signed_var': False, 'physical_range': '[0|0]', 'bit': 36, 'type': 'int', 'order': 'intel', 'physical_unit': ''}

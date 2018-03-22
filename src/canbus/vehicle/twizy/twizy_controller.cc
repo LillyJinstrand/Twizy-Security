@@ -130,18 +130,12 @@ Chassis TwizyController::chassis() {
   chassis_.set_error_code(chassis_error_code());
 
   // 3
-  chassis_.set_engine_started(true);
   // ADD YOUR OWN CAR CHASSIS OPERATION
   // We assume that car isn't in motion when engine starts.
-  chassis_.set_engine_rpm(0);
-  chassis_.set_speed_mps(0);
-  chassis_.set_odometer_m(0);
-  chassis_.set_fuel_range_m(0);
-  chassis_.set_throttle_percentage(0);
-  chassis_.set_brake_percentage(0);
+  chassis_.set_speed_mps(chassis_detail.twizy().curr_speed().curr_speed());
   chassis_.set_steering_percentage(0);
   chassis_.set_steering_torque_nm(0);
-  chassis_.set_parking_brake(false);
+  chassis_.set_parking_brake(true);
   
   return chassis_;
 }

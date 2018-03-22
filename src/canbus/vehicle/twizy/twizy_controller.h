@@ -30,7 +30,6 @@
 #include "modules/control/proto/control_cmd.pb.h"
 #include "modules/canbus/vehicle/twizy/protocol/steering_64.h"
 #include "modules/canbus/vehicle/twizy/protocol/gear_66.h"
-#include "modules/canbus/proto/twizy.pb.h"
 
 
 namespace apollo {
@@ -114,8 +113,6 @@ class TwizyController final : public VehicleController {
   Steering64 *steering_64_ = nullptr;
   Gear66 *gear_66_ = nullptr;
 
-  Twizy twizy_;
-  
   CanSender<::apollo::canbus::ChassisDetail>* can_sender_;
   Chassis chassis_;
   std::unique_ptr<std::thread> thread_;

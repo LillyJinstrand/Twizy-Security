@@ -19,7 +19,6 @@
 
 #include "modules/drivers/canbus/can_comm/protocol_data.h"
 #include "modules/canbus/proto/chassis_detail.pb.h"
-#include "modules/canbus/proto/twizy.pb.h"
 
 namespace apollo {
 namespace canbus {
@@ -31,7 +30,7 @@ class Steeringangle0c0hc0 : public ::apollo::drivers::canbus::ProtocolData<
   static const int32_t ID;
   Steeringangle0c0hc0();
   void Parse(const std::uint8_t* bytes, int32_t length,
-                     Twizy* chassis) const;
+                     ChassisDetail* chassis) const;
 
  private:
 
