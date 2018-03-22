@@ -19,18 +19,19 @@
 
 #include "modules/drivers/canbus/can_comm/protocol_data.h"
 #include "modules/canbus/proto/chassis_detail.pb.h"
+#include "modules/canbus/proto/twizy.pb.h"
 
 namespace apollo {
 namespace canbus {
 namespace twizy {
 
 class Steeringangle0c0hc0 : public ::apollo::drivers::canbus::ProtocolData<
-							 ::apollo::canbus::ChassisDetail> {
+							::apollo::canbus::ChassisDetail> {
  public:
   static const int32_t ID;
   Steeringangle0c0hc0();
   void Parse(const std::uint8_t* bytes, int32_t length,
-                     ChassisDetail* chassis) const override;
+                     Twizy* chassis) const;
 
  private:
 
@@ -48,10 +49,6 @@ class Steeringangle0c0hc0 : public ::apollo::drivers::canbus::ProtocolData<
 
   // config detail: {'name': 'LWS', 'offset': 0.0, 'precision': 0.1, 'len': 16, 'is_signed_var': True, 'physical_range': '[-40|40]', 'bit': 0, 'type': 'double', 'order': 'intel', 'physical_unit': '\xb0'}
   double lws(const std::uint8_t* bytes, const int32_t length) const;
-
-  // TODO: add additional variables that are used.
-  private:
-	  double steering_angle_ = 0.0;
 };
 
 }  // namespace twizy

@@ -26,16 +26,18 @@ namespace apollo {
 namespace canbus {
 namespace twizy {
 
+using ::apollo::drivers::canbus::Byte;
+
 Steeringangle0c0hc0::Steeringangle0c0hc0() {}
 const int32_t Steeringangle0c0hc0::ID = 0xC0;
 
 void Steeringangle0c0hc0::Parse(const std::uint8_t* bytes, int32_t length,
-                         ChassisDetail* chassis) const {
-  chassis->mutable_twizy()->mutable_steeringangle_0c0h_c0()->set_sas_chcksum(sas_chcksum(bytes, length));
-  chassis->mutable_twizy()->mutable_steeringangle_0c0h_c0()->set_msg_count(msg_count(bytes, length));
-  chassis->mutable_twizy()->mutable_steeringangle_0c0h_c0()->set_lws_stat(lws_stat(bytes, length));
-  chassis->mutable_twizy()->mutable_steeringangle_0c0h_c0()->set_lws_speed(lws_speed(bytes, length));
-  chassis->mutable_twizy()->mutable_steeringangle_0c0h_c0()->set_lws(lws(bytes, length));
+                         Twizy* chassis) const {
+  chassis->mutable_steeringangle_0c0h_c0()->set_sas_chcksum(sas_chcksum(bytes, length));
+  chassis->mutable_steeringangle_0c0h_c0()->set_msg_count(msg_count(bytes, length));
+  chassis->mutable_steeringangle_0c0h_c0()->set_lws_stat(lws_stat(bytes, length));
+  chassis->mutable_steeringangle_0c0h_c0()->set_lws_speed(lws_speed(bytes, length));
+  chassis->mutable_steeringangle_0c0h_c0()->set_lws(lws(bytes, length));
 }
 
 // config detail: {'name': 'sas_chcksum', 'offset': 0.0, 'precision': 1.0, 'len': 4, 'is_signed_var': False, 'physical_range': '[0|0]', 'bit': 36, 'type': 'int', 'order': 'intel', 'physical_unit': ''}
@@ -75,47 +77,20 @@ double Steeringangle0c0hc0::lws_speed(const std::uint8_t* bytes, int32_t length)
 }
 
 // config detail: {'name': 'lws', 'offset': 0.0, 'precision': 0.1, 'len': 16, 'is_signed_var': True, 'physical_range': '[-40|40]', 'bit': 0, 'type': 'double', 'order': 'intel', 'physical_unit': '\xb0'}
-double Steeringangle0c0hc0::lws(const std::uint8_t* bytes, double angle) const {
-  angle = ProtocolData::BoundedValue(-40.0, 40.0, angle);
+double Steeringangle0c0hc0::lws(const std::uint8_t* bytes, int32_t length) const {
+  Byte t0(bytes + 1);
+  int32_t x = t0.get_byte(0, 8);
 
-  Byte frame_high(bytes + 1);
-  // TODO: ask steering if + is left or right!!!!§
-  // for now assume that left(+) and right(-). write 255 for -, 0 for +.
-  if (angle < 0)
-    frame_high.set_value(0xFF);
-  else
-    frame_high.set_value(0x00);
+  Byte t1(bytes + 0);
+  int32_t t = t1.get_byte(0, 8);
+  x <<= 8;
+  x |= t;
 
-  // 
-  int32_t a = angle / 0.100000;
-  if (a < 0)
-    a += 0x10000;
-   
-  std::uint8_t t = 0;
-  t = a & 0xFF;
-  Byte frame_low(bytes + 0);
-  frame_low.set_value(t, 0, 8);
-  
-  a <<= 16;
-  a >>= 16;
+  x <<= 16;
+  x >>= 16;
 
-  double ret = a * 0.100000;
+  double ret = x * 0.100000;
   return ret;
-}
-
-Steeringangle0c0hc0 *Steeringangle0c0hc0::set_steering_angle(double angle) {
-	steering_angle_ = angle;
-	return this;
-}
-
-// TODO: Add additional setter functions for what we need.
-void Steeringangle0c0hc0::UpdateData(uint8_t *data) {
-	set_steering_angle(data, steering_angle_)
-}
-
-// TODO: add additional variables.
-void Steeringangle0c0hc0::Reset() {
-	steering_angle_ = 0.0;
 }
 }  // namespace twizy
 }  // namespace canbus
