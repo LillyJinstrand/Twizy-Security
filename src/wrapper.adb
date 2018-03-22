@@ -17,14 +17,16 @@ is
     is
     begin
         Valid_id_test := Convert_C_Bool(perception_data.valid_id);
-        null;
     end Update_Perception;
 
     procedure Update_GPS 
-        (localization_estimate : in localization_status_ada)
+        (localization_estimate : in localization_estimate_ada)
     is
     begin
-        -- Valid_pose_test := localization_estimate.valid_pose;
+        if Convert_C_Bool(localization_estimate.valid_pose) then
+            null;
+            --Safe := gpsModule.gpstest(localization_estimate.pose.position.x, localization_estimate.pose.position.y);
+        end if;
         null;
     end Update_GPS;
 
@@ -36,7 +38,7 @@ is
     function Is_Safe return Boolean
     is
     begin
-        return True;
+        return Safe;
     end Is_Safe;
 
 begin
