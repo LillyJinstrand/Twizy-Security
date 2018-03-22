@@ -37,10 +37,12 @@ package body perception with SPARK_Mode is
 	function PointInDangerZone(P : in LocalPoint; DZ : in DangerZone) return Boolean
 	is
 		Ang  : Lidar_Angle := 0.0;
-		pragma Assume(P.X * P.X > 0.0);
-		pragma Assume(P.Y * P.Y > 0.0);
-		pragma Assume(Distance(P.X * P.X) + Distance(P.Y * P.Y) > 0.0);
-		Dist : constant Distance := Mathutil.Sqrt(Distance(P.X * P.X) + Distance(P.Y * P.Y));
+
+		pragma Assume(P.X * P.X + P.Y * P.Y > 0.0);
+		pragma Assume(P.X * P.X + P.Y * P.Y < 6000.0);
+		Dist2 : constant Distance := Distance(P.X * P.X + P.Y * P.Y);
+		pragma Assume(Dist2 > 0.0);
+		Dist : constant Distance := Mathutil.Sqrt(Dist2);
 	begin
 	    if Dist > DZ.Radius then
 		   return False;

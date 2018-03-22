@@ -48,8 +48,9 @@ package perception with SPARK_Mode is
    breakConstant : constant Distance := 150.0;
 
    -- Checks if a point is inside a danger zone
+   -- Look at objects inside of a 100x100 m square around the car
    function PointInDangerZone(P : in LocalPoint; DZ : in DangerZone) return Boolean with
-	 Pre => P.Y > 0.0 and abs P.X < 80.0 and abs P.Y < 80.0,
+	 Pre => P.Y > 0.0 and abs P.X < 50.0 and abs P.Y < 50.0,
 	 Global => null;
 
    -- Transforms a point P in the world space to the local space
