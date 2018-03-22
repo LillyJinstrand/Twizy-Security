@@ -64,11 +64,12 @@ void InitDefaults();
 }  // namespace protobuf_modules_2fcanbus_2fproto_2fvehicle_5fparameter_2eproto
 
 enum VehicleParameter_VehicleBrand {
-  VehicleParameter_VehicleBrand_LINCOLN_MKZ = 0
+  VehicleParameter_VehicleBrand_LINCOLN_MKZ = 0,
+  VehicleParameter_VehicleBrand_RENAULT_TWIZY = 1
 };
 bool VehicleParameter_VehicleBrand_IsValid(int value);
 const VehicleParameter_VehicleBrand VehicleParameter_VehicleBrand_VehicleBrand_MIN = VehicleParameter_VehicleBrand_LINCOLN_MKZ;
-const VehicleParameter_VehicleBrand VehicleParameter_VehicleBrand_VehicleBrand_MAX = VehicleParameter_VehicleBrand_LINCOLN_MKZ;
+const VehicleParameter_VehicleBrand VehicleParameter_VehicleBrand_VehicleBrand_MAX = VehicleParameter_VehicleBrand_RENAULT_TWIZY;
 const int VehicleParameter_VehicleBrand_VehicleBrand_ARRAYSIZE = VehicleParameter_VehicleBrand_VehicleBrand_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* VehicleParameter_VehicleBrand_descriptor();
@@ -156,6 +157,8 @@ class VehicleParameter : public ::google::protobuf::Message /* @@protoc_insertio
   typedef VehicleParameter_VehicleBrand VehicleBrand;
   static const VehicleBrand LINCOLN_MKZ =
     VehicleParameter_VehicleBrand_LINCOLN_MKZ;
+  static const VehicleBrand RENAULT_TWIZY =
+    VehicleParameter_VehicleBrand_RENAULT_TWIZY;
   static inline bool VehicleBrand_IsValid(int value) {
     return VehicleParameter_VehicleBrand_IsValid(value);
   }

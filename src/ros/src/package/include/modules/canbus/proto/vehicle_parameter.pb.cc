@@ -127,7 +127,7 @@ void AddDescriptorsImpl() {
   static const char descriptor[] = {
       "\n,modules/canbus/proto/vehicle_parameter"
       ".proto\022\rapollo.canbus\032\"modules/canbus/pr"
-      "oto/chassis.proto\"\366\002\n\020VehicleParameter\022;"
+      "oto/chassis.proto\"\211\003\n\020VehicleParameter\022;"
       "\n\005brand\030\001 \001(\0162,.apollo.canbus.VehiclePar"
       "ameter.VehicleBrand\022\027\n\017max_steer_angle\030\002"
       " \001(\001\022\033\n\023max_steer_angle_spd\030\003 \001(\001\022\033\n\023min"
@@ -136,10 +136,11 @@ void AddDescriptorsImpl() {
       " \001(\001\022\030\n\020max_engine_pedal\030\010 \001(\001\022\037\n\027max_en"
       "able_fail_attempt\030\t \001(\005\0228\n\014driving_mode\030"
       "\n \001(\0162\".apollo.canbus.Chassis.DrivingMod"
-      "e\"\037\n\014VehicleBrand\022\017\n\013LINCOLN_MKZ\020\000"
+      "e\"2\n\014VehicleBrand\022\017\n\013LINCOLN_MKZ\020\000\022\021\n\rRE"
+      "NAULT_TWIZY\020\001"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 474);
+      descriptor, 493);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "modules/canbus/proto/vehicle_parameter.proto", &protobuf_RegisterTypes);
   ::apollo::canbus::protobuf_modules_2fcanbus_2fproto_2fchassis_2eproto::AddDescriptors();
@@ -166,6 +167,7 @@ const ::google::protobuf::EnumDescriptor* VehicleParameter_VehicleBrand_descript
 bool VehicleParameter_VehicleBrand_IsValid(int value) {
   switch (value) {
     case 0:
+    case 1:
       return true;
     default:
       return false;
@@ -174,6 +176,7 @@ bool VehicleParameter_VehicleBrand_IsValid(int value) {
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const VehicleParameter_VehicleBrand VehicleParameter::LINCOLN_MKZ;
+const VehicleParameter_VehicleBrand VehicleParameter::RENAULT_TWIZY;
 const VehicleParameter_VehicleBrand VehicleParameter::VehicleBrand_MIN;
 const VehicleParameter_VehicleBrand VehicleParameter::VehicleBrand_MAX;
 const int VehicleParameter::VehicleBrand_ARRAYSIZE;
