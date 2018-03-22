@@ -7,8 +7,9 @@ int main(){
     init();
     std::cout << "isInitialized returned: " << isInitialized() << "\n";
 
+    bool result;
     std::cout << "Calling is_safe()\n";
-    bool result = is_safe();
+    result = is_safe();
     std::cout << "is_safe returned: " << result << "\n";
 
     perception_obstacle_ada test_obstacle = {
@@ -35,6 +36,9 @@ int main(){
     std::cout << "Calling update_perception()\n";
     update_perception(test_obstacle);
     
+    std::cout << "Calling is_safe()\n";
+    result = is_safe();
+    std::cout << "is_safe returned: " << result << "\n";
 
     return 0;
 }

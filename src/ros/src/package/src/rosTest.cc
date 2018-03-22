@@ -56,7 +56,7 @@ void perceptionCallback(const apollo::perception::PerceptionObstacles& msg)
        
 
     }
-    ROS_INFO("%s", ss.str().c_str());
+    //ROS_INFO("%s", ss.str().c_str());
 }
 
 void predictionCallback(const apollo::prediction::PredictionObstacles& msg)
@@ -90,7 +90,12 @@ void canbusCallback(const std_msgs::String::ConstPtr& msg)
 
 void localizationCallback(const apollo::localization::LocalizationEstimate& msg)
 {
-    //ROS_INFO("Recived localization callback");
+    std::stringstream ss;
+    ss << "Localization:\nX: " << msg.pose().position().x();
+    ss << " Y: " << msg.pose().position().y();
+    ss << " Z: " << msg.pose().position().z();
+    ss << "\n";
+    ROS_INFO("%s", ss.str().c_str());
   /* update_gps(); */
 }
 

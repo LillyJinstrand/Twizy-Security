@@ -7,7 +7,7 @@ extern "C" {
     void init_ada();
     char is_initialized_ada();
 
-    void update_perception_ada();
+    void update_perception_ada(perception_obstacle_ada);
     void update_gps_ada();
     void update_speed_ada();
 
@@ -27,7 +27,7 @@ bool isInitialized(){
 }
 
 void update_perception(perception_obstacle_ada in){
-    update_perception_ada();
+    update_perception_ada(in);
 }
 void update_gps(){
     update_gps_ada();
