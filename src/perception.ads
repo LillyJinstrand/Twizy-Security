@@ -18,7 +18,7 @@ package perception with SPARK_Mode is
    -- angle from lidar (0 is straight forward)
    subtype Angle is FloatingNumber range -360.0 .. 360.0;
    subtype Steering_angle is Angle range -90.0 .. 90.0;
-   subtype Lidar_angle is Angle range -90.0 .. 90.0;
+   subtype Lidar_angle is Angle range -180.0 .. 180.0;
 
    type DangerZone is
 	  record
