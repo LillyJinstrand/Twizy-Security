@@ -80,12 +80,12 @@ void controlCallback(const apollo::control::ControlCommand& msg)
   */
 }
 
-void canbusCallback(const std_msgs::String::ConstPtr& msg)
+void canbusCallback(const apollo::canbus::Chassis& msg)
 {
-  //ROS_INFO("I heard from canbus: [%s]", msg->data.c_str());
-  /* Filter out speed from canbus data
-  update_speed(); 
-  */
+    ROS_INFO("Canbus message recived");
+    /* Filter out speed from canbus data
+    update_speed(); 
+    */
 }
 
 void localizationCallback(const apollo::localization::LocalizationEstimate& msg)
