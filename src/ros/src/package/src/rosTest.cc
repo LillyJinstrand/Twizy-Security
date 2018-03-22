@@ -82,7 +82,14 @@ void controlCallback(const apollo::control::ControlCommand& msg)
 
 void canbusCallback(const apollo::canbus::Chassis& msg)
 {
-    ROS_INFO("Canbus message recived");
+    std::stringstream ss;
+    ss << "Canbus message:\nSpeed: ";
+    ss << msg.speed_mps() << "m/s\n";
+    ss << "Time sent: ";
+    ss << msg.header().timestamp_sec();
+    ss << " s\n";
+
+    //ROS_INFO("%s", ss.str().c_str());
     /* Filter out speed from canbus data
     update_speed(); 
     */
@@ -95,7 +102,7 @@ void localizationCallback(const apollo::localization::LocalizationEstimate& msg)
     ss << " Y: " << msg.pose().position().y();
     ss << " Z: " << msg.pose().position().z();
     ss << "\n";
-    ROS_INFO("%s", ss.str().c_str());
+    //ROS_INFO("%s", ss.str().c_str());
   /* update_gps(); */
 }
 
@@ -107,7 +114,7 @@ int main(int argc, char **argv)
   ros::Subscriber perception = n.subscribe("/apollo/perception/obstacles", 1000, perceptionCallback);
   ros::Subscriber prediction = n.subscribe("/apollo/prediction", 1000, predictionCallback);
   ros::Subscriber control = n.subscribe("/apollo/control", 1000, controlCallback);
-  ros::Subscriber canbus = n.subscribe("canbus", 1000, canbusCallback);
+  ros::Subscriber canbus = n.subscribe("/apollo/canbus/chassis", 1000, canbusCallback);
   ros::Subscriber localization = n.subscribe("/apollo/localization/pose", 1000, localizationCallback);
   
   ros::Publisher canbus_pub = n.advertise<std_msgs::String>("canbus", 1000);
