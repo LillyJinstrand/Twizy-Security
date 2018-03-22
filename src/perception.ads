@@ -11,9 +11,9 @@ package perception with SPARK_Mode is
    type Object_type is (UNKNOWN, DYNAMIC, STATIC, PEDESTRIAN, BICYCLE, VEHICLE);
 
    -- unit is meters
-   subtype Distance is FloatingNumber range 0.0 .. 10000.0;
+   subtype Distance is FloatingNumber range 0.0 .. 100000.0;
 
-   subtype Cartesian_Coordinate is FloatingNumber range -180.0 .. 180.0;
+   subtype Cartesian_Coordinate is FloatingNumber range -1000.0 .. 1000.0;
 
    -- angle from lidar (0 is straight forward)
    subtype Angle is FloatingNumber range -360.0 .. 360.0;
@@ -49,7 +49,7 @@ package perception with SPARK_Mode is
 
    -- Checks if a point is inside a danger zone
    function PointInDangerZone(P : in LocalPoint; DZ : in DangerZone) return Boolean with
-	 Pre => P.Y > 0.0,
+	 Pre => P.Y > 0.0 and abs P.X < 80.0 and abs P.Y < 80.0,
 	 Global => null;
 
    -- Transforms a point P in the world space to the local space
@@ -65,7 +65,7 @@ package perception with SPARK_Mode is
 
    function breakingDistance (s : in Speed) return Distance with
 	 Pre => S > 0.0,
-     Post => BreakingDistance'Result > 0.0;
+     Post => BreakingDistance'Result >= 0.0;
 
    function GetDangerZone(S : in Speed; SteeringAngle : in Steering_Angle; Obj_Type : in Object_Type)
 	 return DangerZone with
