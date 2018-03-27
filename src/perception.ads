@@ -44,6 +44,17 @@ package perception with SPARK_Mode is
 
    subtype LocalPoint is Point;
 
+   -- for now, lines ignore the Z coordinate, we will filter out the height of objects
+   -- before we get there
+   type Line is
+	  record
+		 P : LocalPoint;
+		 Q : LocalPoint;
+	  end record;
+
+   -- Counter-clockwise, clockwise, co-linear
+   type Orientation is (CCW, CW, CL);
+
    scopeangle : constant Lidar_angle := 45.0;
    breakConstant : constant Distance := 150.0;
 
@@ -72,6 +83,16 @@ package perception with SPARK_Mode is
 	 return DangerZone with
 	 Pre => S > 0.0,
      Global => null;
+
+   function GetDZEdge(DZ : DangerZone; Left : Boolean) return Line with
+	 Global => null;
+
+   function GetOrientation(P1 : LocalPoint; P2 : LocalPoint; P3 : LocalPoint) return Orientation
+	 with
+	 Global => null;
+
+   function IsIntersecting(L1 : Line; L2 : Line) return Boolean
+	 with Global => null;
 
    function pccheck(O : in Obstacle; S : in Speed) return Boolean with
 	 Pre => S > 0.0,

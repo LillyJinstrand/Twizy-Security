@@ -1,5 +1,7 @@
 --with Spark.Float_Arithmetic_Lemmas;
 with Mathutil;
+with Ada.Float_Text_IO; use Ada.Float_Text_IO;
+with Ada.Text_IO;
 
 package body perception with SPARK_Mode is
 
@@ -48,13 +50,13 @@ package body perception with SPARK_Mode is
 		   return False;
 		else
 			if P.X /= 0.0 and P.Y /= 0.0 then
-				Ang := Lidar_Angle(Mathutil.ArcTan(P.Y, P.X));
+				Ang := Lidar_Angle(Mathutil.ArcTan(P.X, P.Y));
 			elsif P.Y = 0.0 then
 			    pragma Assume(P.X / P.X = 1.0 or P.X / P.X = -1.0);
 				Ang := 90.0 * Lidar_Angle(P.X / P.X);
 			end if;
 	   end if;
-	   return abs Ang <= DZ.ScopeAngle;
+	   return (abs Ang) <= DZ.ScopeAngle;
 	end PointInDangerZone;
 
 	-- this fails proofs but will need to be rewritten anyway
@@ -63,6 +65,48 @@ package body perception with SPARK_Mode is
 	begin
 	   return (P.X - C.X, P.Y - C.Y, P.Z - C.Z);
 	end WorldToLocal;
+
+	function GetDZEdge(DZ : DangerZone; Left : Boolean) return Line
+	is
+	   Q : LocalPoint := (Mathutil.Cos(DZ.ScopeAngle) *  DZ.Radius, Mathutil.Sin(DZ.ScopeAngle) *  DZ.Radius, 0.0);
+	begin
+	   if (Left) then
+		  Q.X := (-Q.X);
+	   end if;
+	   return (P => (0.0, 0.0, 0.0), Q => Q);
+	end GetDZEdge;
+
+	function GetOrientation(P1 : LocalPoint; P2 : LocalPoint; P3 : LocalPoint) return Orientation
+	is
+	   Val : constant Cartesian_Coordinate := (P2.Y - P1.Y) * (P3.X - P2.X) -
+		 (P3.Y - P2.Y) * (P2.X - P1.X);
+	begin
+	   if Val = 0.0 then
+		  return CL;
+	   elsif Val < 0.0 then
+		  return CCW;
+	   else
+		  return CW;
+	   end if;
+	end GetOrientation;
+
+	-- https://www.geeksforgeeks.org/check-if-two-given-line-segments-intersect/
+	function IsIntersecting(L1 : Line; L2 : Line) return Boolean
+	is
+	   O1 : constant Orientation := GetOrientation(L1.P, L1.Q, L2.P);
+	   O2 : constant Orientation := GetOrientation(L1.P, L1.Q, L2.Q);
+	   O3 : constant Orientation := GetOrientation(L2.P, L2.Q, L1.P);
+	   O4 : constant Orientation := GetOrientation(L2.P, L2.Q, L1.Q);
+	begin
+	   -- general case
+	   if O1 /= O2 and then O3 /= O4 then
+		  return True;
+	   end if;
+	   -- we ignore the special case with colinear orientations since
+	   --  that case is covered by the point in dz (we have a point on
+	   --  the edge
+	   return False;
+	end IsIntersecting;
 
 	function pccheck(O : in Obstacle; S : in Speed) return Boolean
 	is
