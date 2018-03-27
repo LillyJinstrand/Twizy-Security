@@ -7,6 +7,8 @@ perception_obstacle_ada convert_obstacle(const apollo::perception::PerceptionObs
         ada_obs.id = obs.id();
     }
 
+    if((ada_obs.valid_velocity = obs.has_velocity()))
+        ada_obs.velocity = convert_point(obs.velocity());
     
 
     if((ada_obs.valid_velocity = obs.has_velocity())){

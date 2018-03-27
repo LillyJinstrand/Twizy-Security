@@ -25,7 +25,6 @@ int max_polygons = 0;
 
 void perceptionCallback(const apollo::perception::PerceptionObstacles& msg)
 {
-
     std::stringstream ss;
     ss << "\n" << msg.perception_obstacle_size() << " Obstacles:\n";
     for(int i=0; i < msg.perception_obstacle_size(); i++){

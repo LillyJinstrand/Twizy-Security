@@ -7,10 +7,12 @@ trajectory_ada convert_trajectory(const apollo::prediction::Trajectory& t){
     if((out.valid_probability = t.has_probability()))
         out.probability = t.probability();
     out.trajectory_points_size = 0;
+    
     for(int i=0; i < t.trajectory_point_size() && i < MAX_NUMBER_POINTS; i++){
         out.trajectory_points[i] = convert_trajectory_point(t.trajectory_point(i));
         out.trajectory_points_size++;
     }
+    
 
     return out;
 }
@@ -35,3 +37,4 @@ prediction_obstacle_ada convert_prediction_obstacle(const apollo::prediction::Pr
 
     return out;
 }
+

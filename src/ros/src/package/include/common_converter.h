@@ -8,6 +8,8 @@
 #include "modules/common/proto/pnc_point.pb.h"
 #include "modules/prediction/proto/prediction_obstacle.pb.h"
 
+bool simple_test();
+
 point_enu_ada convert_point_enu(const apollo::common::PointENU&);
 
 quaternion_ada convert_quaternion(const apollo::common::Quaternion&);

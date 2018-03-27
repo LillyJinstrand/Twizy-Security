@@ -70,4 +70,14 @@ target_link_libraries(rosTest
     ${PROTOBUF_LIBRARIES}
     
 )
+add_executable(converterTest src/converter_test.cc)
+target_link_libraries(converterTest
+    ${catkin_LIBRARIES}
+    apollo
+    converters
+    ${CMAKE_CURRENT_LIST_DIR}/lib/security.a
+    ${PROTOBUF_LIBRARIES}
+)
+
 add_dependencies(rosTest package_generate_message_cpp)
+add_dependencies(converterTest rosTest)

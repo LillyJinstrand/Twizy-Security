@@ -1,5 +1,9 @@
 #include "common_converter.h"
 
+bool simple_test(){
+    return true;
+}
+
 point_enu_ada convert_point_enu(const apollo::common::PointENU& p){
     point_enu_ada out = {}; 
     if((out.valid_x = p.has_x()))
@@ -52,7 +56,7 @@ path_point_ada convert_path_point(const apollo::common::PathPoint& p){
 trajectory_point_ada convert_trajectory_point(const apollo::common::TrajectoryPoint& p){
     trajectory_point_ada out = {};
     if((out.valid_point = p.has_path_point()))
-        out.path_point = convert_path_point(p.path_point());
+        //out.path_point = convert_path_point(p.path_point());
     if((out.valid_v = p.has_v()))
         out.v = p.v();
     if((out.valid_a = p.has_a()))
