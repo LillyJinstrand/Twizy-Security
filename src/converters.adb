@@ -3,6 +3,8 @@ with Interfaces.C.Extensions;
 with Ada.Numerics.Generic_Elementary_Functions;
 
 
+with speedModule; use speedModule;
+
 with gpsModule; use gpsModule;
 
 
@@ -12,30 +14,30 @@ package body converters with SPARK_Mode is
    
    
    testb : Double := 3.0;
-   testrov : Lat := 30.0;
+   testlat : Lat := 30.0;
+   
+   function double_to_speed (d : double) return speed
+     
+   is temp : Speed := Speed(d);
+   
+      begin
       
-   function doubleconv (doub : Double) return Lat
+      return temp;
+      
+   end double_to_speed;
+      
+      
+   function double_to_lat (doub : Double) return Lat
      
    is
-         temp : Lat range -90.0 .. 90.0 := Lat(doub);
+         temp : Lat := Lat(doub);
       
    begin
       
-   if (-180.0 < temp  and temp < 180.0)
-     
-     then
-      
        return temp; 
       
-         
-      else
-         
-       return testrov;
-         
-      end if;
       
-      
-   end doubleconv; 
+   end double_to_lat; 
    
    function point_to_cart_x (p : point_3d) return Cartesian_Coordinate 
    is
