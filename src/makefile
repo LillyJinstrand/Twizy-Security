@@ -45,16 +45,16 @@ $(BIN)/test: test.cc $(BIN)/security.a
 
 .PHONY: ros
 ros: $(BIN)/security.a security.h perception_data.h
-	cp security.h $(ROS)/src/package/include/security.h
+	rsync -auv security.h $(ROS)/src/package/include/security.h
 	mkdir -p $(ROS)/src/package/lib
-	cp $(BIN)/security.a $(ROS)/src/package/lib/security.a
-	cp *_data.h $(ROS)/src/package/include/
+	rsync -auv $(BIN)/security.a $(ROS)/src/package/lib/security.a
+	rsync -auv *_data.h $(ROS)/src/package/include/
 	rm -rf $(ROS)/build
 
 .PHONY: apollo
 apollo:
 	make ros
-	cp -r $(ROS) $(APOLLO)
+	rsync -auv -r $(ROS) $(APOLLO)
 
 .PHONY: test
 test: $(BIN)/test
