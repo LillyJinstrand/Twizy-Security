@@ -2,6 +2,7 @@ syntax = "proto2";
 package apollo.canbus;
 
 import "modules/canbus/proto/chassis.proto";
+import "modules/canbus/proto/twizy.proto";
 
 message ChassisDetail {
   enum Type {
@@ -24,6 +25,7 @@ message ChassisDetail {
   optional Battery battery = 14;            // Battery info
   optional CheckResponseSignal check_response = 15;
   optional License license = 16;            // License info
+  optional Twizy twizy = 17;
 }
 
 // CheckResponseSignal

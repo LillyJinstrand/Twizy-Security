@@ -30,7 +30,7 @@ is
         null;
     end Update_GPS;
 
-    procedure Update_Speed is
+    procedure Update_Speed(speed : in speed_ada) is
     begin 
         null;
     end Update_Speed;

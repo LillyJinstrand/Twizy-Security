@@ -32,11 +32,11 @@ Gearandbreakpedal59b::Gearandbreakpedal59b() {}
 const int32_t Gearandbreakpedal59b::ID = 0x59B;
 
 void Gearandbreakpedal59b::Parse(const std::uint8_t* bytes, int32_t length,
-                         Twizy* chassis) const {
-  chassis->mutable_gear_and_breakpedal_59b()->set_brake_pedalstatus(brake_pedalstatus(bytes, length));
-  chassis->mutable_gear_and_breakpedal_59b()->set_gear_r(gear_r(bytes, length));
-  chassis->mutable_gear_and_breakpedal_59b()->set_gear_n(gear_n(bytes, length));
-  chassis->mutable_gear_and_breakpedal_59b()->set_gear_d(gear_d(bytes, length));
+                         ChassisDetail* chassis) const {
+  chassis->mutable_twizy()->mutable_gear_and_pedal()->set_brake_pedalstatus(brake_pedalstatus(bytes, length));
+  chassis->mutable_twizy()->mutable_gear_and_pedal()->set_gear_r(gear_r(bytes, length));
+  chassis->mutable_twizy()->mutable_gear_and_pedal()->set_gear_n(gear_n(bytes, length));
+  chassis->mutable_twizy()->mutable_gear_and_pedal()->set_gear_d(gear_d(bytes, length));
 }
 
 // config detail: {'name': 'brake_pedalstatus', 'offset': 0.0, 'precision': 1.0, 'len': 1, 'is_signed_var': False, 'physical_range': '[0|0]', 'bit': 8, 'type': 'bool', 'order': 'intel', 'physical_unit': ''}

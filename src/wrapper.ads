@@ -2,6 +2,8 @@ with perception_data_h;
 use perception_data_h;
 with localization_data_h;
 use localization_data_h;
+with speed_data_h;
+use speed_data_h;
 with Interface_utils;
 use Interface_utils;
 with gpsModule;
@@ -43,7 +45,7 @@ is
         Convention => C,
         Export,
         External_Name => "update_gps_ada";
-    procedure Update_Speed
+    procedure Update_Speed(speed : in speed_ada)
     with
         Global => Null,
         Convention => C,

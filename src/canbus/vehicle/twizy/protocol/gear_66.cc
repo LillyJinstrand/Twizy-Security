@@ -47,22 +47,22 @@ Gear66 *Gear66::set_gear_none() {
 }
 
 Gear66 *Gear66::set_gear_reverse() {
-  gear_ = 0b00100000;
+  gear_ = 0b00000100;
   return this;
 }
 
 Gear66 *Gear66::set_gear_neutral() {
-  gear_ = 0b00001000;
+  gear_ = 0b00010000;
   return this;
 }
 
 Gear66 *Gear66::set_gear_drive() {
-  gear_ = 0b00000010;
+  gear_ = 0b01000000;
   return this;
 }
 
 Gear66 *Gear66::set_brake_pedalstatus() {
-  pedal_ = 0b00000001;
+  pedal_ = 0b10000000;
   return this;
 }
 

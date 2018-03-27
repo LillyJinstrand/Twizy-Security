@@ -9,8 +9,17 @@
 
 #include "perception_data.h"
 #include "perception_converter.h"
-#include "security.h"
+#include "localization_converter.h"
+#include "speed_converter.h"
 
+#include "security.h"
+#include "break_message.h"
+
+ros::Publisher control_publisher;
+
+void send_brake_command(){
+    control_publisher.publish(generate_break_command());
+}
 
 int max_polygons = 0;
 
@@ -72,12 +81,11 @@ void controlCallback(const apollo::control::ControlCommand& msg)
     ss << "Throttle: " << msg.throttle() << "\n";
     ss << "Brake: " << msg.brake() << "\n";
     ss << "Speed: " << msg.speed() << "\n";
-    //ROS_INFO("%s", ss.str().c_str());
+    ROS_INFO("%s", ss.str().c_str());
 
-  /* This isn't even correct just a suggestion, we should probably 
-  if is_safe()
-	  vidarebefordra
-  */
+    if (is_safe()){
+        control_publisher.publish(msg);
+    }
 }
 
 void canbusCallback(const apollo::canbus::Chassis& msg)
@@ -90,9 +98,7 @@ void canbusCallback(const apollo::canbus::Chassis& msg)
     ss << " s\n";
 
     //ROS_INFO("%s", ss.str().c_str());
-    /* Filter out speed from canbus data
-    update_speed(); 
-    */
+    update_speed(convert_speed(msg)); 
 }
 
 void localizationCallback(const apollo::localization::LocalizationEstimate& msg)
@@ -103,17 +109,23 @@ void localizationCallback(const apollo::localization::LocalizationEstimate& msg)
     ss << " Z: " << msg.pose().position().z();
     ss << "\n";
     //ROS_INFO("%s", ss.str().c_str());
-  /* update_gps(); */
+    update_gps(convert_localization_estimate(msg));
+    if(!is_safe){
+        send_brake_command();
+    }
 }
+
 
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "rosTest");   
   ros::NodeHandle n;   
 
+  control_publisher = n.advertise<apollo::control::ControlCommand>("/apollo/control", 1000);
+
   ros::Subscriber perception = n.subscribe("/apollo/perception/obstacles", 1000, perceptionCallback);
   ros::Subscriber prediction = n.subscribe("/apollo/prediction", 1000, predictionCallback);
-  ros::Subscriber control = n.subscribe("/apollo/control", 1000, controlCallback);
+  ros::Subscriber control = n.subscribe("CONTROL_COMMAND", 1000, controlCallback);
   ros::Subscriber canbus = n.subscribe("/apollo/canbus/chassis", 1000, canbusCallback);
   ros::Subscriber localization = n.subscribe("/apollo/localization/pose", 1000, localizationCallback);
   
@@ -122,6 +134,8 @@ int main(int argc, char **argv)
   ros::Rate loop_rate(1000);   
 
   ROS_INFO("RosTest started");
+
+  send_brake_command();
 
   int count = 0;
   while (ros::ok())

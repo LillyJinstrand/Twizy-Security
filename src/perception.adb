@@ -5,8 +5,7 @@ with Ada.Text_IO;
 
 package body perception with SPARK_Mode is
 
-   -- for debug
---use Spark.Float_Arithmetic_Lemmas;
+	--use Spark.Float_Arithmetic_Lemmas;
 
 	function breakingDistance (s : in Speed) return Distance
 	is

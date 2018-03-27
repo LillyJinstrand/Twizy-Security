@@ -17,6 +17,7 @@
 #include "modules/canbus/vehicle/vehicle_factory.h"
 #include "modules/canbus/proto/vehicle_parameter.pb.h"
 #include "modules/canbus/vehicle/lincoln/lincoln_vehicle_factory.h"
+#include "modules/canbus/vehicle/twizy/twizy_vehicle_factory.h"
 
 namespace apollo {
 namespace canbus {
