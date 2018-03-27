@@ -8,8 +8,8 @@ extern "C" {
     char is_initialized_ada();
 
     void update_perception_ada(perception_obstacle_ada);
-    void update_gps_ada();
-    void update_speed_ada();
+    void update_gps_ada(localization_estimate_ada);
+    void update_speed_ada(speed_ada);
 
     char is_safe_ada();
 
@@ -29,11 +29,11 @@ bool isInitialized(){
 void update_perception(perception_obstacle_ada in){
     update_perception_ada(in);
 }
-void update_gps(){
-    update_gps_ada();
+void update_gps(localization_estimate_ada in){
+    update_gps_ada(in);
 }
-void update_speed(){
-    update_speed_ada();
+void update_speed(speed_ada in){
+    update_speed_ada(in);
 }
 
 bool is_safe(){

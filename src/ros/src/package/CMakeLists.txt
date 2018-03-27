@@ -56,11 +56,16 @@ add_library(converters
     STATIC ${ConverterSource} ${ConverterHeader}
 )
 
+add_library(breakMsg
+    STATIC "src/break_message.cc" "include/break_message.h"
+)
+
 add_executable(rosTest src/rosTest.cc)
 target_link_libraries(rosTest 
     ${catkin_LIBRARIES}
     apollo
     converters
+    breakMsg
     ${CMAKE_CURRENT_LIST_DIR}/lib/security.a
     ${PROTOBUF_LIBRARIES}
     

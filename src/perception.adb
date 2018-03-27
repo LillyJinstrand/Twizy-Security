@@ -1,9 +1,9 @@
-with Spark.Float_Arithmetic_Lemmas;
+--with Spark.Float_Arithmetic_Lemmas;
 with Mathutil;
 
 package body perception with SPARK_Mode is
 
-	use Spark.Float_Arithmetic_Lemmas;
+	--use Spark.Float_Arithmetic_Lemmas;
 
 	function breakingDistance (s : in Speed) return Distance
 	is
