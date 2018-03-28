@@ -119,6 +119,8 @@ Chassis TwizyController::chassis() {
   chassis_.Clear();
 
   ChassisDetail chassis_detail;
+  ChassisDetail *chassis_detail_;
+
   message_manager_->GetSensorData(&chassis_detail);
 
   // 21, 22, previously 1, 2
@@ -130,12 +132,30 @@ Chassis TwizyController::chassis() {
   chassis_.set_error_code(chassis_error_code());
 
   // 3
+  chassis_.set_engine_started(true);
+  
   // ADD YOUR OWN CAR CHASSIS OPERATION
   // We assume that car isn't in motion when engine starts.
+  if(!chassis_detail.twizy().curr_speed().has_curr_speed()) {
+	  chassis_detail_->mutable_twizy()->mutable_curr_speed()->set_curr_speed(0);
+  }
+  if(!chassis_detail.twizy().steering_angle().has_lws()) {
+	  chassis_detail_->mutable_twizy()->mutable_steering_angle()->set_lws(0);
+  }
+  if(!chassis_detail.twizy().steering_angle().has_lws_speed()) {
+	  chassis_detail_->mutable_twizy()->mutable_steering_angle()->set_lws_speed(0);
+  }
+  if(!chassis_detail.twizy().gear_and_pedal().has_brake_pedalstatus()) {
+	  chassis_detail_->mutable_twizy()->mutable_gear_and_pedal()->set_brake_pedalstatus(false);
+  }
+  if(!chassis_detail.twizy().gear_and_pedal().has_gear_r() ||
+	  !chassis_detail.twizy().gear_and_pedal().has_gear_n() ||
+	  !chassis_detail.twizy().gear_and_pedal().has_gear_d()) {
+	  chassis_detail_->mutable_twizy()->mutable_gear_and_pedal()->set_gear_r(false);
+	  chassis_detail_->mutable_twizy()->mutable_gear_and_pedal()->set_gear_n(false);
+	  chassis_detail_->mutable_twizy()->mutable_gear_and_pedal()->set_gear_d(true);
+	  }
   chassis_.set_speed_mps(chassis_detail.twizy().curr_speed().curr_speed());
-  chassis_.set_steering_percentage(0);
-  chassis_.set_steering_torque_nm(0);
-  chassis_.set_parking_brake(true);
   
   return chassis_;
 }
@@ -285,7 +305,7 @@ void TwizyController::Brake(double pedal) {
     return;
   }
   // ADD YOUR OWN CAR CHASSIS OPERATION
-  gear_66_->set_brake_pedalstatus();
+  gear_66_->set_brake_pedalstatus(true);
 }
 
 // drive with old acceleration
