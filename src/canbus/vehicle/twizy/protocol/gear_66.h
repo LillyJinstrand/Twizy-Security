@@ -84,7 +84,7 @@ class Gear66 : public ::apollo::drivers::canbus::ProtocolData<
    */
   Gear66 *set_gear_drive();
 
-  Gear66 *set_brake_pedalstatus();
+  Gear66 *set_brake_pedalstatus(bool pedal);
 
  private:
   /**

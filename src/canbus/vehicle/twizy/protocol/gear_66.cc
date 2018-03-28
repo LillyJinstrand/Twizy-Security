@@ -25,7 +25,7 @@ namespace twizy {
 using ::apollo::drivers::canbus::Byte;
 
 // public
-const int32_t Gear66::ID = 0x66;
+const int32_t Gear66::ID = 0x98; // ID 152 på CAN i dec.
 
 uint32_t Gear66::GetPeriod() const {
   // on event, so value nonsense
@@ -61,8 +61,12 @@ Gear66 *Gear66::set_gear_drive() {
   return this;
 }
 
-Gear66 *Gear66::set_brake_pedalstatus() {
-  pedal_ = 0b10000000;
+Gear66 *Gear66::set_brake_pedalstatus(bool pedal) {
+	if(pedal) {
+	  pedal_ = 0b10000000;
+	} else {
+	  pedal_ = 0;
+	}
   return this;
 }
 

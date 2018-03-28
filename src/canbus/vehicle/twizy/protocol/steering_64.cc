@@ -24,7 +24,7 @@ namespace twizy {
 
 using ::apollo::drivers::canbus::Byte;
 
-const int32_t Steering64::ID = 0x64;
+const int32_t Steering64::ID = 0x150; //ID 150 på CAN i dec.
 
 uint32_t Steering64::GetPeriod() const {
   // receive rate??
