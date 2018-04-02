@@ -81,3 +81,5 @@ target_link_libraries(converterTest
 
 add_dependencies(rosTest package_generate_message_cpp)
 add_dependencies(converterTest rosTest)
+
+execute_process(COMMAND ./devel/lib/package/converterTest)
