@@ -7,12 +7,15 @@ perception_obstacle_ada convert_obstacle(const apollo::perception::PerceptionObs
         ada_obs.id = obs.id();
     }
 
+    if((ada_obs.valid_theta = obs.has_theta()))
+        ada_obs.theta = obs.theta();
+
     if((ada_obs.valid_velocity = obs.has_velocity()))
         ada_obs.velocity = convert_point(obs.velocity());
     
 
-    if((ada_obs.valid_velocity = obs.has_velocity())){
-        ada_obs.velocity = convert_point(obs.velocity());
+    if((ada_obs.valid_position = obs.has_position())){
+        ada_obs.position = convert_point(obs.position());
     }
 
     if((ada_obs.valid_length = obs.has_length()))
@@ -51,4 +54,5 @@ perception_obstacle_ada convert_obstacle(const apollo::perception::PerceptionObs
         ada_obs.timestamp = obs.timestamp();
     if((ada_obs.valid_tracking_time = obs.has_tracking_time()))
         ada_obs.tracking_time = obs.tracking_time();
+    return ada_obs;
 }

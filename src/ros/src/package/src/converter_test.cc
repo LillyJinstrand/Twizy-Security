@@ -72,14 +72,43 @@ void test_convert_perception(){
     perception_obstacle_ada o2 = {};
 
     o2.valid_id = true;
+    TEST_CHECK(o2.valid_id == convert_obstacle(o1).valid_id);
     o2.id = 1;
+    TEST_CHECK(o2.id == convert_obstacle(o1).id);
 
     o2.valid_theta = true;
+    TEST_CHECK(o2.valid_theta == convert_obstacle(o1).valid_theta);
     o2.theta = 6.0;
+    TEST_CHECK(o2.theta == convert_obstacle(o1).theta);
 
     o2.velocity.x = 2.5;
+    o2.velocity.valid_x = true;
     o2.velocity.y = 3.5;
+    o2.velocity.valid_y = true;
     o2.velocity.z = 4.5;
+    o2.velocity.valid_z = true;
+    TEST_CHECK(o2.velocity.valid_x == convert_obstacle(o1).velocity.valid_x);
+    TEST_CHECK(o2.velocity.x == convert_obstacle(o1).velocity.x);
+
+    TEST_CHECK(o2.velocity.valid_y == convert_obstacle(o1).velocity.valid_y);
+    TEST_CHECK(o2.velocity.y == convert_obstacle(o1).velocity.y);
+    
+    TEST_CHECK(o2.velocity.valid_z == convert_obstacle(o1).velocity.valid_z);
+    TEST_CHECK(o2.velocity.z == convert_obstacle(o1).velocity.z);
+
+    o2.position.x = 1.5;
+    o2.position.valid_x = true;
+    o2.position.y = 2.5;
+    o2.position.valid_y = true;
+    o2.position.z = 3.5;
+    o2.position.valid_z = true;
+
+    TEST_CHECK(o2.position.valid_x == convert_obstacle(o1).position.valid_x);
+    TEST_CHECK(o2.position.x == convert_obstacle(o1).position.x);
+    TEST_CHECK(o2.position.valid_y == convert_obstacle(o1).position.valid_y);
+    TEST_CHECK(o2.position.y == convert_obstacle(o1).position.y);
+    TEST_CHECK(o2.position.valid_z == convert_obstacle(o1).position.valid_z);
+    TEST_CHECK(o2.position.z == convert_obstacle(o1).position.z);
 }
 
 TEST_LIST = {
