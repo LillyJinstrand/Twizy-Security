@@ -56,10 +56,6 @@ void test_convert_perception(){
     o1.mutable_position()->set_y(2.5);
     o1.mutable_position()->set_z(3.5);
 
-    o1.mutable_velocity()->set_x(2.5);
-    o1.mutable_velocity()->set_y(3.5);
-    o1.mutable_velocity()->set_z(4.5);
-
     o1.set_length(10.0);
     o1.set_width(20.0);
     o1.set_height(30.0);
@@ -77,9 +73,6 @@ void test_convert_perception(){
     o2.valid_theta = true;
     o2.theta = 6.0;
 
-    o2.velocity.x = 2.5;
-    o2.velocity.y = 3.5;
-    o2.velocity.z = 4.5;
 }
 
 TEST_LIST = {
