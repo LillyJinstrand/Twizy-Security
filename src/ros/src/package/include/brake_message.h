@@ -14,7 +14,7 @@ apollo::common::Header generate_header();
 
 //Returns a command for stopping the car. For the timestamp to remain
 //valid the message should be sent immediatly after being generated
-apollo::control::ControlCommand generate_break_command();
+apollo::control::ControlCommand generate_brake_command();
 
 
 #endif

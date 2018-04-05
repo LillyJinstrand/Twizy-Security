@@ -57,11 +57,11 @@ add_library(converters
 )
 
 add_library(breakMsg
-    STATIC "src/break_message.cc" "include/break_message.h"
+    STATIC "src/brake_message.cc" "include/brake_message.h"
 )
 
-add_executable(rosTest src/rosTest.cc)
-target_link_libraries(rosTest 
+add_executable(TwizzySecurity src/TwizzySecurity.cc)
+target_link_libraries(TwizzySecurity 
     ${catkin_LIBRARIES}
     apollo
     converters
@@ -79,7 +79,5 @@ target_link_libraries(converterTest
     ${PROTOBUF_LIBRARIES}
 )
 
-add_dependencies(rosTest package_generate_message_cpp)
-add_dependencies(converterTest rosTest)
-
-execute_process(COMMAND ./devel/lib/package/converterTest)
+add_dependencies(TwizzySecurity package_generate_message_cpp)
+add_dependencies(converterTest TwizzySecurity)

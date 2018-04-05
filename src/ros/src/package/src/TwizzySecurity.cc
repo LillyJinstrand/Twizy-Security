@@ -13,12 +13,12 @@
 #include "speed_converter.h"
 
 #include "security.h"
-#include "break_message.h"
+#include "brake_message.h"
 
 ros::Publisher control_publisher;
 
 void send_brake_command(){
-    control_publisher.publish(generate_break_command());
+    control_publisher.publish(generate_brake_command());
 }
 
 void perceptionCallback(const apollo::perception::PerceptionObstacles& msg)
@@ -74,7 +74,7 @@ void localizationCallback(const apollo::localization::LocalizationEstimate& msg)
 
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "rosTest");   
+  ros::init(argc, argv, "TwizzySecurity");   
   ros::NodeHandle n;   
 
   control_publisher = n.advertise<apollo::control::ControlCommand>("/apollo/control", 1000);
@@ -87,7 +87,7 @@ int main(int argc, char **argv)
 
   ros::Rate loop_rate(1000);   
 
-  ROS_INFO("RosTest started");
+  ROS_INFO("TwizzySecurity started");
 
   int count = 0;
   while (ros::ok())

@@ -1,4 +1,4 @@
-#include "break_message.h"
+#include "brake_message.h"
 #include <iostream>
 
 int sequence_number = 1;
@@ -28,7 +28,7 @@ apollo::common::Header generate_header(){
     return msg;
 }
 
-apollo::control::ControlCommand generate_break_command(){
+apollo::control::ControlCommand generate_brake_command(){
     apollo::control::ControlCommand msg;
 
     //Stop the car
