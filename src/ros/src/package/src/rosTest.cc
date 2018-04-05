@@ -21,50 +21,17 @@ void send_brake_command(){
     control_publisher.publish(generate_break_command());
 }
 
-int max_polygons = 0;
-
 void perceptionCallback(const apollo::perception::PerceptionObstacles& msg)
 {
-    std::stringstream ss;
-    ss << "\n" << msg.perception_obstacle_size() << " Obstacles:\n";
     for(int i=0; i < msg.perception_obstacle_size(); i++){
         const apollo::perception::PerceptionObstacle& obs = msg.perception_obstacle(i);
-        
-        ROS_INFO("Calling update_perception()");
+        ROS_INFO("Calling update_perception() for obstacle nr: %d", i);
         update_perception(convert_obstacle(obs));
-
-
-        ss << "Id: " << obs.id() << "\n";
-        ss << "Type: ";
-        switch(obs.type()){
-           case 0:
-               ss << "Unknown";
-               break;
-           case 1:
-               ss << "Unknown Movable";
-               break;
-           case 2:
-               ss << "Unkown Unmovable";
-               break;
-           case 3:
-               ss << "Pedestrian";
-               break;
-           case 4:
-               ss << "Bicycle";
-               break;
-           case 5:
-               ss << "Vehicle";
-               break;
-       }
-       ss << "\n";
-       ss << "Size: " << obs.length() << " " << obs.width() << " " << obs.height() << "\n";
-       ss << "Position: x: " << obs.position().x() << " y: " << obs.position().y() << " z: " << obs.position().z() << "\n";
-       ss << "Number of polygons: " << obs.polygon_point_size() << "\n";
-       
-       
-
     }
-    //ROS_INFO("%s", ss.str().c_str());
+    if(!is_safe){
+        send_brake_command();
+        ROS_INFO("Perception module reports not safe! Sending brake command");
+    }
 }
 
 void predictionCallback(const apollo::prediction::PredictionObstacles& msg)
@@ -75,42 +42,32 @@ void predictionCallback(const apollo::prediction::PredictionObstacles& msg)
 
 void controlCallback(const apollo::control::ControlCommand& msg)
 {
-    std::stringstream ss;
-    ss << "\nControl Command:\n";
-    ss << "Throttle: " << msg.throttle() << "\n";
-    ss << "Brake: " << msg.brake() << "\n";
-    ss << "Speed: " << msg.speed() << "\n";
-    ROS_INFO("%s", ss.str().c_str());
-
     if (is_safe()){
+        ROS_INFO("Everything reports safe, forwarding command");
         control_publisher.publish(msg);
+        return;
     }
+    send_brake_command();
+    ROS_INFO("Car state is NOT SAFE: Blocking message and sending brake command");
 }
 
 void canbusCallback(const apollo::canbus::Chassis& msg)
 {
-    std::stringstream ss;
-    ss << "Canbus message:\nSpeed: ";
-    ss << msg.speed_mps() << "m/s\n";
-    ss << "Time sent: ";
-    ss << msg.header().timestamp_sec();
-    ss << " s\n";
-
-    //ROS_INFO("%s", ss.str().c_str());
+    ROS_INFO("Calling update speed");
     update_speed(convert_speed(msg)); 
+    if(!is_safe){
+        send_brake_command();
+        ROS_INFO("Speed module reports not safe! Sending brake command");
+    }
 }
 
 void localizationCallback(const apollo::localization::LocalizationEstimate& msg)
 {
-    std::stringstream ss;
-    ss << "Localization:\nX: " << msg.pose().position().x();
-    ss << " Y: " << msg.pose().position().y();
-    ss << " Z: " << msg.pose().position().z();
-    ss << "\n";
-    //ROS_INFO("%s", ss.str().c_str());
+    ROS_INFO("Calling update gps");
     update_gps(convert_localization_estimate(msg));
     if(!is_safe){
         send_brake_command();
+        ROS_INFO("Localization reports not safe! Sending brake command");
     }
 }
 
@@ -127,30 +84,15 @@ int main(int argc, char **argv)
   ros::Subscriber control = n.subscribe("CONTROL_COMMAND", 1000, controlCallback);
   ros::Subscriber canbus = n.subscribe("/apollo/canbus/chassis", 1000, canbusCallback);
   ros::Subscriber localization = n.subscribe("/apollo/localization/pose", 1000, localizationCallback);
-  
-  ros::Publisher canbus_pub = n.advertise<std_msgs::String>("canbus", 1000);
 
   ros::Rate loop_rate(1000);   
 
   ROS_INFO("RosTest started");
 
-  send_brake_command();
-
   int count = 0;
   while (ros::ok())
   {
-    std_msgs::String msg;
-
-    std::stringstream ss;
-    ss << "hello world " << count;
-    msg.data = ss.str();
-
-    //ROS_INFO("%s", msg.data.c_str());
-
-    //canbus_pub.publish(msg);
-
     ros::spinOnce();
-
     loop_rate.sleep();
     ++count;
   }

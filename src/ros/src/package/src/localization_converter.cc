@@ -44,7 +44,7 @@ MeasureState convert_measure_state(const apollo::localization::MeasureState& m){
 
 uncertainty_ada convert_uncertainty(const apollo::localization::Uncertainty& u){
     uncertainty_ada out = {};
-
+    
     if((out.valid_position_std_dev = u.has_position_std_dev()))
         out.position_std_dev = convert_point_3d(u.position_std_dev());
     if((out.valid_orientation_std_dev = u.has_orientation_std_dev()))
@@ -55,7 +55,7 @@ uncertainty_ada convert_uncertainty(const apollo::localization::Uncertainty& u){
         out.linear_acceleration_std_dev = convert_point_3d(u.linear_acceleration_std_dev());
     if((out.valid_angular_velocity_std_dev = u.has_angular_velocity_std_dev()))
         out.angular_velocity_std_dev = convert_point_3d(u.angular_velocity_std_dev());
-
+   
     return out;
 }
 
