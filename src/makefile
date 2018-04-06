@@ -74,7 +74,7 @@ spark:
 	gnatmake -P$(GPR)
 
 .PHONY: prove
-prove:
+prove: $(OBJ)/lib.a
 	gnatprove -j 0 -k --level=4 -P$(GPR)
 .PHONY: clean
 clean:
