@@ -10,6 +10,8 @@ with gpsModule;
 with speedModule;
 with converters;
 use converters;
+with interfaces.C;
+use interfaces.C;
 
 package Wrapper
     with SPARK_Mode
