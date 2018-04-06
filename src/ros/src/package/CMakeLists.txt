@@ -60,8 +60,8 @@ add_library(breakMsg
     STATIC "src/brake_message.cc" "include/brake_message.h"
 )
 
-add_executable(TwizzySecurity src/TwizzySecurity.cc)
-target_link_libraries(TwizzySecurity 
+add_executable(twizySecurity src/twizy_security.cc)
+target_link_libraries(twizySecurity 
     ${catkin_LIBRARIES}
     apollo
     converters
@@ -79,5 +79,5 @@ target_link_libraries(converterTest
     ${PROTOBUF_LIBRARIES}
 )
 
-add_dependencies(TwizzySecurity package_generate_message_cpp)
-add_dependencies(converterTest TwizzySecurity)
+add_dependencies(twizySecurity package_generate_message_cpp)
+add_dependencies(converterTest twizySecurity)
