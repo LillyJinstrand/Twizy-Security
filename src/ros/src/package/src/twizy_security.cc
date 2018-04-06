@@ -15,6 +15,7 @@
 #include "security.h"
 #include "brake_message.h"
 
+ros::Publisher control_publisher;
 void send_brake_command(){
     control_publisher.publish(generate_brake_command());
 }
@@ -74,7 +75,7 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "twizySecurity");   
   ros::NodeHandle n;   
 
-  ros::Publisher control_publisher = n.advertise<apollo::control::ControlCommand>("/apollo/control", 1000);
+  control_publisher = n.advertise<apollo::control::ControlCommand>("/apollo/control", 1000);
 
   ros::Subscriber perception = n.subscribe("/apollo/perception/obstacles", 1000, perceptionCallback);
   ros::Subscriber prediction = n.subscribe("/apollo/prediction", 1000, predictionCallback);
