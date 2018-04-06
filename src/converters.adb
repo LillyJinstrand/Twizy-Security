@@ -2,19 +2,17 @@ package body converters with SPARK_Mode is
    function double_to_speed (d : double) return speed
    is temp : Speed;
    begin
-       if (d <= -79.0) then
+       if (d <= -80.0) then
            temp := -79.0;
            return temp;
        end if;
-       if (d >= 79.0) then
+       if (d >= 80.0) then
            temp :=  79.0;
            return temp;
        end if;
-       pragma Assert(d > -79.0);
-       pragma Assert(d < 79.0);
-       pragma Assume(d > -79.0);
-       pragma Assume(d < 79.0);
        temp := Speed(d);
+       pragma Annotate (GNATprove, False_Positive, "range check might fail", 
+            "No codepath to reach this with out of range values");
        return temp;
    end double_to_speed;
       

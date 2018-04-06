@@ -1,3 +1,7 @@
+with Interface_utils; use Interface_utils;
+with speedModule; use speedModule;
+with converters; use converters;
+with Interfaces.C; use Interfaces.C;
 package body Wrapper
     with SPARK_Mode
 is
@@ -28,14 +32,17 @@ is
         (localization_estimate : in localization_estimate_ada)
     is
     begin
-      if Convert_C_Bool(localization_estimate.valid_pose) 
-        and ( localization_estimate.pose.position.x < 180.0 and localization_estimate.pose.position.x > -180.0)
-        and ( localization_estimate.pose.position.y < 90.0 and localization_estimate.pose.position.y > -90.0)
-      then
+        if Convert_C_Bool(localization_estimate.valid_pose) 
+            and ( localization_estimate.pose.position.x < 180.0 and localization_estimate.pose.position.x > -180.0)
+            and ( localization_estimate.pose.position.y < 90.0 and localization_estimate.pose.position.y > -90.0)
+        then
             null;
             --Safe := gpsModule.gpstest(localization_estimate.pose.position.x, localization_estimate.pose.position.y);
+            return;
         end if;
-        null;
+        -- Gps values are compleately wrong meaning something is wrong with our gps.
+        -- We can not work without gps so we brake
+        Safe := False;
     end Update_GPS;
 
     procedure Update_Speed(speed : in speed_ada) is
@@ -43,13 +50,16 @@ is
         if not (Convert_C_Bool(speed.valid_speed)) then
             return;
         end if;
-        if (speed.speed > -80.0 and speed.speed < 80.0) then
+        if not (speed.speed > -80.0 and speed.speed < 80.0) then
             -- Data is way out of range, so we assume something is wrong
             Safe := False;
             return;
-        end if;
-        if not (speedModule.speedtest(speed_ada_to_speed(speed)) = True) then
-            Safe := False;
+        else
+            if not (speedModule.speedtest(speed_ada_to_speed(speed))) then
+                -- Speed check fails
+                -- Set safe to false to brake
+                Safe := False;
+            end if;
         end if;
     end Update_Speed;
 
