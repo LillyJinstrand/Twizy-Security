@@ -1,5 +1,5 @@
-#ifndef BREAK_MESSAGE_H
-#define BREAK_MESSAGE_H
+#ifndef BRAKE_MESSAGE_H
+#define BRAKE_MESSAGE_H
 
 #include "ros/ros.h"
 #include "modules/control/proto/control_cmd.pb.h"
