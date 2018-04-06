@@ -7,6 +7,8 @@ use speed_data_h;
 with Interface_utils;
 use Interface_utils;
 with gpsModule;
+with interfaces.C;
+use interfaces.C;
 
 package Wrapper
     with SPARK_Mode
