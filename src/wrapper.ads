@@ -7,16 +7,19 @@ use speed_data_h;
 with Interface_utils;
 use Interface_utils;
 with gpsModule;
+with speedModule;
+with converters;
+use converters;
 
 package Wrapper
     with SPARK_Mode
 is
     Initialized : Boolean := False;
+    -- This is the big one. Once this has been set to false the value is not allowed to change
+    -- outside of a restart. Once this is set to false the car will emergency brake
+    -- and ignore any other commands until it is reset
     Safe : Boolean := True;
 
-    -- TODO: Remove this debug stuff
-    Valid_pose_test : Boolean := False;
-    Valid_id_test : Boolean := False;
     -- Here should any initialzation code be run
     procedure Init 
     with 
@@ -47,7 +50,7 @@ is
         External_Name => "update_gps_ada";
     procedure Update_Speed(speed : in speed_ada)
     with
-        Global => Null,
+        Global => (Output => Safe),
         Convention => C,
         Export,
         External_Name => "update_speed_ada";
@@ -57,7 +60,7 @@ is
     -- Once it has switched to unsafe, it will not switch back without resetting
     function Is_Safe return Boolean 
     with 
-        Global => Null,
+        Global => (Input => Safe),
         Convention => C,
         Export,
         External_Name => "is_safe_ada";

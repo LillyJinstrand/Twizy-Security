@@ -3,6 +3,11 @@ package body Wrapper
 is
     procedure Init is
     begin
+        if not (Safe) then
+            -- Runnin init in a non fresh state is wrong
+            Initialized := False;
+            return;
+        end if;
         Initialized := True;
     end Init;
 
@@ -16,7 +21,7 @@ is
         (perception_data : in perception_obstacle_ada) 
     is
     begin
-        Valid_id_test := Convert_C_Bool(perception_data.valid_id);
+        null;
     end Update_Perception;
 
     procedure Update_GPS 
@@ -32,7 +37,12 @@ is
 
     procedure Update_Speed(speed : in speed_ada) is
     begin 
-        null;
+        if not (Convert_C_Bool(speed.valid_speed)) then
+            return;
+        end if;
+        if not (speedModule.speedtest(speed_ada_to_speed(speed)) = True) then
+            Safe := False;
+        end if;
     end Update_Speed;
 
     function Is_Safe return Boolean
