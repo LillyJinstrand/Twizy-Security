@@ -15,6 +15,9 @@
 #include "security.h"
 #include "brake_message.h"
 
+double max_heading = 0;
+double min_heading = 0;
+
 ros::Publisher control_publisher;
 void send_brake_command(){
     control_publisher.publish(generate_brake_command());
@@ -22,12 +25,15 @@ void send_brake_command(){
 
 void perceptionCallback(const apollo::perception::PerceptionObstacles& msg)
 {
+    if(!is_safe()){
+        //If the car is in a unsafe state already there is point in calling the check
+        return;
+    }
     for(int i=0; i < msg.perception_obstacle_size(); i++){
         const apollo::perception::PerceptionObstacle& obs = msg.perception_obstacle(i);
-        ROS_INFO("Calling update_perception() for obstacle nr: %d", i);
         update_perception(convert_obstacle(obs));
     }
-    if(!is_safe){
+    if(!is_safe()){
         send_brake_command();
         ROS_INFO("Perception module reports not safe! Sending brake command");
     }
@@ -52,9 +58,13 @@ void controlCallback(const apollo::control::ControlCommand& msg)
 
 void canbusCallback(const apollo::canbus::Chassis& msg)
 {
-    ROS_INFO("Calling update speed");
+    if(!is_safe()){
+        //If the car is in a unsafe state already there is point in calling the check
+        return;
+    }
     update_speed(convert_speed(msg)); 
-    if(!is_safe){
+
+    if(!is_safe()){
         send_brake_command();
         ROS_INFO("Speed module reports not safe! Sending brake command");
     }
@@ -62,9 +72,12 @@ void canbusCallback(const apollo::canbus::Chassis& msg)
 
 void localizationCallback(const apollo::localization::LocalizationEstimate& msg)
 {
-    ROS_INFO("Calling update gps");
+    if(!is_safe()){
+        //If the car is in a unsafe state already there is point in calling the check
+        return;
+    }
     update_gps(convert_localization_estimate(msg));
-    if(!is_safe){
+    if(!is_safe()){
         send_brake_command();
         ROS_INFO("Localization reports not safe! Sending brake command");
     }
