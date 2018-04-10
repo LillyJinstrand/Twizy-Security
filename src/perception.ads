@@ -1,5 +1,7 @@
 with types;
 use types;
+with Perception_Data_H;
+use Perception_Data_H;
 -- The car's coordinate system is defined as having the car being 0,0
 -- The y axis increases in the direction the car is facing
 -- The x axis increases to the right of the car
@@ -26,14 +28,6 @@ package perception with SPARK_Mode is
 		 Radius: Distance;
 		 SteeringAngleOffset : Lidar_Angle;
 	  end record;
-
-   type Obstacle is
-	  record
-         Obj_Type : Object_type;
-         Ang : Lidar_angle;
-         Dist : Distance;
-		 Heading: Angle; -- heading in the world coordinate system
-      end record;
 
    type Point is
 	  record
@@ -94,10 +88,8 @@ package perception with SPARK_Mode is
    function IsIntersecting(L1 : Line; L2 : Line) return Boolean
 	 with Global => null;
 
-   function pccheck(O : in Obstacle; S : in Speed) return Boolean with
+   function PerceptionCheck(O : in Perception_Obstacle_ada; S : in Speed) return Boolean with
 	 Pre => S > 0.0,
-	 Post => (if pccheck'Result then abs O.ang > scopeangle or O.dist > breakingDistance(S)) and
-	         (if not pccheck'Result then  abs O.ang <= scopeangle and O.dist <= breakingDistance(S)),
      Global => null;
 
 end perception;

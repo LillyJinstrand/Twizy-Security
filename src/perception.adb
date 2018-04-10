@@ -108,10 +108,10 @@ package body perception with SPARK_Mode is
 	   return False;
 	end IsIntersecting;
 
-	function pccheck(O : in Obstacle; S : in Speed) return Boolean
+	function PerceptionCheck(Obstacle : in Perception_Obstacle_ada; S : in Speed) return Boolean
 	is
 		breakingDist : constant Distance := BreakingDistance(s);
 	begin
-		return not (abs O.Ang <= Scopeangle and then O.Dist <= BreakingDist);
-	end pccheck;
+		return BreakingDist > 0.0;
+	end PerceptionCheck;
 end;
