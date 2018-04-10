@@ -16,14 +16,14 @@ package body perception with SPARK_Mode is
 	   return abs (Dist / BreakConstant);
 	end breakingDistance;
 
-	function GetDangerZone(S : in Speed; SteeringAngle : in Steering_Angle; Obj_Type : in Object_Type) return DangerZone
+	function GetDangerZone(S : in Speed; SteeringAngle : in Steering_Angle; Obj_Type : in C_type) return DangerZone
 	is
 	   -- These values chage when test for real values
 	   BreakingDist : Distance := BreakingDistance(S);
 	   LidarAngle : Lidar_Angle := 45.0;
 	   BreakingDistScale : constant Distance := 1.23;
 	begin
-	   if not (Obj_Type = STATIC) then
+	   if Obj_Type /= UNKNOWN_UNMOVABLE then
 		  if (BreakingDist >= Distance'Last / BreakingDistScale) then
 			 BreakingDist := Distance'Last;
 		  else
@@ -108,10 +108,62 @@ package body perception with SPARK_Mode is
 	   return False;
 	end IsIntersecting;
 
-	function PerceptionCheck(Obstacle : in Perception_Obstacle_ada; S : in Speed) return Boolean
+	function PerceptionCheck(Obstacle : in Perception_Obstacle_ada; Pose : in Pose_Ada; S : in Speed) return Boolean
 	is
-		breakingDist : constant Distance := BreakingDistance(s);
+	    DZ : constant DangerZone := GetDangerZone(S, 0.0, Obstacle.The_C_Type);
+
+		X : constant FloatingNumber := FloatingNumber(Obstacle.Length) / 2.0;
+		Y : constant FloatingNumber := FloatingNumber(Obstacle.Width) / 2.0;
+		-- TODO: find out unit of theta, currently assumes degrees
+		Stw : constant FloatingNumber := Mathutil.Sin(FloatingNumber(Obstacle.Theta));
+		Ctw : constant FloatingNumber := Mathutil.Cos(FloatingNumber(Obstacle.Theta));
+		-- these points are in the "world" coordinate system, whatever that means
+	    P1w : constant Point := (  X	 * Ctw -   Y  * Stw,    X  * Stw +   Y  * Ctw, 0.0); -- top left
+	    P2w : constant Point := (  X	 * Ctw - (-Y) * Stw,    X  * Stw + (-Y) * Ctw, 0.0); -- top right
+	    P3w : constant Point := ((-X)  * Ctw - (-Y) * Stw, (-X) * Stw + (-Y) * Ctw, 0.0); -- bot right
+	    P4w : constant Point := ((-X)  * Ctw -   Y  * Stw, (-X) * Stw +   Y  * Ctw, 0.0); -- bot left
+
+		XT : constant FloatingNumber := FloatingNumber(Pose.Position.X);
+		YT : constant FloatingNumber := FloatingNumber(Pose.Position.Y);
+
+		-- translated to the cars coordinate system
+	    P1t : constant Point := (P1w.X - XT, P1w.Y - YT, 0.0); -- top left
+	    P2t : constant Point := (P2w.X - XT, P2w.Y - YT, 0.0); -- top right
+	    P3t : constant Point := (P3w.X - XT, P3w.Y - YT, 0.0); -- bot right
+	    P4t : constant Point := (P4w.X - XT, P4w.Y - YT, 0.0); -- bot left
+
+		-- TODO: find out unit of heading, currently assumes degrees
+		St : constant FloatingNumber := Mathutil.Sin(FloatingNumber(Pose.Heading));
+		Ct : constant FloatingNumber := Mathutil.Cos(FloatingNumber(Pose.Heading));
+		-- these points are in the car's local coordinate system
+		-- to be checked against the dangerZone
+	    P1 : constant Point := (  P1t.X	 * Ct -   P1t.Y  * St,    P1t.X  * St +   P1t.Y  * Ct, 0.0); -- top left
+	    P2 : constant Point := (  P2t.X	 * Ct - (-P2t.Y) * St,    P2t.X  * St + (-P2t.Y) * Ct, 0.0); -- top right
+	    P3 : constant Point := ((-P3t.X) * Ct - (-P3t.Y) * St, (-P3t.X)  * St + (-P3t.Y) * Ct, 0.0); -- bot right
+	    P4 : constant Point := ((-P4t.X) * Ct -   P4t.Y  * St, (-P4t.X)  * St +   P4t.Y  * Ct, 0.0); -- bot left
+		-- Our lines to check for intersection with the dangerzone
+		L1 : constant Line := (P1, P2);
+		L2 : constant Line := (P2, P3);
+		L3 : constant Line := (P3, P4);
+		L4 : constant Line := (P4, P1);
+
 	begin
-		return BreakingDist > 0.0;
+	    if PointInDangerZone(P1, DZ) or
+		   PointInDangerZone(P2, DZ) or
+		   PointInDangerZone(P3, DZ) or
+		   PointInDangerZone(P4, DZ) then
+		    return True;
+		end if;
+		if IsIntersecting(L1, GetDZEdge(DZ, False)) or
+		   IsIntersecting(L1, GetDZEdge(DZ, True)) or
+		   IsIntersecting(L2, GetDZEdge(DZ, False)) or
+		   IsIntersecting(L2, GetDZEdge(DZ, True)) or
+		   IsIntersecting(L3, GetDZEdge(DZ, False)) or
+		   IsIntersecting(L3, GetDZEdge(DZ, True)) or
+		   IsIntersecting(L4, GetDZEdge(DZ, False)) or
+		   IsIntersecting(L4, GetDZEdge(DZ, True)) then
+		    return True;
+		end if;
+		return False;
 	end PerceptionCheck;
 end;

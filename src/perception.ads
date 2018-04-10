@@ -2,6 +2,8 @@ with types;
 use types;
 with Perception_Data_H;
 use Perception_Data_H;
+with Localization_Data_H;
+use Localization_Data_H;
 -- The car's coordinate system is defined as having the car being 0,0
 -- The y axis increases in the direction the car is facing
 -- The x axis increases to the right of the car
@@ -10,7 +12,7 @@ use Perception_Data_H;
 
 package perception with SPARK_Mode is
    -- dynamic and static indicate unknown object with a know moving state
-   type Object_type is (UNKNOWN, DYNAMIC, STATIC, PEDESTRIAN, BICYCLE, VEHICLE);
+   --type Object_type is (UNKNOWN, DYNAMIC, STATIC, PEDESTRIAN, BICYCLE, VEHICLE);
 
    -- unit is meters
    subtype Distance is FloatingNumber range 0.0 .. 100000.0;
@@ -73,7 +75,7 @@ package perception with SPARK_Mode is
 	 Pre => S > 0.0,
      Post => BreakingDistance'Result >= 0.0;
 
-   function GetDangerZone(S : in Speed; SteeringAngle : in Steering_Angle; Obj_Type : in Object_Type)
+   function GetDangerZone(S : in Speed; SteeringAngle : in Steering_Angle; Obj_Type : in C_type)
 	 return DangerZone with
 	 Pre => S > 0.0,
      Global => null;
@@ -88,7 +90,7 @@ package perception with SPARK_Mode is
    function IsIntersecting(L1 : Line; L2 : Line) return Boolean
 	 with Global => null;
 
-   function PerceptionCheck(O : in Perception_Obstacle_ada; S : in Speed) return Boolean with
+   function PerceptionCheck(Obstacle : in Perception_Obstacle_ada; Pose : in Pose_Ada; S : in Speed) return Boolean with
 	 Pre => S > 0.0,
      Global => null;
 
