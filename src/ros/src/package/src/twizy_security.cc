@@ -22,12 +22,16 @@ void send_brake_command(){
 
 void perceptionCallback(const apollo::perception::PerceptionObstacles& msg)
 {
+    if(!is_safe()){
+        send_brake_command();
+        ROS_INFO("Car state NOT SAFE: Ignoring callback and sending brake command");
+    }
     for(int i=0; i < msg.perception_obstacle_size(); i++){
         const apollo::perception::PerceptionObstacle& obs = msg.perception_obstacle(i);
         ROS_INFO("Calling update_perception() for obstacle nr: %d", i);
         update_perception(convert_obstacle(obs));
     }
-    if(!is_safe){
+    if(!is_safe()){
         send_brake_command();
         ROS_INFO("Perception module reports not safe! Sending brake command");
     }
@@ -52,9 +56,19 @@ void controlCallback(const apollo::control::ControlCommand& msg)
 
 void canbusCallback(const apollo::canbus::Chassis& msg)
 {
+    if(!is_safe()){
+        send_brake_command();
+        ROS_INFO("Car state NOT SAFE: Ignoring callback and sending brake command");
+    }
     ROS_INFO("Calling update speed");
     update_speed(convert_speed(msg)); 
-    if(!is_safe){
+
+    ROS_INFO("--------- %f %f", convert_speed(msg).speed, msg.speed_mps());
+    if(msg.has_speed_mps())
+        ROS_INFO("EVERYTHING GOOD NOTHING TO SEE HERE");
+    else
+        ROS_INFO("WE SOMEHOW DONT HAVE A VALIDF SPEED PANID");
+    if(!is_safe()){
         send_brake_command();
         ROS_INFO("Speed module reports not safe! Sending brake command");
     }
@@ -64,7 +78,7 @@ void localizationCallback(const apollo::localization::LocalizationEstimate& msg)
 {
     ROS_INFO("Calling update gps");
     update_gps(convert_localization_estimate(msg));
-    if(!is_safe){
+    if(!is_safe()){
         send_brake_command();
         ROS_INFO("Localization reports not safe! Sending brake command");
     }

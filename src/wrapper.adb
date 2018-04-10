@@ -8,7 +8,7 @@ is
     procedure Init is
     begin
         if not (Safe) then
-            -- Runnin init in a non fresh state is wrong
+            -- Running init in a non fresh state is wrong
             Initialized := False;
             return;
         end if;
@@ -40,8 +40,8 @@ is
             --Safe := gpsModule.gpstest(localization_estimate.pose.position.x, localization_estimate.pose.position.y);
             return;
         end if;
-        -- Gps values are compleately wrong meaning something is wrong with our gps.
-        -- We can not work without gps so we brake
+        -- Gps values are compleately wrong meaning we can't trust it. 
+        -- The car cannot function without the gps so we brake.
         Safe := False;
     end Update_GPS;
 
