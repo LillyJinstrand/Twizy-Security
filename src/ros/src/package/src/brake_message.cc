@@ -1,5 +1,4 @@
 #include "brake_message.h"
-#include <iostream>
 
 int sequence_number = 1;
 

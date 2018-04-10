@@ -70,6 +70,15 @@ target_link_libraries(twizySecurity
     ${PROTOBUF_LIBRARIES}
     
 )
+add_executable(interactiveTester src/interactive_tester.cc)
+target_link_libraries(interactiveTester
+    ${catkin_LIBRARIES}
+    apollo
+    converters
+    breakMsg
+    ${CMAKE_CURRENT_LIST_DIR}/lib/security.a
+    ${PROTOBUF_LIBRARIES}
+)
 add_executable(converterTest src/converter_test.cc)
 target_link_libraries(converterTest
     ${catkin_LIBRARIES}
@@ -81,3 +90,4 @@ target_link_libraries(converterTest
 
 add_dependencies(twizySecurity package_generate_message_cpp)
 add_dependencies(converterTest twizySecurity)
+add_dependencies(interactiveTester twizySecurity)
