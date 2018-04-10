@@ -33,8 +33,9 @@ is
     is
     begin
         if Convert_C_Bool(localization_estimate.valid_pose) 
-            and ( localization_estimate.pose.position.x < 180.0 and localization_estimate.pose.position.x > -180.0)
-            and ( localization_estimate.pose.position.y < 90.0 and localization_estimate.pose.position.y > -90.0)
+            -- TODO: These checks are wrong, fix after talking to perception
+            --and ( localization_estimate.pose.position.x < 180.0 and localization_estimate.pose.position.x > -180.0)
+            --and ( localization_estimate.pose.position.y < 90.0 and localization_estimate.pose.position.y > -90.0)
         then
             null;
             --Safe := gpsModule.gpstest(localization_estimate.pose.position.x, localization_estimate.pose.position.y);

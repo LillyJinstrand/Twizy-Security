@@ -15,6 +15,9 @@
 #include "security.h"
 #include "brake_message.h"
 
+double max_heading = 0;
+double min_heading = 0;
+
 ros::Publisher control_publisher;
 void send_brake_command(){
     control_publisher.publish(generate_brake_command());
@@ -60,14 +63,8 @@ void canbusCallback(const apollo::canbus::Chassis& msg)
         send_brake_command();
         ROS_INFO("Car state NOT SAFE: Ignoring callback and sending brake command");
     }
-    ROS_INFO("Calling update speed");
     update_speed(convert_speed(msg)); 
 
-    ROS_INFO("--------- %f %f", convert_speed(msg).speed, msg.speed_mps());
-    if(msg.has_speed_mps())
-        ROS_INFO("EVERYTHING GOOD NOTHING TO SEE HERE");
-    else
-        ROS_INFO("WE SOMEHOW DONT HAVE A VALIDF SPEED PANID");
     if(!is_safe()){
         send_brake_command();
         ROS_INFO("Speed module reports not safe! Sending brake command");
@@ -76,7 +73,7 @@ void canbusCallback(const apollo::canbus::Chassis& msg)
 
 void localizationCallback(const apollo::localization::LocalizationEstimate& msg)
 {
-    ROS_INFO("Calling update gps");
+    ROS_INFO("Position x: %f y: %f", msg.pose().position().x(), msg.pose().position().y());
     update_gps(convert_localization_estimate(msg));
     if(!is_safe()){
         send_brake_command();
