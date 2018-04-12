@@ -19,7 +19,7 @@ package body Mathutil with SPARK_Mode => Off is
 	function Cos(X : FloatingNumber) return FloatingNumber
 	is
 	begin
-	   return FloatingMath.Sin(X, 360.0);
+	   return FloatingMath.Cos(X, 360.0);
 	end;
 
 	function Tan(X : FloatingNumber) return FloatingNumber
