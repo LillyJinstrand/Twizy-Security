@@ -11,8 +11,6 @@ package body converters with SPARK_Mode is
            return temp;
        end if;
        temp := Speed(d);
-       pragma Annotate (GNATprove, False_Positive, "range check might fail", 
-            "No codepath to reach this with out of range values");
        return temp;
    end double_to_speed;
       

@@ -5,6 +5,8 @@ use localization_data_h;
 with speed_data_h;
 use speed_data_h;
 with gpsModule;
+with types; 
+use types;
 
 package Wrapper
     with SPARK_Mode
@@ -15,10 +17,16 @@ is
     -- and ignore any other commands until it is reset
     Safe : Boolean := True;
 
+    -- Variable to cache the current speed in.
+    -- Should be updated every time the canbus callback is run
+    CurrentSpeed : Speed := 0.0;
+    -- Variable to cache current position
+    CurrentPosition : Pose_Ada;
+
     -- Here should any initialzation code be run
     procedure Init 
     with 
-        Global => (Output => Initialized, Input => Safe),
+        Global => (Output => Initialized, In_Out => CurrentSpeed, Input => Safe),
         Convention => C,
         Export,
         External_Name => "init_ada";
@@ -36,19 +44,19 @@ is
     -- This block is the callback functions for the c++ wrapper to attatch to the ROS topics
     procedure Update_Perception(perception_data : in perception_obstacle_ada)
     with
-        Global => Null,
+        Global => (Input => (CurrentPosition, CurrentSpeed), In_Out => Safe),
         Convention => C,
         Export,
         External_Name => "update_perception_ada";
     procedure Update_GPS(localization_estimate : in localization_estimate_ada)
     with
-        Global => (In_Out => Safe),
+        Global => (In_Out => (Safe, CurrentPosition)),
         Convention => C,
         Export,
         External_Name => "update_gps_ada";
     procedure Update_Speed(speed : in speed_ada)
     with
-        Global => (In_Out => Safe),
+        Global => (In_Out => (Safe, CurrentSpeed)),
         Convention => C,
         Export,
         External_Name => "update_speed_ada";
