@@ -50,10 +50,10 @@ $(BIN)/test: test.cc $(BIN)/security.a
 
 .PHONY: ros
 ros: $(BIN)/security.a security.h perception_data.h
-	rsync -auv security.h $(ROS)/src/package/include/security.h
-	mkdir -p $(ROS)/src/package/lib
-	rsync -auv $(BIN)/security.a $(ROS)/src/package/lib/security.a
-	rsync -auv *_data.h $(ROS)/src/package/include/
+	rsync -auv security.h $(ROS)/src/security/include/security.h
+	mkdir -p $(ROS)/src/security/lib
+	rsync -auv $(BIN)/security.a $(ROS)/src/security/lib/security.a
+	rsync -auv *_data.h $(ROS)/src/security/include/
 	rm -rf $(ROS)/build
 
 .PHONY: apollo

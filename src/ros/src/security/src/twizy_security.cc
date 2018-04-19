@@ -90,6 +90,8 @@ int main(int argc, char **argv)
 
   control_publisher = n.advertise<apollo::control::ControlCommand>("/apollo/control", 1000);
 
+  init();
+
   ros::Subscriber perception = n.subscribe("/apollo/perception/obstacles", 1000, perceptionCallback);
   ros::Subscriber prediction = n.subscribe("/apollo/prediction", 1000, predictionCallback);
   ros::Subscriber control = n.subscribe("CONTROL_COMMAND", 1000, controlCallback);
@@ -98,7 +100,10 @@ int main(int argc, char **argv)
 
   ros::Rate loop_rate(1000);
 
-  ROS_INFO("twizySecurity started");
+  if(isInitialized())
+        ROS_INFO("twizySecurity started");
+  else
+        ROS_INFO("twizySecurity did not initialize properly!");
 
   int count = 0;
   while (ros::ok())
