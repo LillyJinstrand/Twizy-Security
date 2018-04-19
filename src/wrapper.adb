@@ -52,6 +52,7 @@ is
             null;
             --Safe := gpsModule.gpstest(localization_estimate.pose.position.x, localization_estimate.pose.position.y);
             CurrentPosition := localization_estimate.pose;
+            LastPositionTimestamp := localization_estimate.timestamp;
             return;
         end if;
         -- Gps values are compleately wrong meaning we can't trust it. 
@@ -61,7 +62,7 @@ is
 
     procedure Update_Speed(speed : in speed_ada) is
     begin 
-        if not (Convert_C_Bool(speed.valid_speed)) then
+        if not (Convert_C_Bool(speed.valid_speed) and Convert_C_Bool(speed.valid_timestamp)) then
             return;
         end if;
         if not (speed.speed > -80.0 and speed.speed < 80.0) then
@@ -76,8 +77,24 @@ is
             end if;
             -- Update the cached value of the current speed
             CurrentSpeed := speed_ada_to_speed(speed);
+            LastSpeedTimestamp := speed.timestamp;
         end if;
     end Update_Speed;
+
+    procedure CheckTimestamps(currentTime : in Interfaces.C.double) is
+    begin
+        pragma Assume (currentTime > 0.0);
+        pragma Assume (LastSpeedTimestamp > 0.0);
+        pragma Assume (LastPositionTimestamp > 0.0);
+        pragma Assume (LastPerceptionTimestamp > 0.0);
+        if (currentTime - LastSpeedTimestamp > MaxSpeedDelay) or
+            (currentTime - LastPositionTimestamp > MaxPositionDelay) or
+            (currentTime - LastPerceptionTimestamp > MaxPerceptionDelay)
+        then
+            Safe := False;
+            return;
+        end if;
+    end CheckTimestamps;
 
     function Is_Safe return Boolean
     is
