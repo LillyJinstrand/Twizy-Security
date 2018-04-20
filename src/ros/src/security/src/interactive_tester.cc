@@ -27,14 +27,10 @@ void control_cmd(ros::Publisher& pub){
     apollo::control::ControlCommand msg;
 
     msg.mutable_header()->CopyFrom(generate_header());
-    double throttle;
-    std::cout << "Enter throttle" << std::endl;
-    std::cin >> throttle;
-    msg.set_throttle(throttle);
-    double brake;
-    std::cout << "Enter brake" << std::endl;
-    std::cin >> brake;
-    msg.set_brake(brake);
+    double speed;
+    std::cout << "Enter speed" << std::endl;
+    std::cin >> speed;
+    msg.set_speed(speed);
     pub.publish(msg);
 }
 void speed_msg(ros::Publisher& pub){

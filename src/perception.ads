@@ -91,7 +91,7 @@ package perception with SPARK_Mode is
 	 with Global => null;
 
    function PerceptionCheck(Obstacle : in Perception_Obstacle_ada; Pose : in Pose_Ada; S : in Speed) return Boolean with
-	 Pre => S > 0.0,
+	 Pre => S >= 0.0,
      Global => null;
 
 end perception;

@@ -1,10 +1,9 @@
 with Interfaces.C; use Interfaces.C;
 with perception; use perception;
 with gpsModule; use gpsModule;
-with speedModule; use speedModule;
-with perception_data_h; use perception_data_h;
 with common_data_h; use common_data_h;
 with speed_data_h; use speed_data_h;
+with types; use types;
 
 
 package converters with SPARK_Mode is

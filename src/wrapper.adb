@@ -2,6 +2,7 @@ with Interface_utils; use Interface_utils;
 with speedModule; use speedModule;
 with converters; use converters;
 with Interfaces.C; use Interfaces.C;
+with perception;
 package body Wrapper
     with SPARK_Mode
 is
@@ -12,6 +13,7 @@ is
             Initialized := False;
             return;
         end if;
+        CurrentSpeed := 0.0;
         Initialized := True;
     end Init;
 
@@ -25,7 +27,17 @@ is
         (perception_data : in perception_obstacle_ada) 
     is
     begin
-        null;
+        if (CurrentSpeed < 0.0) then
+            -- Our sensors and logic does not work if we are reversing
+            -- Therefore it should not be done in autonomus mode
+            Safe := False;
+        else
+            pragma Assume (CurrentSpeed >= 0.0);
+            if not perception.PerceptionCheck(perception_data, CurrentPosition, CurrentSpeed) then
+                -- PerceptionCheck reports not safe, set safe to false
+                Safe := False;
+            end if;
+        end if;
     end Update_Perception;
 
     procedure Update_GPS 
@@ -39,6 +51,8 @@ is
         then
             null;
             --Safe := gpsModule.gpstest(localization_estimate.pose.position.x, localization_estimate.pose.position.y);
+            CurrentPosition := localization_estimate.pose;
+            LastPositionTimestamp := localization_estimate.timestamp;
             return;
         end if;
         -- Gps values are compleately wrong meaning we can't trust it. 
@@ -48,7 +62,7 @@ is
 
     procedure Update_Speed(speed : in speed_ada) is
     begin 
-        if not (Convert_C_Bool(speed.valid_speed)) then
+        if not (Convert_C_Bool(speed.valid_speed) and Convert_C_Bool(speed.valid_timestamp)) then
             return;
         end if;
         if not (speed.speed > -80.0 and speed.speed < 80.0) then
@@ -61,8 +75,26 @@ is
                 -- Set safe to false to brake
                 Safe := False;
             end if;
+            -- Update the cached value of the current speed
+            CurrentSpeed := speed_ada_to_speed(speed);
+            LastSpeedTimestamp := speed.timestamp;
         end if;
     end Update_Speed;
+
+    procedure CheckTimestamps(currentTime : in Interfaces.C.double) is
+    begin
+        pragma Assume (currentTime > 0.0);
+        pragma Assume (LastSpeedTimestamp > 0.0);
+        pragma Assume (LastPositionTimestamp > 0.0);
+        pragma Assume (LastPerceptionTimestamp > 0.0);
+        if (currentTime - LastSpeedTimestamp > MaxSpeedDelay) or
+            (currentTime - LastPositionTimestamp > MaxPositionDelay) or
+            (currentTime - LastPerceptionTimestamp > MaxPerceptionDelay)
+        then
+            Safe := False;
+            return;
+        end if;
+    end CheckTimestamps;
 
     function Is_Safe return Boolean
     is
