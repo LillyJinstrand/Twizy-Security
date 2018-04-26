@@ -14,7 +14,7 @@
  * limitations under the License.
  *****************************************************************************/
 
-#include "modules/canbus/vehicle/twizy/protocol/gear_66.h"
+#include "modules/canbus/vehicle/twizy/protocol/gear_98.h"
 
 #include "modules/drivers/canbus/common/byte.h"
 
@@ -25,43 +25,43 @@ namespace twizy {
 using ::apollo::drivers::canbus::Byte;
 
 // public
-const int32_t Gear66::ID = 0x98; // ID 152 på CAN i dec.
+const int32_t Gear98::ID = 0x98; // ID 152 på CAN i dec.
 
-uint32_t Gear66::GetPeriod() const {
+uint32_t Gear98::GetPeriod() const {
   // on event, so value nonsense
   static const uint32_t PERIOD = 20 * 1000;
   return PERIOD;
 }
 
-void Gear66::UpdateData(uint8_t *data) {
+void Gear98::UpdateData(uint8_t *data) {
   set_gear_p(data, gear_);
   set_brake_pedalstatus_p(data, pedal_);
   // set_clear_driver_override_flag_p(data);
 }
 
-void Gear66::Reset() { gear_ = 0; }
+void Gear98::Reset() { gear_ = 0; }
 
-Gear66 *Gear66::set_gear_none() {
+Gear98 *Gear98::set_gear_none() {
   gear_ = 0;
   return this;
 }
 
-Gear66 *Gear66::set_gear_reverse() {
+Gear98 *Gear98::set_gear_reverse() {
   gear_ = 0b00000100;
   return this;
 }
 
-Gear66 *Gear66::set_gear_neutral() {
+Gear98 *Gear98::set_gear_neutral() {
   gear_ = 0b00010000;
   return this;
 }
 
-Gear66 *Gear66::set_gear_drive() {
+Gear98 *Gear98::set_gear_drive() {
   gear_ = 0b01000000;
   return this;
 }
 
-Gear66 *Gear66::set_brake_pedalstatus(bool pedal) {
+Gear98 *Gear98::set_brake_pedalstatus(bool pedal) {
 	if(pedal) {
 	  pedal_ = 0b10000000;
 	} else {
@@ -71,19 +71,14 @@ Gear66 *Gear66::set_brake_pedalstatus(bool pedal) {
 }
 
 // private
-void Gear66::set_gear_p(uint8_t *data, uint8_t gear) {
+void Gear98::set_gear_p(uint8_t *data, uint8_t gear) {
   Byte frame(data);
   frame.set_value(gear, 0, 8);
 }
 
-void Gear66::set_brake_pedalstatus_p(uint8_t *data, uint8_t pedal) {
+void Gear98::set_brake_pedalstatus_p(uint8_t *data, uint8_t pedal) {
   Byte frame(data + 1);
   frame.set_value(pedal, 0, 8);
-}
-
-void Gear66::set_clear_driver_override_flag_p(uint8_t *bytes) {
-  Byte frame(bytes);
-  frame.set_bit_0(7);
 }
 
 }  // namespace twizy 
