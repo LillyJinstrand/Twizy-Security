@@ -1,3 +1,3 @@
 #/bin/bash
 
-devel/lib/package/converterTest
+devel/lib/security/converterTest
