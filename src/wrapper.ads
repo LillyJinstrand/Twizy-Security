@@ -40,6 +40,10 @@ is
         Convention => C,
         Export,
         External_Name => "init_ada";
+
+    procedure WaitForData
+    with
+        Global => (Input => (LastSpeedTimestamp, LastPositionTimestamp, LastPerceptionTimestamp));
     -- Simply returns if the init function has been run or not
     pragma Warnings (Off, "return type of ""Is_Initialized"" is an 8-bit Ada Boolean",
                         Reason => "Handeled by the c++ wrapper");

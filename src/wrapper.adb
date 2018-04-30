@@ -15,7 +15,19 @@ is
         end if;
         CurrentSpeed := 0.0;
         Initialized := True;
+        -- Busy-wait until we have recived data from all sensors
+        
     end Init;
+
+    procedure WaitForData is
+    begin
+        while (LastPositionTimestamp = 0.0) loop
+            delay Duration(0.01);
+        end loop;
+        while (LastPerceptionTimestamp = 0.0) loop
+            delay Duration(0.01);
+        end loop;
+    end WaitForData;
 
     function Is_Initialized return Boolean
     is
@@ -49,10 +61,9 @@ is
             --and ( localization_estimate.pose.position.x < 180.0 and localization_estimate.pose.position.x > -180.0)
             --and ( localization_estimate.pose.position.y < 90.0 and localization_estimate.pose.position.y > -90.0)
         then
-            null;
             --Safe := gpsModule.gpstest(localization_estimate.pose.position.x, localization_estimate.pose.position.y);
             CurrentPosition := localization_estimate.pose;
-            LastPositionTimestamp := localization_estimate.timestamp;
+            LastPositionTimestamp := localization_estimate.measurement_time;
             return;
         end if;
         -- Gps values are compleately wrong meaning we can't trust it. 
@@ -62,7 +73,7 @@ is
 
     procedure Update_Speed(speed : in speed_ada) is
     begin 
-        if not (Convert_C_Bool(speed.valid_speed) and Convert_C_Bool(speed.valid_timestamp)) then
+        if not (Convert_C_Bool(speed.valid_speed) and not Convert_C_Bool(speed.valid_timestamp)) then
             return;
         end if;
         if not (speed.speed > -80.0 and speed.speed < 80.0) then
