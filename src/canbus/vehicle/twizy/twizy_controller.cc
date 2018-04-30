@@ -63,24 +63,33 @@ ErrorCode TwizyController::Init(const VehicleParameter& params,
   message_manager_ = message_manager;
 
   // sender part
-  steering_64_ = dynamic_cast<Steering64 *>(
-  message_manager_->GetMutableProtocolDataById(Steering64::ID)
+  steering_96_ = dynamic_cast<Steering96 *>(
+  message_manager_->GetMutableProtocolDataById(Steering96::ID)
   );
-  if (steering_64_ == nullptr) {
-    AERROR << "Steering64 does not exist in the TwizyMessageManager!";
+  if (steering_96_ == nullptr) {
+    AERROR << "Steering96 does not exist in the TwizyMessageManager!";
 	return ErrorCode::CANBUS_ERROR;
   }  
 
-  gear_66_ = dynamic_cast<Gear66 *>(
-  message_manager_->GetMutableProtocolDataById(Gear66::ID)
+  gear_98_ = dynamic_cast<Gear98 *>(
+  message_manager_->GetMutableProtocolDataById(Gear98::ID)
   );
-  if (gear_66_ == nullptr) {
-    AERROR << "Gear66 does not exist in the TwizyMessageManager!";
+  if (gear_98_ == nullptr) {
+    AERROR << "Gear98 does not exist in the TwizyMessageManager!";
 	return ErrorCode::CANBUS_ERROR;
   }  
+   
+  speed_9a_ = dynamic_cast<Speed9A *>(
+  message_manager_->GetMutableProtocolDataById(Speed9A::ID)
+  );
+  if (speed_9a_ == nullptr) {
+    AERROR << "Speed9A does not exist in the TwizyMessageManager!";
+  return ErrorCode::CANBUS_ERROR;
+  }  
 
-  can_sender_->AddMessage(Steering64::ID, steering_64_, false);
-  can_sender_->AddMessage(Gear66::ID, gear_66_, false);
+  can_sender_->AddMessage(Steering96::ID, steering_96_, false);
+  can_sender_->AddMessage(Gear98::ID, gear_98_, false);
+  can_sender_->AddMessage(Speed9A::ID, speed_9a_, false);
 
   // need sleep to ensure all messages received
   AINFO << "TwizyController is initialized.";
@@ -121,7 +130,7 @@ Chassis TwizyController::chassis() {
   ChassisDetail chassis_detail;
 
   message_manager_->GetSensorData(&chassis_detail);
-
+  
   // 21, 22, previously 1, 2
   if (driving_mode() == Chassis::EMERGENCY_MODE) {
     set_chassis_error_code(Chassis::NO_ERROR);
@@ -135,11 +144,7 @@ Chassis TwizyController::chassis() {
   
   // ADD YOUR OWN CAR CHASSIS OPERATION
   // We assume that car isn't in motion when engine starts.
-  /* The if statements below are what breaks the CAN module in dreamview.
-     When building apollo we get the warning "'chassis_detail_' may be used 
-     uninitialized in this function" which I'm guessing breaks the CAN module.
-     Have not had time to check how to fix this.
-  */    
+ 
   if(!chassis_detail.twizy().curr_speed().has_curr_speed()) {
 	  chassis_.set_speed_mps(0);
   }
@@ -175,7 +180,6 @@ ErrorCode TwizyController::EnableAutoMode() {
   }
   return ErrorCode::OK;
   // ADD YOUR OWN CAR CHASSIS OPERATION
-  steering_64_->set_enable();
   
   can_sender_->Update();
   const int32_t flag =
@@ -212,7 +216,7 @@ ErrorCode TwizyController::EnableSteeringOnlyMode() {
   /* ADD YOUR OWN CAR CHASSIS OPERATION
   brake_60_->set_disable();
   throttle_62_->set_disable();
-  steering_64_->set_enable();
+  steering_96_->set_enable();
 
   can_sender_->Update();
   if (CheckResponse(CHECK_RESPONSE_STEER_UNIT_FLAG, true) == false) {
@@ -239,7 +243,7 @@ ErrorCode TwizyController::EnableSpeedOnlyMode() {
   /* ADD YOUR OWN CAR CHASSIS OPERATION
   brake_60_->set_enable();
   throttle_62_->set_enable();
-  steering_64_->set_disable();
+  steering_96_->set_disable();
 
   can_sender_->Update();
   if (CheckResponse(CHECK_RESPONSE_SPEED_UNIT_FLAG, true) == false) {
@@ -266,28 +270,28 @@ void TwizyController::Gear(Chassis::GearPosition gear_position) {
   // ADD YOUR OWN CAR CHASSIS OPERATION
   switch (gear_position) {
     case Chassis::GEAR_NEUTRAL: {
-      gear_66_->set_gear_neutral();
+      gear_98_->set_gear_neutral();
       break;
     }
     case Chassis::GEAR_REVERSE: {
-      gear_66_->set_gear_reverse();
+      gear_98_->set_gear_reverse();
       break;
     }
     case Chassis::GEAR_DRIVE: {
-      gear_66_->set_gear_drive();
+      gear_98_->set_gear_drive();
       break;
     }
     case Chassis::GEAR_NONE: {
-      gear_66_->set_gear_none();
+      gear_98_->set_gear_none();
       break;
     }
     case Chassis::GEAR_INVALID: {
       AERROR << "Gear command is invalid!";
-      gear_66_->set_gear_none();
+      gear_98_->set_gear_none();
       break;
     }
     default: {
-      gear_66_->set_gear_none();
+      gear_98_->set_gear_none();
       break;
     }
   }
@@ -308,7 +312,8 @@ void TwizyController::Brake(double pedal) {
     return;
   }
   // ADD YOUR OWN CAR CHASSIS OPERATION
-  gear_66_->set_brake_pedalstatus(true);
+  gear_98_->set_brake_pedalstatus(true);
+  speed_9a_->set_ref_speed(0.0);
 }
 
 // drive with old acceleration
@@ -334,10 +339,9 @@ void TwizyController::Steer(double angle) {
     AINFO << "The current driving mode does not need to set steer.";
     return;
   }
-  const double real_angle = params_.max_steer_angle() * angle / 100.0;
   // reverse sign
   // ADD YOUR OWN CAR CHASSIS OPERATION
-  steering_64_->set_steering_angle(real_angle)->set_steering_angle_speed(200);
+  steering_96_->set_steering_angle(angle)->set_steering_angle_speed(200);
   
 }
 
@@ -355,7 +359,7 @@ void TwizyController::Steer(double angle, double angle_spd) {
   const double real_angle_spd = ProtocolData::BoundedValue(
       params_.min_steer_angle_spd(), params_.max_steer_angle_spd(),
       params_.max_steer_angle_spd() * angle_spd / 100.0);
-  steering_64_->set_steering_angle(real_angle)
+  steering_96_->set_steering_angle(real_angle)
       ->set_steering_angle_speed(real_angle_spd);
   */
 }
