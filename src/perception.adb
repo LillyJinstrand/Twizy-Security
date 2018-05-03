@@ -115,8 +115,8 @@ package body perception with SPARK_Mode is
 		X : constant FloatingNumber := FloatingNumber(Obstacle.Length) / 2.0;
 		Y : constant FloatingNumber := FloatingNumber(Obstacle.Width) / 2.0;
 		-- TODO: find out unit of theta, currently assumes degrees
-		Stw : constant FloatingNumber := Mathutil.Sin(FloatingNumber(Obstacle.Theta));
-		Ctw : constant FloatingNumber := Mathutil.Cos(FloatingNumber(Obstacle.Theta));
+		Stw : constant FloatingNumber := Mathutil.Sin_r(FloatingNumber(Obstacle.Theta));
+		Ctw : constant FloatingNumber := Mathutil.Cos_r(FloatingNumber(Obstacle.Theta));
 		-- these points are in the "world" coordinate system, whatever that means
 	    P1w : constant Point := (  X	 * Ctw -   Y  * Stw,    X  * Stw +   Y  * Ctw, 0.0); -- top left
 	    P2w : constant Point := (  X	 * Ctw - (-Y) * Stw,    X  * Stw + (-Y) * Ctw, 0.0); -- top right
@@ -133,8 +133,8 @@ package body perception with SPARK_Mode is
 	    P4t : constant Point := (P4w.X - XT, P4w.Y - YT, 0.0); -- bot left
 
 		-- TODO: find out unit of heading, currently assumes degrees
-		St : constant FloatingNumber := Mathutil.Sin(FloatingNumber(Pose.Heading));
-		Ct : constant FloatingNumber := Mathutil.Cos(FloatingNumber(Pose.Heading));
+		St : constant FloatingNumber := Mathutil.Sin_r(FloatingNumber(Pose.Heading));
+		Ct : constant FloatingNumber := Mathutil.Cos_r(FloatingNumber(Pose.Heading));
 		-- these points are in the car's local coordinate system
 		-- to be checked against the dangerZone
 	    P1 : constant Point := (  P1t.X	 * Ct -   P1t.Y  * St,    P1t.X  * St +   P1t.Y  * Ct, 0.0); -- top left
@@ -154,6 +154,7 @@ package body perception with SPARK_Mode is
 		   PointInDangerZone(P4, DZ) then
 		    return True;
 		end if;
+		-- one optimization is to find the 2 closest lines, but that might be overkill
 		if IsIntersecting(L1, GetDZEdge(DZ, False)) or
 		   IsIntersecting(L1, GetDZEdge(DZ, True)) or
 		   IsIntersecting(L2, GetDZEdge(DZ, False)) or

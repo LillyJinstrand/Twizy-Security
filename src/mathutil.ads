@@ -21,6 +21,18 @@ package Mathutil with SPARK_Mode => On is
 	  with
 	  Global => null;
 
+	function Sin_r(X : FloatingNumber) return FloatingNumber
+	  with
+	  Global => null;
+
+	function Cos_r(X : FloatingNumber) return FloatingNumber
+	  with
+	  Global => null;
+
+	function Tan_r(X : FloatingNumber) return FloatingNumber
+	  with
+	  Global => null;
+
 	function Sqrt(X : FloatingNumber) return FloatingNumber
 	  with
 	  Global => null,

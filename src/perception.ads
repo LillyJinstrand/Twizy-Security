@@ -15,9 +15,9 @@ package perception with SPARK_Mode is
    --type Object_type is (UNKNOWN, DYNAMIC, STATIC, PEDESTRIAN, BICYCLE, VEHICLE);
 
    -- unit is meters
-   subtype Distance is FloatingNumber range 0.0 .. 100000.0;
+   subtype Distance is FloatingNumber range -10000000.0 .. 10000000.0;
 
-   subtype Cartesian_Coordinate is FloatingNumber range -1000.0 .. 1000.0;
+   subtype Cartesian_Coordinate is Distance;
 
    -- angle from lidar (0 is straight forward)
    subtype Angle is FloatingNumber range -360.0 .. 360.0;
