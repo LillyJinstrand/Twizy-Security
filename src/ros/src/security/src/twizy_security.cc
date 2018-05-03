@@ -25,11 +25,13 @@ void send_brake_command(){
 
 void perceptionCallback(const apollo::perception::PerceptionObstacles& msg)
 {
+    ROS_INFO("Calling perception");
     if(!is_safe()){
         //If the car is in a unsafe state already there is point in calling the check
         return;
     }
     for(int i=0; i < msg.perception_obstacle_size(); i++){
+        ROS_INFO("Calling perception check for obstacle %d", msg.perception_obstacle(i).id());
         const apollo::perception::PerceptionObstacle& obs = msg.perception_obstacle(i);
         update_perception(convert_obstacle(obs));
     }
@@ -39,11 +41,6 @@ void perceptionCallback(const apollo::perception::PerceptionObstacles& msg)
     }
 }
 
-void predictionCallback(const apollo::prediction::PredictionObstacles& msg)
-{
-    //ROS_INFO("Prediction recived");
-    //update_prediction(); //Maybe combine prediction and perception? */
-}
 
 void controlCallback(const apollo::control::ControlCommand& msg)
 {
@@ -96,7 +93,7 @@ int main(int argc, char **argv)
   init();
 
   ros::Subscriber perception = n.subscribe("/apollo/perception/obstacles", 1000, perceptionCallback);
-  ros::Subscriber prediction = n.subscribe("/apollo/prediction", 1000, predictionCallback);
+  //ros::Subscriber prediction = n.subscribe("/apollo/prediction", 1000, predictionCallback);
   ros::Subscriber control = n.subscribe("CONTROL_COMMAND", 1000, controlCallback);
   ros::Subscriber canbus = n.subscribe("/apollo/canbus/chassis", 1000, canbusCallback);
   ros::Subscriber localization = n.subscribe("/apollo/localization/pose", 1000, localizationCallback);
