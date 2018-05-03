@@ -62,6 +62,7 @@ void canbusCallback(const apollo::canbus::Chassis& msg)
         //If the car is in a unsafe state already there is point in calling the check
         return;
     }
+    ROS_INFO("Speed reported %f", convert_speed(msg).speed);
     update_speed(convert_speed(msg)); 
 
     if(!is_safe()){

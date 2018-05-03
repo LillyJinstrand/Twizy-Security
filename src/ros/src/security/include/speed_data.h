@@ -5,6 +5,9 @@
 struct speed_ada {
     double speed;
     bool valid_speed;
+
+    double timestamp;
+    bool valid_timestamp;
 };
 
 #endif

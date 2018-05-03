@@ -15,12 +15,12 @@
  *****************************************************************************/
 
 /**
- * @file gear_66.h
- * @brief the class of Gear66 (for twizy vehicle)
+ * @file gear_98.h
+ * @brief the class of Gear98 (for twizy vehicle)
  */
 
-#ifndef MODULES_CANBUS_VEHICLE_TWIZY_PROTOCOL_GEAR_66_H_
-#define MODULES_CANBUS_VEHICLE_TWIZY_PROTOCOL_GEAR_66_H_
+#ifndef MODULES_CANBUS_VEHICLE_TWIZY_PROTOCOL_GEAR_98_H_
+#define MODULES_CANBUS_VEHICLE_TWIZY_PROTOCOL_GEAR_98_H_
 
 #include "modules/drivers/canbus/can_comm/protocol_data.h"
 #include "modules/canbus/proto/chassis_detail.pb.h"
@@ -34,11 +34,11 @@ namespace canbus {
 namespace twizy {
 
 /**
- * @class Gear66
+ * @class Gear98
  *
  * @brief one of the protocol data of twizy vehicle
  */
-class Gear66 : public ::apollo::drivers::canbus::ProtocolData<
+class Gear98 : public ::apollo::drivers::canbus::ProtocolData<
                     ::apollo::canbus::ChassisDetail> {
  public:
   static const int32_t ID;
@@ -64,27 +64,27 @@ class Gear66 : public ::apollo::drivers::canbus::ProtocolData<
    * @brief set gear to none
    * @return a this pointer to the instance itself
    */
-  Gear66 *set_gear_none();
+  Gear98 *set_gear_none();
 
   /**
    * @brief set gear to reverse
    * @return a this pointer to the instance itself
    */
-  Gear66 *set_gear_reverse();
+  Gear98 *set_gear_reverse();
 
   /**
    * @brief set gear to neutral
    * @return a this pointer to the instance itself
    */
-  Gear66 *set_gear_neutral();
+  Gear98 *set_gear_neutral();
 
   /**
    * @brief set gear to drive
    * @return a this pointer to the instance itself
    */
-  Gear66 *set_gear_drive();
+  Gear98 *set_gear_drive();
 
-  Gear66 *set_brake_pedalstatus(bool pedal);
+  Gear98 *set_brake_pedalstatus(bool pedal);
 
  private:
   /**
@@ -97,14 +97,6 @@ class Gear66 : public ::apollo::drivers::canbus::ProtocolData<
 
   void set_brake_pedalstatus_p(uint8_t *data, uint8_t pedal);
   
-  /**
-   * @brief set clear driver override position
-   * config detail: {'name': 'clear', 'offset': 0.0, 'precision': 1.0, 'len': 1,
-   * 'f_type': 'valid', 'is_signed_var': False, 'physical_range': '[0|0]',
-   * 'bit': 7, 'type': 'bool', 'order': 'intel', 'physical_unit': '""'}
-   */
-  void set_clear_driver_override_flag_p(uint8_t *bytes);
-
  private:
   uint8_t gear_ = 0;
   uint8_t pedal_ = 0;
@@ -115,4 +107,4 @@ class Gear66 : public ::apollo::drivers::canbus::ProtocolData<
 }  // namespace canbus
 }  // namespace apollo
 
-#endif  // MODULES_CANBUS_VEHICLE_TWIZY_PROTOCOL_GEAR_66_H_
+#endif  // MODULES_CANBUS_VEHICLE_TWIZY_PROTOCOL_GEAR_98_H_

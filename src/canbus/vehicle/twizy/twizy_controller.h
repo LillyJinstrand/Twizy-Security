@@ -28,8 +28,10 @@
 #include "modules/common/macro.h"
 #include "modules/common/proto/error_code.pb.h"
 #include "modules/control/proto/control_cmd.pb.h"
-#include "modules/canbus/vehicle/twizy/protocol/steering_64.h"
-#include "modules/canbus/vehicle/twizy/protocol/gear_66.h"
+#include "modules/canbus/vehicle/twizy/protocol/steering_96.h"
+#include "modules/canbus/vehicle/twizy/protocol/gear_98.h"
+#include "modules/canbus/vehicle/twizy/protocol/speed_9a.h"
+
 
 
 namespace apollo {
@@ -110,8 +112,9 @@ class TwizyController final : public VehicleController {
 
  private:
   // control protocol
-  Steering64 *steering_64_ = nullptr;
-  Gear66 *gear_66_ = nullptr;
+  Steering96 *steering_96_ = nullptr;
+  Gear98 *gear_98_ = nullptr;
+  Speed9A *speed_9a_ = nullptr;
 
   CanSender<::apollo::canbus::ChassisDetail>* can_sender_;
   Chassis chassis_;
