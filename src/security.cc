@@ -10,6 +10,7 @@ extern "C" {
     void update_perception_ada(perception_obstacle_ada);
     void update_gps_ada(localization_estimate_ada);
     void update_speed_ada(speed_ada);
+    void check_timestamps_ada(double);
 
     char is_safe_ada();
 
@@ -34,6 +35,10 @@ void update_gps(localization_estimate_ada in){
 }
 void update_speed(speed_ada in){
     update_speed_ada(in);
+}
+
+void check_timestamps(double currentTime){
+    check_timestamps_ada(currentTime);
 }
 
 bool is_safe(){

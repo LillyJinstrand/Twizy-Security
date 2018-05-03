@@ -31,7 +31,7 @@ is
     -- TODO: Determine these in a proper way
     MaxPerceptionDelay : constant Interfaces.C.double := 1000.0;
     MaxPositionDelay : constant Interfaces.C.double := 1000.0;
-    MaxSpeedDelay : constant Interfaces.C.double := 1000.0;
+    MaxSpeedDelay : constant Interfaces.C.double := 100.0;
 
     -- Here should any initialzation code be run
     procedure Init 
@@ -80,7 +80,10 @@ is
         Global => (
             Input => (LastSpeedTimestamp, LastPositionTimestamp, LastPerceptionTimestamp), 
             In_Out => Safe
-            );
+        ),
+        Convention => C,
+        Export,
+        External_Name => "check_timestamps_ada";
 
     -- Returns whether we are safe or not
     -- The result is based on the last run of the callback functions

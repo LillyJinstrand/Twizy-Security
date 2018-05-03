@@ -47,6 +47,7 @@ void predictionCallback(const apollo::prediction::PredictionObstacles& msg)
 
 void controlCallback(const apollo::control::ControlCommand& msg)
 {
+    //check_timestamps(ros::Time::now().toSec());
     if (is_safe()){
         ROS_INFO("Everything reports safe, forwarding command");
         control_publisher.publish(msg);
@@ -63,6 +64,7 @@ void canbusCallback(const apollo::canbus::Chassis& msg)
         return;
     }
     ROS_INFO("Speed reported %f", convert_speed(msg).speed);
+    ROS_INFO("At timestamp %f", convert_speed(msg).timestamp);
     update_speed(convert_speed(msg)); 
 
     if(!is_safe()){

@@ -19,6 +19,7 @@ apollo::common::Header generate_header(){
     apollo::common::ErrorCode err = apollo::common::OK;
     msg.mutable_status()->set_error_code(err);
     msg.set_timestamp_sec(ros::Time::now().toSec());
+    std::cout << ros::Time::now().toSec() << "s" << std::endl;
 
     return msg;
 }
