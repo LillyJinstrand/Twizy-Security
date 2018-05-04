@@ -26,17 +26,18 @@ void send_brake_command(){
 void perceptionCallback(const apollo::perception::PerceptionObstacles& msg)
 {
     ROS_INFO("Calling perception");
-    if(!is_safe()){
+    //if(!is_safe()){
         //If the car is in a unsafe state already there is point in calling the check
-        return;
-    }
+    //    return;
+    //}
     for(int i=0; i < msg.perception_obstacle_size(); i++){
         ROS_INFO("Calling perception check for obstacle %d", msg.perception_obstacle(i).id());
+		ROS_INFO("Object position: %f,%f", msg.perception_obstacle(i).position().x(), msg.perception_obstacle(i).position().y());
         const apollo::perception::PerceptionObstacle& obs = msg.perception_obstacle(i);
         update_perception(convert_obstacle(obs));
     }
     if(!is_safe()){
-        send_brake_command();
+        //send_brake_command();
         ROS_INFO("Perception module reports not safe! Sending brake command");
     }
 }
@@ -62,7 +63,7 @@ void canbusCallback(const apollo::canbus::Chassis& msg)
     }
     ROS_INFO("Speed reported %f", convert_speed(msg).speed);
     ROS_INFO("At timestamp %f", convert_speed(msg).timestamp);
-    update_speed(convert_speed(msg)); 
+    update_speed(convert_speed(msg));
 
     if(!is_safe()){
         send_brake_command();
@@ -85,8 +86,8 @@ void localizationCallback(const apollo::localization::LocalizationEstimate& msg)
 
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "twizySecurity");   
-  ros::NodeHandle n;   
+  ros::init(argc, argv, "twizySecurity");
+  ros::NodeHandle n;
 
   control_publisher = n.advertise<apollo::control::ControlCommand>("/apollo/control", 1000);
 
