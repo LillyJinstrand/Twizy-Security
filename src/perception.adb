@@ -112,16 +112,18 @@ package body perception with SPARK_Mode is
 	is
 	    DZ : constant DangerZone := GetDangerZone(S, 0.0, Obstacle.The_C_Type);
 
+		GX : constant FloatingNumber := FloatingNumber(Obstacle.Position.X);
+		GY : constant FloatingNumber := FloatingNumber(Obstacle.Position.Y);
 		X : constant FloatingNumber := FloatingNumber(Obstacle.Length) / 2.0;
 		Y : constant FloatingNumber := FloatingNumber(Obstacle.Width) / 2.0;
-		-- TODO: find out unit of theta, currently assumes degrees
+
 		Stw : constant FloatingNumber := Mathutil.Sin_r(FloatingNumber(Obstacle.Theta));
 		Ctw : constant FloatingNumber := Mathutil.Cos_r(FloatingNumber(Obstacle.Theta));
 		-- these points are in the "world" coordinate system, whatever that means
-	    P1w : constant Point := (  X	 * Ctw -   Y  * Stw,    X  * Stw +   Y  * Ctw, 0.0); -- top left
-	    P2w : constant Point := (  X	 * Ctw - (-Y) * Stw,    X  * Stw + (-Y) * Ctw, 0.0); -- top right
-	    P3w : constant Point := ((-X)  * Ctw - (-Y) * Stw, (-X) * Stw + (-Y) * Ctw, 0.0); -- bot right
-	    P4w : constant Point := ((-X)  * Ctw -   Y  * Stw, (-X) * Stw +   Y  * Ctw, 0.0); -- bot left
+	    P1w : constant Point := (  X * Ctw -   Y  * Stw + GX,    X  * Stw +   Y  * Ctw + GY, 0.0); -- top left
+	    P2w : constant Point := (  X * Ctw - (-Y) * Stw + GX,    X  * Stw + (-Y) * Ctw + GY, 0.0); -- top right
+	    P3w : constant Point := ((-X)  * Ctw - (-Y) * Stw + GX, (-X) * Stw + (-Y) * Ctw + GY, 0.0); -- bot right
+	    P4w : constant Point := ((-X)  * Ctw -   Y  * Stw + GX, (-X) * Stw +   Y  * Ctw + GY, 0.0); -- bot left
 
 		XT : constant FloatingNumber := FloatingNumber(Pose.Position.X);
 		YT : constant FloatingNumber := FloatingNumber(Pose.Position.Y);
@@ -132,15 +134,14 @@ package body perception with SPARK_Mode is
 	    P3t : constant Point := (P3w.X - XT, P3w.Y - YT, 0.0); -- bot right
 	    P4t : constant Point := (P4w.X - XT, P4w.Y - YT, 0.0); -- bot left
 
-		-- TODO: find out unit of heading, currently assumes degrees
 		St : constant FloatingNumber := Mathutil.Sin_r(FloatingNumber(Pose.Heading));
 		Ct : constant FloatingNumber := Mathutil.Cos_r(FloatingNumber(Pose.Heading));
 		-- these points are in the car's local coordinate system
 		-- to be checked against the dangerZone
-	    P1 : constant Point := (  P1t.X	 * Ct -   P1t.Y  * St,    P1t.X  * St +   P1t.Y  * Ct, 0.0); -- top left
-	    P2 : constant Point := (  P2t.X	 * Ct - (-P2t.Y) * St,    P2t.X  * St + (-P2t.Y) * Ct, 0.0); -- top right
-	    P3 : constant Point := ((-P3t.X) * Ct - (-P3t.Y) * St, (-P3t.X)  * St + (-P3t.Y) * Ct, 0.0); -- bot right
-	    P4 : constant Point := ((-P4t.X) * Ct -   P4t.Y  * St, (-P4t.X)  * St +   P4t.Y  * Ct, 0.0); -- bot left
+	    P1 : constant Point := ( P1t.X * Ct - P1t.Y * St, P1t.X * St + P1t.Y * Ct, 0.0); -- top left
+	    P2 : constant Point := ( P2t.X * Ct - P2t.Y * St, P2t.X * St + P2t.Y * Ct, 0.0); -- top right
+	    P3 : constant Point := ( P3t.X * Ct - P3t.Y * St, P3t.X * St + P3t.Y * Ct, 0.0); -- bot right
+	    P4 : constant Point := ( P4t.X * Ct - P4t.Y * St, P4t.X * St + P4t.Y * Ct, 0.0); -- bot left
 		-- Our lines to check for intersection with the dangerzone
 		L1 : constant Line := (P1, P2);
 		L2 : constant Line := (P2, P3);
@@ -148,11 +149,22 @@ package body perception with SPARK_Mode is
 		L4 : constant Line := (P4, P1);
 
 	begin
+	   Put(Float(GX)); Ada.Text_IO.New_Line(1);
+	   Put(Float(GY)); Ada.Text_IO.New_Line(1);
+	   Ada.Text_IO.Put("XT,XY: "); Put(Float(XT)); Ada.Text_IO.Put(","); Put(Float(YT)); Ada.Text_IO.New_Line(1);
+	   Ada.Text_IO.Put_Line("Points: ");
+	   Ada.Text_IO.Put("1: "); Put(Float(P1.X)); Ada.Text_IO.Put(","); Put(Float(P1.Y)); Ada.Text_IO.New_Line(1);
+	   Ada.Text_IO.Put("2: "); Put(Float(P2.X)); Ada.Text_IO.Put(","); Put(Float(P2.Y)); Ada.Text_IO.New_Line(1);
+	   Ada.Text_IO.Put("3: "); Put(Float(P3.X)); Ada.Text_IO.Put(","); Put(Float(P3.Y)); Ada.Text_IO.New_Line(1);
+	   Ada.Text_IO.Put("4: "); Put(Float(P4.X)); Ada.Text_IO.Put(","); Put(Float(P4.Y)); Ada.Text_IO.New_Line(1);
+	   Ada.Text_IO.Put("");
+
 	    if PointInDangerZone(P1, DZ) or
 		   PointInDangerZone(P2, DZ) or
 		   PointInDangerZone(P3, DZ) or
 		   PointInDangerZone(P4, DZ) then
-		    return True;
+		    Ada.Text_IO.Put_Line("Unsafe, point in DZ");
+		    return False;
 		end if;
 		-- one optimization is to find the 2 closest lines, but that might be overkill
 		if IsIntersecting(L1, GetDZEdge(DZ, False)) or
@@ -163,8 +175,9 @@ package body perception with SPARK_Mode is
 		   IsIntersecting(L3, GetDZEdge(DZ, True)) or
 		   IsIntersecting(L4, GetDZEdge(DZ, False)) or
 		   IsIntersecting(L4, GetDZEdge(DZ, True)) then
-		    return True;
+		    Ada.Text_IO.Put_Line("Unsafe, line crossing DZ");
+		    return False;
 		end if;
-		return False;
+		return True;
 	end PerceptionCheck;
 end;

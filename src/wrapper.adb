@@ -2,6 +2,7 @@ with Interface_utils; use Interface_utils;
 with speedModule; use speedModule;
 with converters; use converters;
 with Interfaces.C; use Interfaces.C;
+with Ada.Text_IO;
 with perception;
 package body Wrapper
     with SPARK_Mode
@@ -16,7 +17,7 @@ is
         CurrentSpeed := 0.0;
         Initialized := True;
         -- Busy-wait until we have recived data from all sensors
-        
+
     end Init;
 
     procedure WaitForData is
@@ -36,7 +37,7 @@ is
     end Is_Initialized;
 
     procedure Update_Perception
-        (perception_data : in perception_obstacle_ada) 
+        (perception_data : in perception_obstacle_ada)
     is
     begin
         if (CurrentSpeed < 0.0) then
@@ -52,11 +53,11 @@ is
         end if;
     end Update_Perception;
 
-    procedure Update_GPS 
+    procedure Update_GPS
         (localization_estimate : in localization_estimate_ada)
     is
     begin
-        if Convert_C_Bool(localization_estimate.valid_pose) 
+        if Convert_C_Bool(localization_estimate.valid_pose)
             -- TODO: These checks are wrong, fix after talking to perception
             --and ( localization_estimate.pose.position.x < 180.0 and localization_estimate.pose.position.x > -180.0)
             --and ( localization_estimate.pose.position.y < 90.0 and localization_estimate.pose.position.y > -90.0)
@@ -66,13 +67,13 @@ is
             LastPositionTimestamp := localization_estimate.measurement_time;
             return;
         end if;
-        -- Gps values are compleately wrong meaning we can't trust it. 
+        -- Gps values are compleately wrong meaning we can't trust it.
         -- The car cannot function without the gps so we brake.
         Safe := False;
     end Update_GPS;
 
     procedure Update_Speed(speed : in speed_ada) is
-    begin 
+    begin
         if not (Convert_C_Bool(speed.valid_speed) and not Convert_C_Bool(speed.valid_timestamp)) then
             return;
         end if;

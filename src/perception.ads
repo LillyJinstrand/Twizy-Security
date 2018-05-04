@@ -52,7 +52,7 @@ package perception with SPARK_Mode is
    type Orientation is (CCW, CW, CL);
 
    scopeangle : constant Lidar_angle := 45.0;
-   breakConstant : constant Distance := 150.0;
+   breakConstant : constant Distance := 1.0;
 
    -- Checks if a point is inside a danger zone
    -- Look at objects inside of a 100x100 m square around the car

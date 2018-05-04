@@ -52,19 +52,21 @@ void perception_msg(ros::Publisher& pub){
 
     apollo::perception::PerceptionObstacle o1;
     o1.set_id(1);
-    o1.mutable_position()->set_x(76.07);
-    o1.mutable_position()->set_y(-4.502);
+    o1.mutable_position()->set_x(0.0);
+    o1.mutable_position()->set_y(16.0);
     o1.mutable_position()->set_z(0.0);
 
     o1.mutable_velocity()->set_x(0.0101980390272);
     o1.mutable_velocity()->set_y(0.0101980390272);
     o1.mutable_velocity()->set_z(0.0);
 
+	o1.set_theta(3.14/2.0);;
+
     o1.set_length(0.5);
     o1.set_width(1.0);
     o1.set_height(1.0);
 
-    apollo::perception::PerceptionObstacle::Type type = apollo::perception::PerceptionObstacle::VEHICLE; 
+    apollo::perception::PerceptionObstacle::Type type = apollo::perception::PerceptionObstacle::VEHICLE;
     o1.set_type(type);
 
     msg.add_perception_obstacle();
@@ -93,7 +95,7 @@ int main(int argc, char **argv){
         int n;
         std::cin >> n;
         switch(n){
-            case 0: 
+            case 0:
                 return 0;
                 break;
             case 1:
@@ -108,8 +110,8 @@ int main(int argc, char **argv){
                 perception_msg(perception_publisher);
                 break;
         }
-        
-        
+
+
         ros::spinOnce();
         count++;
     }
