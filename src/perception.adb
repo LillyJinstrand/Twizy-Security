@@ -21,7 +21,7 @@ package body perception with SPARK_Mode is
 	   -- These values chage when test for real values
 	   BreakingDist : Distance := BreakingDistance(S);
 	   LidarAngle : Lidar_Angle := 45.0;
-	   BreakingDistScale : constant Distance := 1.23;
+	   BreakingDistScale : constant Distance := 1.0;
 	begin
 	   if Obj_Type /= UNKNOWN_UNMOVABLE then
 		  if (BreakingDist >= Distance'Last / BreakingDistScale) then
@@ -46,7 +46,7 @@ package body perception with SPARK_Mode is
 		pragma Assume(Dist2 > 0.0);
 		Dist : constant Distance := Mathutil.Sqrt(Dist2);
 	begin
-	    if Dist > DZ.Radius then
+	    if Dist > DZ.Radius or P.Y < 0.0 then -- outside radius or behind us
 		   return False;
 		else
 			if P.X /= 0.0 and P.Y /= 0.0 then
@@ -134,8 +134,10 @@ package body perception with SPARK_Mode is
 	    P3t : constant Point := (P3w.X - XT, P3w.Y - YT, 0.0); -- bot right
 	    P4t : constant Point := (P4w.X - XT, P4w.Y - YT, 0.0); -- bot left
 
-		St : constant FloatingNumber := Mathutil.Sin_r(FloatingNumber(Pose.Heading));
-		Ct : constant FloatingNumber := Mathutil.Cos_r(FloatingNumber(Pose.Heading));
+		PI : constant FloatingNumber := 3.14159265;
+
+		St : constant FloatingNumber := Mathutil.Sin_r(-FloatingNumber(Pose.Heading) + PI/2.0);
+		Ct : constant FloatingNumber := Mathutil.Cos_r(-FloatingNumber(Pose.Heading) + PI/2.0);
 		-- these points are in the car's local coordinate system
 		-- to be checked against the dangerZone
 	    P1 : constant Point := ( P1t.X * Ct - P1t.Y * St, P1t.X * St + P1t.Y * Ct, 0.0); -- top left
@@ -148,22 +150,31 @@ package body perception with SPARK_Mode is
 		L3 : constant Line := (P3, P4);
 		L4 : constant Line := (P4, P1);
 
+-- DEBUG STUFF
+--		procedure Print_Point(N : String; P : Point) is
+--		   begin
+--			Ada.Text_IO.Put(N);
+--			Put(Float(P.X), Exp => 0);
+--			Ada.Text_IO.Put(",");
+--			Put(Float(P.Y), Exp => 0);
+--			Ada.Text_IO.New_Line(1);
+--			end Print_Point;
 	begin
-	   Put(Float(GX)); Ada.Text_IO.New_Line(1);
-	   Put(Float(GY)); Ada.Text_IO.New_Line(1);
-	   Ada.Text_IO.Put("XT,XY: "); Put(Float(XT)); Ada.Text_IO.Put(","); Put(Float(YT)); Ada.Text_IO.New_Line(1);
-	   Ada.Text_IO.Put_Line("Points: ");
-	   Ada.Text_IO.Put("1: "); Put(Float(P1.X)); Ada.Text_IO.Put(","); Put(Float(P1.Y)); Ada.Text_IO.New_Line(1);
-	   Ada.Text_IO.Put("2: "); Put(Float(P2.X)); Ada.Text_IO.Put(","); Put(Float(P2.Y)); Ada.Text_IO.New_Line(1);
-	   Ada.Text_IO.Put("3: "); Put(Float(P3.X)); Ada.Text_IO.Put(","); Put(Float(P3.Y)); Ada.Text_IO.New_Line(1);
-	   Ada.Text_IO.Put("4: "); Put(Float(P4.X)); Ada.Text_IO.Put(","); Put(Float(P4.Y)); Ada.Text_IO.New_Line(1);
-	   Ada.Text_IO.Put("");
+--	   Put(Float(GX)); Ada.Text_IO.New_Line(1);
+--	   Put(Float(GY)); Ada.Text_IO.New_Line(1);
+--	   Ada.Text_IO.Put("XT,XY: "); Put(Float(XT)); Ada.Text_IO.Put(","); Put(Float(YT)); Ada.Text_IO.New_Line(1);
+--	   Ada.Text_IO.Put_Line("Points: ");
+--	   Print_Point("1: ", P1);
+--	   Print_Point("2: ", P2);
+--	   Print_Point("3: ", P3);
+--	   Print_Point("4: ", P4);
+--	   Ada.Text_IO.Put("");
 
 	    if PointInDangerZone(P1, DZ) or
 		   PointInDangerZone(P2, DZ) or
 		   PointInDangerZone(P3, DZ) or
 		   PointInDangerZone(P4, DZ) then
-		    Ada.Text_IO.Put_Line("Unsafe, point in DZ");
+--		    Ada.Text_IO.Put_Line("Unsafe, point in DZ");
 		    return False;
 		end if;
 		-- one optimization is to find the 2 closest lines, but that might be overkill
@@ -175,7 +186,7 @@ package body perception with SPARK_Mode is
 		   IsIntersecting(L3, GetDZEdge(DZ, True)) or
 		   IsIntersecting(L4, GetDZEdge(DZ, False)) or
 		   IsIntersecting(L4, GetDZEdge(DZ, True)) then
-		    Ada.Text_IO.Put_Line("Unsafe, line crossing DZ");
+--		    Ada.Text_IO.Put_Line("Unsafe, line crossing DZ");
 		    return False;
 		end if;
 		return True;
