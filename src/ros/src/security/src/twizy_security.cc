@@ -73,6 +73,7 @@ void canbusCallback(const apollo::canbus::Chassis& msg)
 
 void localizationCallback(const apollo::localization::LocalizationEstimate& msg)
 {
+	ROS_INFO("Received localization");
     if(!is_safe()){
         //If the car is in a unsafe state already there is point in calling the check
         return;

@@ -52,15 +52,16 @@ void perception_msg(ros::Publisher& pub){
 
     apollo::perception::PerceptionObstacle o1;
     o1.set_id(1);
-    o1.mutable_position()->set_x(0.0);
-    o1.mutable_position()->set_y(16.0);
+    o1.mutable_position()->set_x(6.0);
+    o1.mutable_position()->set_y(20.0);
     o1.mutable_position()->set_z(0.0);
 
     o1.mutable_velocity()->set_x(0.0101980390272);
     o1.mutable_velocity()->set_y(0.0101980390272);
     o1.mutable_velocity()->set_z(0.0);
 
-	o1.set_theta(3.14/2.0);;
+	//o1.set_theta(3.14/4.0);;
+	o1.set_theta(0.0);;
 
     o1.set_length(0.5);
     o1.set_width(1.0);
@@ -75,12 +76,30 @@ void perception_msg(ros::Publisher& pub){
     pub.publish(msg);
 }
 
+void localization_msg(ros::Publisher& pub) {
+    apollo::localization::LocalizationEstimate msg;
+
+    msg.mutable_header()->CopyFrom(generate_header());
+
+	apollo::localization::Pose pose;
+	pose.mutable_position()->set_x(-6.0);
+	pose.mutable_position()->set_y(-6.0);
+	pose.mutable_position()->set_z(0.0);
+
+	//pose.set_heading(0.0);
+	pose.set_heading(-3.14/2.0);
+
+	msg.mutable_pose()->CopyFrom(pose);
+
+	pub.publish(msg);
+}
+
 int main(int argc, char **argv){
     ros::init(argc, argv, "interactiveTester");
     ros::NodeHandle nh;
 
     ros::Publisher control_publisher = nh.advertise<apollo::control::ControlCommand>("CONTROL_COMMAND", 1000);
-    ros::Publisher localization_publisher = nh.advertise<apollo::perception::PerceptionObstacles>("/apollo/perception/obstacles", 1000);
+    ros::Publisher localization_publisher = nh.advertise<apollo::localization::LocalizationEstimate>("/apollo/localization/pose", 1000);
     ros::Publisher canbus_publisher = nh.advertise<apollo::canbus::Chassis>("/apollo/canbus/chassis", 1000);
     ros::Publisher perception_publisher = nh.advertise<apollo::perception::PerceptionObstacles>("/apollo/perception/obstacles", 1000);
 
@@ -105,6 +124,7 @@ int main(int argc, char **argv){
                 speed_msg(canbus_publisher);
                 break;
             case 3:
+				localization_msg(localization_publisher);
                 break;
             case 4:
                 perception_msg(perception_publisher);
