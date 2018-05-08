@@ -1,6 +1,6 @@
 #
-# 
-# TLDR: Set the varibles in the top of the file, run make apollo, and then run catkin_make in the 
+#
+# TLDR: Set the varibles in the top of the file, run make apollo, and then run catkin_make in the
 # ros folder in the apollo docker container
 
 # Name of of the gpr file, and the directories to put binaries and similar into
@@ -20,16 +20,17 @@ LIBGNAT=$(shell dirname $(LIBPATH))/adalib/libgnat.a
 APOLLO=~/AutonomousTwizy/src/BSc2018/apollo-2.0.0
 
 # This block lists targets. They should be generated in a better way, but are hardcoded for now
-# SPARKOBJECTS contains all the SPARK/Ada files to be built. Needed to differentiate between ada and c++ 
-SPARKOBJECTS=$(OBJ)/gpsmodule.o $(OBJ)/perception.o $(OBJ)/speedmodule.o $(OBJ)/wrapper.o $(OBJ)/interface_utils.o $(OBJ)/mathutil.o $(OBJ)/converters.o 
+# SPARKOBJECTS contains all the SPARK/Ada files to be built. Needed to differentiate between ada and c++
+SPARKOBJECTS=$(OBJ)/gpsmodule.o $(OBJ)/perception.o $(OBJ)/speedmodule.o $(OBJ)/wrapper.o $(OBJ)/interface_utils.o $(OBJ)/mathutil.o $(OBJ)/converters.o
 # SPARKALI is just the same list as above but with .ali, can easily be replaced with something generated
-SPARKALI=$(OBJ)/gpsmodule.ali $(OBJ)/perception.ali $(OBJ)/speedmodule.ali $(OBJ)/wrapper.ali $(OBJ)/interface_utils.ali $(OBJ)/mathutil.ali $(OBJ)/converters.ali 
+SPARKALI=$(OBJ)/gpsmodule.ali $(OBJ)/perception.ali $(OBJ)/speedmodule.ali $(OBJ)/wrapper.ali $(OBJ)/interface_utils.ali $(OBJ)/mathutil.ali $(OBJ)/converters.ali
 # A list of ada spec files, needed to make lib.a to rebuilt when ada files changes
-ADASPEC=common_data_h.ads perception_data_h.ads prediction_data_h.ads localization_data_h.ads control_cmd_data_h.ads speed_data_h.ads 
+ADASPEC=common_data_h.ads perception_data_h.ads prediction_data_h.ads localization_data_h.ads control_cmd_data_h.ads speed_data_h.ads
 
 # Rule to build the main library, with the c++ wrapper. Matches the security.h header
 # It combines the objects from security.o with lib.a by extracting the contents of lib.a into a temporary folder
 # and then combines them, and finally deletes the temp folder.
+
 $(BIN)/security.a: $(OBJ)/lib.a $(OBJ)/security.o
 	mkdir -p $(BIN)
 	rm -rf $(TEMP)
@@ -45,14 +46,14 @@ $(OBJ)/security.o: security.cc security.h
 
 # Packs together the SPARK/Ada components into a temporary library.
 # Can be linked to on ist own against the interface exposed in wrapper.ads
-$(OBJ)/lib.a: $(ADASPEC) $(SPARKOBJECTS) 
+$(OBJ)/lib.a: $(ADASPEC) $(SPARKOBJECTS)
 	gnatbind -Lck -o ck.adb $(SPARKALI)
 	gnatmake -D $(OBJ) ck.adb
 	ar cr $(OBJ)/lib.a $(OBJ)/ck.o $(SPARKOBJECTS)
 	rm -f ck.ad*
 
 # Rule to make most SPARK/Ada files
-$(OBJ)/%.o: %.adb %.ads 
+$(OBJ)/%.o: %.adb %.ads
 	mkdir -p $(OBJ)
 	gnatmake -D $(OBJ) $*
 
