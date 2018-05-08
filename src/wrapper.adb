@@ -2,7 +2,6 @@ with Interface_utils; use Interface_utils;
 with speedModule; use speedModule;
 with converters; use converters;
 with Interfaces.C; use Interfaces.C;
-with Ada.Text_IO;
 with perception;
 package body Wrapper
     with SPARK_Mode
@@ -22,12 +21,7 @@ is
 
     procedure WaitForData is
     begin
-        while (LastPositionTimestamp = 0.0) loop
-            delay Duration(0.01);
-        end loop;
-        while (LastPerceptionTimestamp = 0.0) loop
-            delay Duration(0.01);
-        end loop;
+        null;
     end WaitForData;
 
     function Is_Initialized return Boolean
@@ -50,6 +44,7 @@ is
                 -- PerceptionCheck reports not safe, set safe to false
                 Safe := False;
             end if;
+            LastPerceptionTimestamp := perception_data.timestamp;
         end if;
     end Update_Perception;
 

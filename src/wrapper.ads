@@ -58,19 +58,19 @@ is
     -- This block is the callback functions for the c++ wrapper to attatch to the ROS topics
     procedure Update_Perception(perception_data : in perception_obstacle_ada)
     with
-        Global => (Input => (CurrentPosition, CurrentSpeed), In_Out => Safe, Output => LastPerceptionTimestamp),
+        Global => (Input => (CurrentPosition, CurrentSpeed), In_Out => (Safe, LastPerceptionTimestamp)),
         Convention => C,
         Export,
         External_Name => "update_perception_ada";
     procedure Update_GPS(localization_estimate : in localization_estimate_ada)
     with
-        Global => (In_Out => (Safe, CurrentPosition), Output => LastPositionTimestamp),
+        Global => (In_Out => (Safe, CurrentPosition, LastPositionTimestamp)),
         Convention => C,
         Export,
         External_Name => "update_gps_ada";
     procedure Update_Speed(speed : in speed_ada)
     with
-        Global => (In_Out => (Safe, CurrentSpeed), Output => LastSpeedTimestamp),
+        Global => (In_Out => (Safe, CurrentSpeed, LastSpeedTimestamp)),
         Convention => C,
         Export,
         External_Name => "update_speed_ada";
