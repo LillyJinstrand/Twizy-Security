@@ -1,6 +1,6 @@
 with Ada.Numerics.Generic_Elementary_Functions;
 
-package body Mathutil with SPARK_Mode => Off is
+package body Mathutil with SPARK_Mode => Off  is
 	package FloatingMath is
 		new Ada.Numerics.Generic_Elementary_Functions(FloatingNumber);
 

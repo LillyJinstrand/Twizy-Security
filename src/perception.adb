@@ -59,13 +59,6 @@ package body perception with SPARK_Mode is
 	   return (abs Ang) <= DZ.ScopeAngle;
 	end PointInDangerZone;
 
-	-- this fails proofs but will need to be rewritten anyway
-	function WorldToLocal(P : in Point; C : in Point) return LocalPoint
-	is
-	begin
-	   return (P.X - C.X, P.Y - C.Y, P.Z - C.Z);
-	end WorldToLocal;
-
 	function GetDZEdge(DZ : DangerZone; Left : Boolean) return Line
 	is
 	   Q : LocalPoint := (Mathutil.Cos(DZ.ScopeAngle) *  DZ.Radius, Mathutil.Sin(DZ.ScopeAngle) *  DZ.Radius, 0.0);

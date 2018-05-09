@@ -11,10 +11,12 @@ package Mathutil with SPARK_Mode => On is
 
 	function Sin(X : FloatingNumber) return FloatingNumber
 	  with
+	  Post => Sin'Result >= -1.0 and Sin'Result <= 1.0,
 	  Global => null;
 
 	function Cos(X : FloatingNumber) return FloatingNumber
 	  with
+	  Post => Cos'Result >= -1.0 and Cos'Result <= 1.0,
 	  Global => null;
 
 	function Tan(X : FloatingNumber) return FloatingNumber
@@ -23,10 +25,12 @@ package Mathutil with SPARK_Mode => On is
 
 	function Sin_r(X : FloatingNumber) return FloatingNumber
 	  with
+	  Post => Sin_r'Result >= -1.0 and Sin_r'Result <= 1.0,
 	  Global => null;
 
 	function Cos_r(X : FloatingNumber) return FloatingNumber
 	  with
+	  Post => Cos_r'Result >= -1.0 and Cos_r'Result <= 1.0,
 	  Global => null;
 
 	function Tan_r(X : FloatingNumber) return FloatingNumber

@@ -15,7 +15,7 @@ package perception with SPARK_Mode is
    --type Object_type is (UNKNOWN, DYNAMIC, STATIC, PEDESTRIAN, BICYCLE, VEHICLE);
 
    -- unit is meters
-   subtype Distance is FloatingNumber range -10000000.0 .. 10000000.0;
+   subtype Distance is FloatingNumber range -1000000000000.0 .. 1000000000000.0;
 
    subtype Cartesian_Coordinate is Distance;
 
@@ -60,17 +60,6 @@ package perception with SPARK_Mode is
 	 Pre => P.Y > 0.0 and abs P.X < 50.0 and abs P.Y < 50.0,
 	 Global => null;
 
-   -- Transforms a point P in the world space to the local space
-   -- around the car given the car's position in the world space,
-   -- i.e. the car/dangerzone is the origin
-   function WorldToLocal(P : in Point; C : in Point) return LocalPoint with
-	 Global => null;
-
-   -- transforms a point A to a coordinate system with matrix B
-   -- TODO: matrix type
-   -- function TransformAtoB(A : in Point; B : in Point) return Point with
-   -- Global => null;
-
    function breakingDistance (s : in Speed) return Distance with
 	 Pre => S > 0.0,
      Post => BreakingDistance'Result >= 0.0;
@@ -81,17 +70,28 @@ package perception with SPARK_Mode is
      Global => null;
 
    function GetDZEdge(DZ : DangerZone; Left : Boolean) return Line with
+	 Pre => DZ.Radius < Cartesian_Coordinate'Last / 2.0,
 	 Global => null;
 
    function GetOrientation(P1 : LocalPoint; P2 : LocalPoint; P3 : LocalPoint) return Orientation
 	 with
+	 Pre => P1.X * P1.X < Cartesian_Coordinate'Last / 2.0
+	    and P2.X * P2.X < Cartesian_Coordinate'Last / 2.0
+	    and P3.X * P3.X < Cartesian_Coordinate'Last / 2.0
+	    and P1.Y * P1.Y < Cartesian_Coordinate'Last / 2.0
+	    and P2.Y * P2.Y < Cartesian_Coordinate'Last / 2.0
+	    and P3.Y * P3.Y < Cartesian_Coordinate'Last / 2.0,
 	 Global => null;
 
    function IsIntersecting(L1 : Line; L2 : Line) return Boolean
 	 with Global => null;
 
    function PerceptionCheck(Obstacle : in Perception_Obstacle_ada; Pose : in Pose_Ada; S : in Speed) return Boolean with
-	 Pre => S >= 0.0,
+	 Pre => S >= 0.0 and
+	 Cartesian_Coordinate(Obstacle.Position.X) + Cartesian_Coordinate(Obstacle.Length) + Cartesian_Coordinate(Obstacle.Width) < Cartesian_Coordinate'Last / 2.0 and
+	 Cartesian_Coordinate(Obstacle.Position.Y) + Cartesian_Coordinate(Obstacle.Length) + Cartesian_Coordinate(Obstacle.Width) < Cartesian_Coordinate'Last / 2.0 and
+	        Cartesian_Coordinate(Pose.Position.X) < Cartesian_Coordinate'Last / 2.0 and
+	        Cartesian_Coordinate(Pose.Position.Y) < Cartesian_Coordinate'Last / 2.0,
      Global => null;
 
 end perception;
