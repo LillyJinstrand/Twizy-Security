@@ -88,6 +88,14 @@ is
         end if;
     end Update_Speed;
 
+    procedure Check_Brake_Pedal(pedal_status : Extensions.bool) is
+    begin
+        -- Compare against 1 instead of true beacuse of how the bool Extensions work
+        if(pedal_status = 1) then
+            Safe := False;
+        end if;
+    end Check_Brake_Pedal;
+
     procedure CheckTimestamps(currentTime : in Interfaces.C.double) is
     begin
         pragma Assume (currentTime > 0.0);

@@ -19,6 +19,7 @@ extern bool is_safe();
 extern void update_perception(perception_obstacle_ada);
 extern void update_gps(localization_estimate_ada);
 extern void update_speed(speed_ada);
+extern void check_brake_pedal(bool);
 extern void check_timestamps(double);
 
 

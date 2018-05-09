@@ -8,6 +8,7 @@ with gpsModule;
 with types; 
 use types;
 with Interfaces.C;
+with Interfaces.C.Extensions;
 
 package Wrapper
     with SPARK_Mode
@@ -74,6 +75,13 @@ is
         Convention => C,
         Export,
         External_Name => "update_speed_ada";
+
+    procedure Check_Brake_Pedal(pedal_status : Interfaces.C.Extensions.bool)
+    with
+        Global => (In_Out => Safe),
+        Convention => C,
+        Export,
+        External_Name => "check_brake_pedal_ada";
 
     procedure CheckTimestamps(currentTime : in Interfaces.C.double)
     with

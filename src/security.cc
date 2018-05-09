@@ -11,6 +11,7 @@ extern "C" {
     void update_gps_ada(localization_estimate_ada);
     void update_speed_ada(speed_ada);
     void check_timestamps_ada(double);
+    void check_brake_pedal_ada(bool);
 
     char is_safe_ada();
 
@@ -39,6 +40,10 @@ void update_speed(speed_ada in){
 
 void check_timestamps(double currentTime){
     check_timestamps_ada(currentTime);
+}
+
+void check_brake_pedal(bool pedal_status){
+    check_brake_pedal_ada(pedal_status);
 }
 
 bool is_safe(){

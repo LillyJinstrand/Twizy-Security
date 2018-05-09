@@ -42,6 +42,10 @@ void speed_msg(ros::Publisher& pub){
     std::cout << "Enter speed" << std::endl;
     std::cin >> speed;
     msg.set_speed_mps(speed);
+    int pedal;
+    std::cout << "Pedal status, 1 for pressed, 0 for not" << std::endl;
+    std::cin >> pedal;
+    msg.set_parking_brake((bool) pedal);
     pub.publish(msg);
 }
 

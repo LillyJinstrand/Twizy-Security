@@ -64,6 +64,7 @@ void canbusCallback(const apollo::canbus::Chassis& msg)
     ROS_INFO("Speed reported %f", convert_speed(msg).speed);
     ROS_INFO("At timestamp %f", convert_speed(msg).timestamp);
     update_speed(convert_speed(msg));
+    check_brake_pedal(msg.parking_brake());
 
     if(!is_safe()){
         send_brake_command();
