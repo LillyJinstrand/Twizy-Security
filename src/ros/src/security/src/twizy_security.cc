@@ -97,7 +97,7 @@ int main(int argc, char **argv)
 
   ros::Subscriber perception = n.subscribe("/apollo/perception/obstacles", 1000, perceptionCallback);
   //ros::Subscriber prediction = n.subscribe("/apollo/prediction", 1000, predictionCallback);
-  ros::Subscriber control = n.subscribe("CONTROL_COMMAND", 1000, controlCallback);
+  ros::Subscriber control = n.subscribe("/apollo/safety", 1000, controlCallback);
   ros::Subscriber canbus = n.subscribe("/apollo/canbus/chassis", 1000, canbusCallback);
   ros::Subscriber localization = n.subscribe("/apollo/localization/pose", 1000, localizationCallback);
 
