@@ -1,8 +1,4 @@
-with Interface_utils; use Interface_utils;
 with speedModule; use speedModule;
-with converters; use converters;
-with Interfaces.C; use Interfaces.C;
-with Ada.Text_IO;
 with perception;
 package body Wrapper
     with SPARK_Mode
@@ -22,12 +18,7 @@ is
 
     procedure WaitForData is
     begin
-        while (LastPositionTimestamp = 0.0) loop
-            delay Duration(0.01);
-        end loop;
-        while (LastPerceptionTimestamp = 0.0) loop
-            delay Duration(0.01);
-        end loop;
+        null;
     end WaitForData;
 
     function Is_Initialized return Boolean
@@ -50,6 +41,7 @@ is
                 -- PerceptionCheck reports not safe, set safe to false
                 Safe := False;
             end if;
+            LastPerceptionTimestamp := perception_data.timestamp;
         end if;
     end Update_Perception;
 
@@ -74,24 +66,41 @@ is
 
     procedure Update_Speed(speed : in speed_ada) is
     begin
-        if not (Convert_C_Bool(speed.valid_speed) and not Convert_C_Bool(speed.valid_timestamp)) then
+        if not Convert_C_Bool(speed.valid_speed) then
             return;
         end if;
+        pragma Assert(Convert_C_Bool(speed.valid_speed));
         if not (speed.speed > -80.0 and speed.speed < 80.0) then
             -- Data is way out of range, so we assume something is wrong
             Safe := False;
             return;
-        else
-            if not (speedModule.speedtest(speed_ada_to_speed(speed))) then
-                -- Speed check fails
-                -- Set safe to false to brake
-                Safe := False;
-            end if;
-            -- Update the cached value of the current speed
-            CurrentSpeed := speed_ada_to_speed(speed);
-            LastSpeedTimestamp := speed.timestamp;
         end if;
+        if not (speedModule.speedtest(speed_ada_to_speed(speed))) then
+            -- Speed check fails
+            -- Set safe to false to brake
+            Safe := False;
+        end if;
+        -- Update the cached value of the current speed
+        CurrentSpeed := speed_ada_to_speed(speed);
+        if not Convert_C_Bool(speed.valid_timestamp) then
+            return;
+        end if;
+        if(speed.timestamp <= LastSpeedTimestamp) then
+            -- Something is very wrong if we recive mesages out of order
+            Safe := False;
+            return;
+        end if;
+        pragma Assert(speed.timestamp > LastSpeedTimestamp);
+        LastSpeedTimestamp := speed.timestamp;
     end Update_Speed;
+
+    procedure Check_Brake_Pedal(pedal_status : Extensions.bool) is
+    begin
+        -- Compare against 1 instead of true beacuse of how the bool Extensions work
+        if not Convert_C_Bool(pedal_status) then
+            Safe := False;
+        end if;
+    end Check_Brake_Pedal;
 
     procedure CheckTimestamps(currentTime : in Interfaces.C.double) is
     begin
