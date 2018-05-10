@@ -1,14 +1,12 @@
-with perception_data_h;
-use perception_data_h;
-with localization_data_h;
-use localization_data_h;
-with speed_data_h;
-use speed_data_h;
+with perception_data_h; use perception_data_h;
+with localization_data_h; use localization_data_h;
+with speed_data_h; use speed_data_h;
 with gpsModule;
-with types; 
-use types;
-with Interfaces.C;
+with types; use types;
+with Interfaces.C; use Interfaces.C;
 with Interfaces.C.Extensions;
+with Interface_utils; use Interface_utils;
+with converters; use converters;
 
 package Wrapper
     with SPARK_Mode
@@ -74,7 +72,14 @@ is
         Global => (In_Out => (Safe, CurrentSpeed, LastSpeedTimestamp)),
         Convention => C,
         Export,
-        External_Name => "update_speed_ada";
+        External_Name => "update_speed_ada",
+        -- Interfaces.C.Extensions.bool needs to be compared against 1 instead of true
+        Post => 
+            ((LastSpeedTimestamp = LastSpeedTimestamp'Old) or (LastSpeedTimestamp > LastSpeedTimestamp'Old))
+            and (if (speed.timestamp < LastSpeedTimestamp and 
+                    Convert_C_Bool(speed.valid_timestamp) and
+                    Convert_C_Bool(speed.valid_speed)) then Safe = False)
+            and (if Convert_C_Bool(speed.valid_speed) and (speed.speed > 5.5) then Safe = False);
 
     procedure Check_Brake_Pedal(pedal_status : Interfaces.C.Extensions.bool)
     with
