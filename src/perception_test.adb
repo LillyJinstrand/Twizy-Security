@@ -1,9 +1,6 @@
-with Perception;
-with Ada.Text_IO;
-with Types;
-use Types;
-use Ada.Text_IO;
-use Perception;
+with Perception; use Perception;
+with Ada.Text_IO; use Ada.Text_IO;
+with Types; use Types;
 
 procedure Perception_Test is
    package Bool_IO is new Ada.Text_IO.Enumeration_IO(Boolean);

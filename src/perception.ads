@@ -11,34 +11,7 @@ use Localization_Data_H;
 -- and negative angles are the the left of the car
 
 package perception with SPARK_Mode is
-   -- dynamic and static indicate unknown object with a know moving state
-   --type Object_type is (UNKNOWN, DYNAMIC, STATIC, PEDESTRIAN, BICYCLE, VEHICLE);
 
-   -- unit is meters
-   subtype Distance is FloatingNumber range -1000000000000.0 .. 1000000000000.0;
-
-   subtype Cartesian_Coordinate is Distance;
-
-   -- angle from lidar (0 is straight forward)
-   subtype Angle is FloatingNumber range -360.0 .. 360.0;
-   subtype Steering_angle is Angle range -90.0 .. 90.0;
-   subtype Lidar_angle is Angle range -180.0 .. 180.0;
-
-   type DangerZone is
-	  record
-		 ScopeAngle : Lidar_Angle;
-		 Radius: Distance;
-		 SteeringAngleOffset : Lidar_Angle;
-	  end record;
-
-   type Point is
-	  record
-		 X : Cartesian_Coordinate;
-		 Y : Cartesian_Coordinate;
-		 Z : Cartesian_Coordinate;
-	  end record;
-
-   subtype LocalPoint is Point;
 
    -- for now, lines ignore the Z coordinate, we will filter out the height of objects
    -- before we get there

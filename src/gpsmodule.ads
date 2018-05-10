@@ -1,21 +1,16 @@
 pragma SPARK_Mode(ON);
 
-package gpsModule with SPARK_Mode is
+with Types; use Types;
 
-   type Lon is digits 8 range -180.0 .. 180.0;
-   type Lat is digits 8 range -90.0 .. 90.0;
-   
-   type box is 
-      record
-         top_left_lat : Lat;
-         bottom_right_lat : Lat;
-         bottom_right_lon : Lon;
-         top_left_lon : Lon;
-      end record;
-   
-   function gpstest(X : in Lat; Y : in Lon) return Boolean with
-    Post => (if gpstest'Result then X >= 57.68699206426933 and X <= 57.688440132300684 and Y >= 11.97746068239212 and Y <= 11.981237232685089) and
-    (if not gpstest'Result then X < 57.68699206426933 or X > 57.688440132300684 or Y < 11.97746068239212 or Y > 11.981237232685089),
+package gpsModule with SPARK_Mode is
+   Top_Left : constant Types.Point := (667271.0, 6398091.0, 0.0);
+   Bottom_Right : constant Types.Point := (677862.0, 6397724.0, 0.0);
+
+   function gpstest(Position : Types.Point) return Boolean with
+    Post => (if Gpstest'Result then (Position.X > Top_Left.X and Position.Y < Top_Left.Y
+	                            and Position.X < Bottom_Right.X and Position.Y > Bottom_Right.Y)) and
+	 (if not Gpstest'Result then not (Position.X > Top_Left.X and Position.Y < Top_Left.Y
+	                            and Position.X < Bottom_Right.X and Position.Y > Bottom_Right.Y)),
      Global => null;
 
 
