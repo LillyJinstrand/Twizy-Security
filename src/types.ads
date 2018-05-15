@@ -4,7 +4,7 @@ package types is
    subtype Speed is FloatingNumber range -80.0 .. 80.0;
 
    -- unit is meters
-   subtype Distance is FloatingNumber range -1000000000000.0 .. 1000000000000.0;
+   subtype Distance is FloatingNumber range -100000000000000000.0 .. 10000000000000000000000.0;
 
    subtype Cartesian_Coordinate is Distance;
 

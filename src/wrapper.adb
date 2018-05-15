@@ -97,7 +97,7 @@ is
     procedure Check_Brake_Pedal(pedal_status : Extensions.bool) is
     begin
         -- Compare against 1 instead of true beacuse of how the bool Extensions work
-        if not Convert_C_Bool(pedal_status) then
+        if Convert_C_Bool(pedal_status) then
             Safe := False;
         end if;
     end Check_Brake_Pedal;

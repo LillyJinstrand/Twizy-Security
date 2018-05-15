@@ -25,14 +25,10 @@ void send_brake_command(){
 
 void perceptionCallback(const apollo::perception::PerceptionObstacles& msg)
 {
-    ROS_INFO("Calling perception");
-    //if(!is_safe()){
-        //If the car is in a unsafe state already there is point in calling the check
-    //    return;
-    //}
+    //ROS_INFO("Calling perception");
     for(int i=0; i < msg.perception_obstacle_size(); i++){
-        ROS_INFO("Calling perception check for obstacle %d", msg.perception_obstacle(i).id());
-		ROS_INFO("Object position: %f,%f", msg.perception_obstacle(i).position().x(), msg.perception_obstacle(i).position().y());
+        //ROS_INFO("Calling perception check for obstacle %d", msg.perception_obstacle(i).id());
+		//ROS_INFO("Object position: %f,%f", msg.perception_obstacle(i).position().x(), msg.perception_obstacle(i).position().y());
         const apollo::perception::PerceptionObstacle& obs = msg.perception_obstacle(i);
         update_perception(convert_obstacle(obs));
     }
@@ -61,10 +57,11 @@ void canbusCallback(const apollo::canbus::Chassis& msg)
         //If the car is in a unsafe state already there is point in calling the check
         return;
     }
-    ROS_INFO("Speed reported %f", convert_speed(msg).speed);
-    ROS_INFO("At timestamp %f", convert_speed(msg).timestamp);
+    //ROS_INFO("Speed reported %f", convert_speed(msg).speed);
+    //ROS_INFO("At timestamp %f", convert_speed(msg).timestamp);
     update_speed(convert_speed(msg));
     check_brake_pedal(msg.parking_brake());
+    //ROS_INFO("Pedal status %d", msg.parking_brake());
 
     if(!is_safe()){
         send_brake_command();
@@ -74,7 +71,7 @@ void canbusCallback(const apollo::canbus::Chassis& msg)
 
 void localizationCallback(const apollo::localization::LocalizationEstimate& msg)
 {
-	ROS_INFO("Received localization");
+	//ROS_INFO("Received localization");
     if(!is_safe()){
         //If the car is in a unsafe state already there is point in calling the check
         return;
