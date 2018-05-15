@@ -1,6 +1,6 @@
 # Twizy Security
 ## A SPARK based security system for a Apollo Auto based autonomous vehicle
-
+This project is the result of a bachelor's thesis project at Chalmers University of Technology.
 ## Prerequisites
 * GNU make
 * GCC
