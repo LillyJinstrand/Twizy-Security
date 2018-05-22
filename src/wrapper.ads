@@ -73,7 +73,6 @@ is
         Convention => C,
         Export,
         External_Name => "update_speed_ada",
-        -- Interfaces.C.Extensions.bool needs to be compared against 1 instead of true
         Post => 
             ((LastSpeedTimestamp = LastSpeedTimestamp'Old) or (LastSpeedTimestamp > LastSpeedTimestamp'Old))
             and (if (speed.timestamp < LastSpeedTimestamp and 
