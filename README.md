@@ -6,6 +6,7 @@ This project is the result of a bachelor's thesis project at Chalmers University
 * GCC
 * GNAT
 * SPARK 2014
+* ROS
 
 ## Building
 ### SPARK library
@@ -18,3 +19,9 @@ Then run `catkin_make` in the src/ros/ folder
 ## License
 This project is licensed under the MIT License.
 For details see the LICENSE file.
+
+## Created by 
+* Johan Erlandsson
+* Hashem Hashem
+* Emil Jinstrand
+* Simon Mölzer
