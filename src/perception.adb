@@ -12,7 +12,7 @@ package body perception with SPARK_Mode is
 	   Dist : Distance;
 	begin
 	   pragma Assert(BreakConstant > 0.0);
-	   Dist := Distance(S) * Distance(S);
+	   Dist := Distance(S) * Distance(2);
 	   return abs (Dist / BreakConstant);
 	end breakingDistance;
 

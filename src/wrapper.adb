@@ -10,7 +10,7 @@ is
             Initialized := False;
             return;
         end if;
-        CurrentSpeed := 0.0;
+        CurrentSpeed := 4.5;
         Initialized := True;
         -- Busy-wait until we have recived data from all sensors
 
@@ -66,6 +66,7 @@ is
 
     procedure Update_Speed(speed : in speed_ada) is
     begin
+        CurrentSpeed := 4.5;
         if not Convert_C_Bool(speed.valid_speed) then
             return;
         end if;
